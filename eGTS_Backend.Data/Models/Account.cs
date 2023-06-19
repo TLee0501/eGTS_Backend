@@ -1,31 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace eGTS_Backend.Data.Models;
 
 public partial class Account
 {
-    [Required]
     public Guid Id { get; set; }
 
-    [Required]
-    [MaxLength(11)]
     public string PhoneNo { get; set; } = null!;
 
-    [Required]
-    [MaxLength(20)]
     public string Password { get; set; } = null!;
 
-    [Required]
-    [MaxLength(10)]
     public string Role { get; set; } = null!;
 
-    [Required]
-    [MaxLength(50)]
     public string FullName { get; set; } = null!;
 
-    [Required]
     public DateTime CreateTime { get; set; }
 
     public string? Description { get; set; }
@@ -35,6 +24,8 @@ public partial class Account
     public double? Weight { get; set; }
 
     public double? Height { get; set; }
+
+    public bool? IsLock { get; set; }
 
     public virtual ICollection<Contract> ContractExperts { get; set; } = new List<Contract>();
 

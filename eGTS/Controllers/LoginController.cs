@@ -18,7 +18,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
-        public ActionResult<IEnumerable<Account>> Login(string PhoneNo, String Password)
+        public async Task<ActionResult<IEnumerable<Account>>> Login(string PhoneNo, String Password)
         {
             if (PhoneNo == "")
                 return BadRequest();
