@@ -11,7 +11,7 @@ namespace eGTS_Backend.Data.DAO
     {
         private static AccountDAO instance;
         private static readonly object instanceLock = new object();
-        public EGTSContext Context;
+        public EGtsContext Context;
         public AccountDAO() { }
         public static AccountDAO Instance
         {
@@ -27,7 +27,7 @@ namespace eGTS_Backend.Data.DAO
         }
         public Account Login(string PhoneNo, string Password)
         {
-            Context = new EGTSContext();
+            Context = new EGtsContext();
             Account result = null;
             try
             {
