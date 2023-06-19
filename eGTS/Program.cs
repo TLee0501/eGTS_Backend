@@ -1,3 +1,5 @@
+using eGTS_Backend.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<EGtsContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EGTSDbConnection"));
+});
 
 var app = builder.Build();
 

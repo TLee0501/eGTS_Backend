@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{9476E030-E63B-4C77-B635-C74411E2A0F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGTS_Backend.Data", "eGTS_Backend.Data\eGTS_Backend.Data.csproj", "{E044C3A9-8B5B-4863-80B0-3324802DE118}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGTS", "eGTS\eGTS.csproj", "{D4467F57-C6E9-48B5-87A1-560F9C026087}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9476E030-E63B-4C77-B635-C74411E2A0F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9476E030-E63B-4C77-B635-C74411E2A0F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9476E030-E63B-4C77-B635-C74411E2A0F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9476E030-E63B-4C77-B635-C74411E2A0F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E044C3A9-8B5B-4863-80B0-3324802DE118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E044C3A9-8B5B-4863-80B0-3324802DE118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E044C3A9-8B5B-4863-80B0-3324802DE118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E044C3A9-8B5B-4863-80B0-3324802DE118}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4467F57-C6E9-48B5-87A1-560F9C026087}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4467F57-C6E9-48B5-87A1-560F9C026087}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4467F57-C6E9-48B5-87A1-560F9C026087}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4467F57-C6E9-48B5-87A1-560F9C026087}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
