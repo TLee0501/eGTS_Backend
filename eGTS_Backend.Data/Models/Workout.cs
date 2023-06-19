@@ -11,8 +11,6 @@ public partial class Workout
 
     public string Name { get; set; } = null!;
 
-    public TimeSpan Time { get; set; }
-
     public string Description { get; set; } = null!;
 
     public Guid VidieoId { get; set; }

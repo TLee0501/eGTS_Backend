@@ -7,9 +7,7 @@ public partial class Schedule
 {
     public Guid Id { get; set; }
 
-    public TimeSpan Time { get; set; }
-
-    public DateTime Date { get; set; }
+    public DateTime DateTime { get; set; }
 
     public Guid ContractId { get; set; }
 

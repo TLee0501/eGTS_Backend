@@ -239,7 +239,7 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.ContractId).HasColumnName("ContractID");
             entity.Property(e => e.CreatedDate).HasColumnType("date");
-            entity.Property(e => e.Date).HasColumnType("date");
+            entity.Property(e => e.DateTime).HasColumnType("datetime");
 
             entity.HasOne(d => d.Contract).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.ContractId)
