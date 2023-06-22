@@ -25,7 +25,7 @@ public partial class Account
 
     public double? Height { get; set; }
 
-    public bool? IsLock { get; set; }
+    public bool IsLock { get; set; }
 
     public virtual ICollection<Contract> ContractExperts { get; set; } = new List<Contract>();
 
@@ -44,4 +44,15 @@ public partial class Account
     public virtual ICollection<Package> PackagePts { get; set; } = new List<Package>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    public Account(Guid id, string phoneNo, string password, string role, string fullName, DateTime createTime, bool isLock)
+    {
+        Id = id;
+        PhoneNo = phoneNo;
+        Password = password;
+        Role = role;
+        FullName = fullName;
+        CreateTime = createTime;
+        IsLock = isLock;
+    }
 }
