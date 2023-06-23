@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using eGTS_Backend.Data.Models;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using eGTS_Backend.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace eGTS.Controllers

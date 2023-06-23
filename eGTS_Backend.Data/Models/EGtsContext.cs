@@ -57,9 +57,7 @@ public partial class EGtsContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.IsLock).HasColumnName("isLock");
-            entity.Property(e => e.Password)
-                .HasMaxLength(20)
-                .IsUnicode(false);
+            entity.Property(e => e.Password).IsUnicode(false);
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(11)
                 .IsUnicode(false);
@@ -77,20 +75,26 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.ExpertId).HasColumnName("ExpertID");
             entity.Property(e => e.FinishDate).HasColumnType("date");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.Neid).HasColumnName("NEID");
+            entity.Property(e => e.PackageId).HasColumnName("PackageID");
+            entity.Property(e => e.Ptid).HasColumnName("PTID");
             entity.Property(e => e.StartDate).HasColumnType("date");
-
-            entity.HasOne(d => d.Expert).WithMany(p => p.ContractExperts)
-                .HasForeignKey(d => d.ExpertId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Contract_Account1");
 
             entity.HasOne(d => d.Gymer).WithMany(p => p.ContractGymers)
                 .HasForeignKey(d => d.GymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Contract_Account");
+
+            entity.HasOne(d => d.Package).WithMany(p => p.Contracts)
+                .HasForeignKey(d => d.PackageId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Contract_Package");
+
+            entity.HasOne(d => d.Pt).WithMany(p => p.ContractPts)
+                .HasForeignKey(d => d.Ptid)
+                .HasConstraintName("FK_Contract_Account1");
         });
 
         modelBuilder.Entity<Feedback>(entity =>
@@ -189,23 +193,11 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.GymerId).HasColumnName("GymerID");
-            entity.Property(e => e.Neid).HasColumnName("NEID");
-            entity.Property(e => e.OrderDate).HasColumnType("date");
-            entity.Property(e => e.Ptid).HasColumnName("PTID");
-
-            entity.HasOne(d => d.Gymer).WithMany(p => p.PackageGymers)
-                .HasForeignKey(d => d.GymerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Package_Account");
-
-            entity.HasOne(d => d.Ne).WithMany(p => p.PackageNes)
-                .HasForeignKey(d => d.Neid)
-                .HasConstraintName("FK_Package_Account2");
-
-            entity.HasOne(d => d.Pt).WithMany(p => p.PackagePts)
-                .HasForeignKey(d => d.Ptid)
-                .HasConstraintName("FK_Package_Account1");
+            entity.Property(e => e.HasNe).HasColumnName("hasNE");
+            entity.Property(e => e.HasPt).HasColumnName("hasPT");
+            entity.Property(e => e.Name)
+                .HasMaxLength(30)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Payment>(entity =>
@@ -215,19 +207,13 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.CotractId).HasColumnName("CotractID");
-            entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.ContractId).HasColumnName("ContractID");
             entity.Property(e => e.PaymentDate).HasColumnType("date");
 
-            entity.HasOne(d => d.Cotract).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.CotractId)
+            entity.HasOne(d => d.Contract).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.ContractId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Payment_Contract");
-
-            entity.HasOne(d => d.Gymer).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.GymerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Payment_Account");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
@@ -245,6 +231,25 @@ public partial class EGtsContext : DbContext
                 .HasForeignKey(d => d.ContractId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Schedule_Contract");
+
+            entity.HasMany(d => d.Workouts).WithMany(p => p.Schedules)
+                .UsingEntity<Dictionary<string, object>>(
+                    "WorkoutList",
+                    r => r.HasOne<Workout>().WithMany()
+                        .HasForeignKey("WorkoutId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_WorkoutList_Workout"),
+                    l => l.HasOne<Schedule>().WithMany()
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_WorkoutList_Schedule"),
+                    j =>
+                    {
+                        j.HasKey("ScheduleId", "WorkoutId");
+                        j.ToTable("WorkoutList");
+                        j.IndexerProperty<Guid>("ScheduleId").HasColumnName("ScheduleID");
+                        j.IndexerProperty<Guid>("WorkoutId").HasColumnName("WorkoutID");
+                    });
         });
 
         modelBuilder.Entity<Workout>(entity =>
@@ -258,13 +263,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(30)
                 .IsUnicode(false);
-            entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
             entity.Property(e => e.VidieoId).HasColumnName("VidieoID");
-
-            entity.HasOne(d => d.Schedule).WithMany(p => p.Workouts)
-                .HasForeignKey(d => d.ScheduleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Workout_Schedule");
         });
 
         modelBuilder.Entity<WorkoutResult>(entity =>

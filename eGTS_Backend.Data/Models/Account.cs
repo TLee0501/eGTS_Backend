@@ -27,23 +27,15 @@ public partial class Account
 
     public bool IsLock { get; set; }
 
-    public virtual ICollection<Contract> ContractExperts { get; set; } = new List<Contract>();
-
     public virtual ICollection<Contract> ContractGymers { get; set; } = new List<Contract>();
+
+    public virtual ICollection<Contract> ContractPts { get; set; } = new List<Contract>();
 
     public virtual ICollection<FoodSchedule> FoodSchedules { get; set; } = new List<FoodSchedule>();
 
     public virtual ICollection<Message> MessageRecivers { get; set; } = new List<Message>();
 
     public virtual ICollection<Message> MessageSenders { get; set; } = new List<Message>();
-
-    public virtual ICollection<Package> PackageGymers { get; set; } = new List<Package>();
-
-    public virtual ICollection<Package> PackageNes { get; set; } = new List<Package>();
-
-    public virtual ICollection<Package> PackagePts { get; set; } = new List<Package>();
-
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public Account(Guid id, string phoneNo, string password, string role, string fullName, DateTime createTime, bool isLock)
     {
