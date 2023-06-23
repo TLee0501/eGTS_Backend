@@ -35,6 +35,8 @@ public partial class EGtsContext : DbContext
 
     public virtual DbSet<Workout> Workouts { get; set; }
 
+    public virtual DbSet<WorkoutList> WorkoutLists { get; set; }
+
     public virtual DbSet<WorkoutResult> WorkoutResults { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -231,25 +233,6 @@ public partial class EGtsContext : DbContext
                 .HasForeignKey(d => d.ContractId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Schedule_Contract");
-
-            entity.HasMany(d => d.Workouts).WithMany(p => p.Schedules)
-                .UsingEntity<Dictionary<string, object>>(
-                    "WorkoutList",
-                    r => r.HasOne<Workout>().WithMany()
-                        .HasForeignKey("WorkoutId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_WorkoutList_Workout"),
-                    l => l.HasOne<Schedule>().WithMany()
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_WorkoutList_Schedule"),
-                    j =>
-                    {
-                        j.HasKey("ScheduleId", "WorkoutId");
-                        j.ToTable("WorkoutList");
-                        j.IndexerProperty<Guid>("ScheduleId").HasColumnName("ScheduleID");
-                        j.IndexerProperty<Guid>("WorkoutId").HasColumnName("WorkoutID");
-                    });
         });
 
         modelBuilder.Entity<Workout>(entity =>
@@ -264,6 +247,26 @@ public partial class EGtsContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false);
             entity.Property(e => e.VidieoId).HasColumnName("VidieoID");
+        });
+
+        modelBuilder.Entity<WorkoutList>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("WorkoutList");
+
+            entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
+            entity.Property(e => e.WorkoutId).HasColumnName("WorkoutID");
+
+            entity.HasOne(d => d.Schedule).WithMany()
+                .HasForeignKey(d => d.ScheduleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_WorkoutList_Schedule");
+
+            entity.HasOne(d => d.Workout).WithMany()
+                .HasForeignKey(d => d.WorkoutId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_WorkoutList_Workout");
         });
 
         modelBuilder.Entity<WorkoutResult>(entity =>

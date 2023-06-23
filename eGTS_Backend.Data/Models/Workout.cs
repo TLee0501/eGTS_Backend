@@ -12,6 +12,4 @@ public partial class Workout
     public string Description { get; set; } = null!;
 
     public Guid VidieoId { get; set; }
-
-    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 }

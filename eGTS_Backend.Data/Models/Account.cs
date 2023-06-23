@@ -36,15 +36,4 @@ public partial class Account
     public virtual ICollection<Message> MessageRecivers { get; set; } = new List<Message>();
 
     public virtual ICollection<Message> MessageSenders { get; set; } = new List<Message>();
-
-    public Account(Guid id, string phoneNo, string password, string role, string fullName, DateTime createTime, bool isLock)
-    {
-        Id = id;
-        PhoneNo = phoneNo;
-        Password = password;
-        Role = role;
-        FullName = fullName;
-        CreateTime = createTime;
-        IsLock = isLock;
-    }
 }
