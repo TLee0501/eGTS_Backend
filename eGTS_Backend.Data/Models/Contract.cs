@@ -9,15 +9,17 @@ public partial class Contract
 
     public Guid GymerId { get; set; }
 
-    public Guid ExpertId { get; set; }
+    public Guid? Ptid { get; set; }
+
+    public Guid? Neid { get; set; }
+
+    public Guid PackageId { get; set; }
 
     public DateTime StartDate { get; set; }
 
     public DateTime FinishDate { get; set; }
 
-    public short NumberOfDays { get; set; }
-
-    public virtual Account Expert { get; set; } = null!;
+    public bool Status { get; set; }
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
@@ -25,7 +27,11 @@ public partial class Contract
 
     public virtual Account Gymer { get; set; } = null!;
 
+    public virtual Package Package { get; set; } = null!;
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    public virtual Account? Pt { get; set; }
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 

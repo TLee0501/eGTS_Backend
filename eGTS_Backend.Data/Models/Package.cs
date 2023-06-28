@@ -7,19 +7,17 @@ public partial class Package
 {
     public Guid Id { get; set; }
 
-    public Guid GymerId { get; set; }
+    public string Name { get; set; } = null!;
 
-    public Guid? Ptid { get; set; }
+    public bool HasPt { get; set; }
 
-    public Guid? Neid { get; set; }
+    public bool HasNe { get; set; }
+
+    public short NumerOfMonth { get; set; }
 
     public double Price { get; set; }
 
-    public DateTime OrderDate { get; set; }
+    public bool Status { get; set; }
 
-    public virtual Account Gymer { get; set; } = null!;
-
-    public virtual Account? Ne { get; set; }
-
-    public virtual Account? Pt { get; set; }
+    public virtual ICollection<Contract> Contracts { get; set; } = new List<Contract>();
 }
