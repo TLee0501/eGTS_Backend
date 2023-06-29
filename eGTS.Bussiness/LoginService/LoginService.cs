@@ -19,15 +19,9 @@ namespace eGTS.Bussiness.LoginService
         }
         public async Task<AccountViewModel> Login(LoginViewModel model)
         {
-            if (model.PhoneNo == "")
-                return null;
-            if (model.Password == "")
-                return null;
             var account = await _context.Accounts.SingleOrDefaultAsync(a => a.PhoneNo == model.PhoneNo && a.Password == model.Password);
 
             if (account == default)
-                return null;
-            else if (account.IsLock == true)
                 return null;
 
             AccountViewModel result = new AccountViewModel
