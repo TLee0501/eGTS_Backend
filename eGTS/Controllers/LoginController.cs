@@ -49,7 +49,19 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]//NOT FOUND
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            if (model.PhoneNo == "")
+                return BadRequest(new ErrorResponse(400, "Phone Number Is Empty"));
+            if (model.Password == "")
+                return BadRequest(new ErrorResponse(400, "Password Is Empty"));
+
             var result = await _loginService.Login(model);
+
+            if (result == null)
+                return NotFound(new ErrorResponse(404, "Phone numer/Password is incorrect"));
+            else if (result.IsLock == true)
+                return Unauthorized(new ErrorResponse(401, "Account Is Lock"));
+
+
             _logger.LogInformation($"Login by {model.PhoneNo}");
             return Ok(new SuccessResponse<AccountViewModel>(200, "Login Success.", result));
         }
