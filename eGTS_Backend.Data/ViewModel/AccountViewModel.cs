@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace eGTS_Backend.Data.ViewModel
 {
-    public class AccountCreateViewModel
+    public class AccountViewModel
     {
+        public Guid Id { get; set; }
         public string PhoneNo { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string Fullname { get; set; } = null!;

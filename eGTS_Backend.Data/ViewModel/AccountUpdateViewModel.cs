@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace eGTS_Backend.Data.ViewModel
 {
-    public class AccountCreateViewModel
+    public class AccountUpdateViewModel
     {
         public string PhoneNo { get; set; } = null!;
         public string Password { get; set; } = null!;
@@ -15,5 +15,6 @@ namespace eGTS_Backend.Data.ViewModel
         public string Role { get; set; } = null!;
         public Boolean IsLock { get; set; }
         public DateTime CreateDate { get; set; }
+
     }
 }

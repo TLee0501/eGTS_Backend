@@ -5,7 +5,9 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGTS_Backend.Data", "eGTS_Backend.Data\eGTS_Backend.Data.csproj", "{E044C3A9-8B5B-4863-80B0-3324802DE118}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGTS", "eGTS\eGTS.csproj", "{D4467F57-C6E9-48B5-87A1-560F9C026087}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGTS", "eGTS\eGTS.csproj", "{D4467F57-C6E9-48B5-87A1-560F9C026087}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGTS.Bussiness", "eGTS.Bussiness\eGTS.Bussiness.csproj", "{69747CCB-54CA-49DA-A233-A18C4952385C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D4467F57-C6E9-48B5-87A1-560F9C026087}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4467F57-C6E9-48B5-87A1-560F9C026087}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4467F57-C6E9-48B5-87A1-560F9C026087}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69747CCB-54CA-49DA-A233-A18C4952385C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69747CCB-54CA-49DA-A233-A18C4952385C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69747CCB-54CA-49DA-A233-A18C4952385C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69747CCB-54CA-49DA-A233-A18C4952385C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

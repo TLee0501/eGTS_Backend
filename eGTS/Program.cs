@@ -1,3 +1,5 @@
+using eGTS.Bussiness.AccountService;
+using eGTS.Bussiness.LoginService;
 using eGTS_Backend.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +17,8 @@ builder.Services.AddDbContext<EGtsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EGTSDbConnection"));
 });
 
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

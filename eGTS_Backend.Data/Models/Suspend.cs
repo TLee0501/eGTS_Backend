@@ -3,15 +3,17 @@ using System.Collections.Generic;
 
 namespace eGTS_Backend.Data.Models;
 
-public partial class Payment
+public partial class Suspend
 {
     public Guid Id { get; set; }
 
     public Guid PackageGymerId { get; set; }
 
-    public DateTime PaymentDate { get; set; }
+    public DateTime From { get; set; }
 
-    public double Amount { get; set; }
+    public DateTime To { get; set; }
+
+    public string Reson { get; set; } = null!;
 
     public virtual PackageGymer PackageGymer { get; set; } = null!;
 }

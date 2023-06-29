@@ -17,27 +17,49 @@ public partial class EGtsContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
-    public virtual DbSet<Contract> Contracts { get; set; }
+    public virtual DbSet<BodyPerameter> BodyPerameters { get; set; }
 
-    public virtual DbSet<Feedback> Feedbacks { get; set; }
+    public virtual DbSet<Excercise> Excercises { get; set; }
 
-    public virtual DbSet<Food> Foods { get; set; }
+    public virtual DbSet<ExcerciseSchedule> ExcerciseSchedules { get; set; }
 
-    public virtual DbSet<FoodSchedule> FoodSchedules { get; set; }
+    public virtual DbSet<ExcerciseType> ExcerciseTypes { get; set; }
+
+    public virtual DbSet<ExerciseInExerciseType> ExerciseInExerciseTypes { get; set; }
+
+    public virtual DbSet<ExserciseInSession> ExserciseInSessions { get; set; }
+
+    public virtual DbSet<FeedBack> FeedBacks { get; set; }
+
+    public virtual DbSet<FoodAndSuppliment> FoodAndSuppliments { get; set; }
+
+    public virtual DbSet<FoodAndSupplimentInFoodAndSupplimentType> FoodAndSupplimentInFoodAndSupplimentTypes { get; set; }
+
+    public virtual DbSet<FoodAndSupplimentInMeal> FoodAndSupplimentInMeals { get; set; }
+
+    public virtual DbSet<FoodAndSupplimentType> FoodAndSupplimentTypes { get; set; }
+
+    public virtual DbSet<Meal> Meals { get; set; }
 
     public virtual DbSet<Message> Messages { get; set; }
 
+    public virtual DbSet<NutritionSchedule> NutritionSchedules { get; set; }
+
     public virtual DbSet<Package> Packages { get; set; }
+
+    public virtual DbSet<PackageGymer> PackageGymers { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
 
-    public virtual DbSet<Schedule> Schedules { get; set; }
+    public virtual DbSet<Qualification> Qualifications { get; set; }
 
-    public virtual DbSet<Workout> Workouts { get; set; }
+    public virtual DbSet<Request> Requests { get; set; }
 
-    public virtual DbSet<WorkoutList> WorkoutLists { get; set; }
+    public virtual DbSet<Session> Sessions { get; set; }
 
-    public virtual DbSet<WorkoutResult> WorkoutResults { get; set; }
+    public virtual DbSet<SessionResult> SessionResults { get; set; }
+
+    public virtual DbSet<Suspend> Suspends { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -52,114 +74,255 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.Certificate).IsUnicode(false);
-            entity.Property(e => e.CreateTime).HasColumnType("datetime");
-            entity.Property(e => e.Description).IsUnicode(false);
-            entity.Property(e => e.FullName)
+            entity.Property(e => e.CreateDate).HasColumnType("date");
+            entity.Property(e => e.Fullname)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.IsLock).HasColumnName("isLock");
-            entity.Property(e => e.Password).IsUnicode(false);
+            entity.Property(e => e.Gender)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Password)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(11)
                 .IsUnicode(false);
             entity.Property(e => e.Role)
-                .HasMaxLength(10)
+                .HasMaxLength(5)
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<Contract>(entity =>
+        modelBuilder.Entity<BodyPerameter>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_Gymer_Contract");
+            entity.HasKey(e => e.GymerId).HasName("PK_PhysicalPerameter");
 
-            entity.ToTable("Contract");
+            entity.ToTable("BodyPerameter");
+
+            entity.Property(e => e.GymerId)
+                .ValueGeneratedNever()
+                .HasColumnName("GymerID");
+            entity.Property(e => e.Bmi).HasColumnName("BMI");
+            entity.Property(e => e.CreateDate).HasColumnType("date");
+
+            entity.HasOne(d => d.Gymer).WithOne(p => p.BodyPerameter)
+                .HasForeignKey<BodyPerameter>(d => d.GymerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PhysicalPerameter_Account");
+        });
+
+        modelBuilder.Entity<Excercise>(entity =>
+        {
+            entity.ToTable("Excercise");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.FinishDate).HasColumnType("date");
-            entity.Property(e => e.GymerId).HasColumnName("GymerID");
-            entity.Property(e => e.Neid).HasColumnName("NEID");
-            entity.Property(e => e.PackageId).HasColumnName("PackageID");
-            entity.Property(e => e.Ptid).HasColumnName("PTID");
-            entity.Property(e => e.StartDate).HasColumnType("date");
+            entity.Property(e => e.Description)
+                .HasMaxLength(300)
+                .IsUnicode(false);
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Video).IsUnicode(false);
+        });
 
-            entity.HasOne(d => d.Gymer).WithMany(p => p.ContractGymers)
+        modelBuilder.Entity<ExcerciseSchedule>(entity =>
+        {
+            entity.ToTable("ExcerciseSchedule");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
+            entity.Property(e => e.Ptid).HasColumnName("PTID");
+
+            entity.HasOne(d => d.Gymer).WithMany(p => p.ExcerciseScheduleGymers)
                 .HasForeignKey(d => d.GymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Contract_Account");
+                .HasConstraintName("FK_ExcerciseSchedule_Account");
 
-            entity.HasOne(d => d.Package).WithMany(p => p.Contracts)
-                .HasForeignKey(d => d.PackageId)
+            entity.HasOne(d => d.PackageGymer).WithMany(p => p.ExcerciseSchedules)
+                .HasForeignKey(d => d.PackageGymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Contract_Package");
+                .HasConstraintName("FK_ExcerciseSchedule_PackageGymer");
 
-            entity.HasOne(d => d.Pt).WithMany(p => p.ContractPts)
+            entity.HasOne(d => d.Pt).WithMany(p => p.ExcerciseSchedulePts)
                 .HasForeignKey(d => d.Ptid)
-                .HasConstraintName("FK_Contract_Account1");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExcerciseSchedule_Account1");
         });
 
-        modelBuilder.Entity<Feedback>(entity =>
+        modelBuilder.Entity<ExcerciseType>(entity =>
         {
-            entity.ToTable("Feedback");
+            entity.ToTable("ExcerciseType");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.ContractId).HasColumnName("ContractID");
-            entity.Property(e => e.CreatedDate).HasColumnType("date");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Ptid).HasColumnName("PTID");
+
+            entity.HasOne(d => d.Pt).WithMany(p => p.ExcerciseTypes)
+                .HasForeignKey(d => d.Ptid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExcerciseType_Account");
+        });
+
+        modelBuilder.Entity<ExerciseInExerciseType>(entity =>
+        {
+            entity.ToTable("ExerciseInExerciseType");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.ExerciseId).HasColumnName("ExerciseID");
+            entity.Property(e => e.ExerciseTypeId).HasColumnName("ExerciseTypeID");
+
+            entity.HasOne(d => d.Exercise).WithMany(p => p.ExerciseInExerciseTypes)
+                .HasForeignKey(d => d.ExerciseId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExerciseInExerciseType_Excercise");
+
+            entity.HasOne(d => d.ExerciseType).WithMany(p => p.ExerciseInExerciseTypes)
+                .HasForeignKey(d => d.ExerciseTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExerciseInExerciseType_ExcerciseType");
+        });
+
+        modelBuilder.Entity<ExserciseInSession>(entity =>
+        {
+            entity.ToTable("ExserciseInSession");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.ExerciseId).HasColumnName("ExerciseID");
+            entity.Property(e => e.SessionId).HasColumnName("SessionID");
+
+            entity.HasOne(d => d.Exercise).WithMany(p => p.ExserciseInSessions)
+                .HasForeignKey(d => d.ExerciseId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExserciseInSession_Excercise");
+
+            entity.HasOne(d => d.Session).WithMany(p => p.ExserciseInSessions)
+                .HasForeignKey(d => d.SessionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExserciseInSession_Session");
+        });
+
+        modelBuilder.Entity<FeedBack>(entity =>
+        {
+            entity.ToTable("FeedBack");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.CreateDate).HasColumnType("date");
             entity.Property(e => e.Feedback1)
-                .HasMaxLength(200)
+                .HasMaxLength(300)
                 .IsUnicode(false)
                 .HasColumnName("Feedback");
+            entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
+            entity.Property(e => e.PtidorNeid).HasColumnName("PTIDorNEID");
 
-            entity.HasOne(d => d.Contract).WithMany(p => p.Feedbacks)
-                .HasForeignKey(d => d.ContractId)
+            entity.HasOne(d => d.PackageGymer).WithMany(p => p.FeedBacks)
+                .HasForeignKey(d => d.PackageGymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Feedback_Contract");
+                .HasConstraintName("FK_FeedBack_PackageGymer");
+
+            entity.HasOne(d => d.PtidorNe).WithMany(p => p.FeedBacks)
+                .HasForeignKey(d => d.PtidorNeid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FeedBack_Account");
         });
 
-        modelBuilder.Entity<Food>(entity =>
+        modelBuilder.Entity<FoodAndSuppliment>(entity =>
         {
-            entity.ToTable("Food");
+            entity.ToTable("FoodAndSuppliment");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.FoodScheduleId).HasColumnName("FoodScheduleID");
             entity.Property(e => e.Name)
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsUnicode(false);
-
-            entity.HasOne(d => d.FoodSchedule).WithMany(p => p.Foods)
-                .HasForeignKey(d => d.FoodScheduleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Food_Food_Schedule");
         });
 
-        modelBuilder.Entity<FoodSchedule>(entity =>
+        modelBuilder.Entity<FoodAndSupplimentInFoodAndSupplimentType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_Food Schedule");
+            entity.ToTable("FoodAndSupplimentInFoodAndSupplimentType");
 
-            entity.ToTable("Food_Schedule");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.FoodAndSupplimentId).HasColumnName("FoodAndSupplimentID");
+            entity.Property(e => e.FoodAndSupplimentTypeId).HasColumnName("FoodAndSupplimentTypeID");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.ContractId).HasColumnName("ContractID");
-            entity.Property(e => e.CreateDate).HasColumnType("date");
-            entity.Property(e => e.Date).HasColumnType("date");
-            entity.Property(e => e.EndDate).HasColumnType("date");
+            entity.HasOne(d => d.FoodAndSuppliment).WithMany(p => p.FoodAndSupplimentInFoodAndSupplimentTypes)
+                .HasForeignKey(d => d.FoodAndSupplimentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FoodAndSupplimentInFoodAndSupplimentType_FoodAndSuppliment");
+
+            entity.HasOne(d => d.FoodAndSupplimentType).WithMany(p => p.FoodAndSupplimentInFoodAndSupplimentTypes)
+                .HasForeignKey(d => d.FoodAndSupplimentTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FoodAndSupplimentInFoodAndSupplimentType_FoodAndSupplimentType");
+        });
+
+        modelBuilder.Entity<FoodAndSupplimentInMeal>(entity =>
+        {
+            entity.ToTable("FoodAndSupplimentInMeal");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.FoodAndSupplimentId).HasColumnName("FoodAndSupplimentID");
+            entity.Property(e => e.MealId).HasColumnName("MealID");
+
+            entity.HasOne(d => d.FoodAndSuppliment).WithMany(p => p.FoodAndSupplimentInMeals)
+                .HasForeignKey(d => d.FoodAndSupplimentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FoodAndSupplimentInMeal_FoodAndSuppliment");
+
+            entity.HasOne(d => d.Meal).WithMany(p => p.FoodAndSupplimentInMeals)
+                .HasForeignKey(d => d.MealId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FoodAndSupplimentInMeal_Meal");
+        });
+
+        modelBuilder.Entity<FoodAndSupplimentType>(entity =>
+        {
+            entity.ToTable("FoodAndSupplimentType");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Neid).HasColumnName("NEID");
-            entity.Property(e => e.StartDate).HasColumnType("date");
+            entity.Property(e => e.UnitOfMeasument)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
 
-            entity.HasOne(d => d.Contract).WithMany(p => p.FoodSchedules)
-                .HasForeignKey(d => d.ContractId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Food_Schedule_Contract");
+        modelBuilder.Entity<Meal>(entity =>
+        {
+            entity.ToTable("Meal");
 
-            entity.HasOne(d => d.Ne).WithMany(p => p.FoodSchedules)
-                .HasForeignKey(d => d.Neid)
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.NutritionScheduleId).HasColumnName("NutritionScheduleID");
+
+            entity.HasOne(d => d.NutritionSchedule).WithMany(p => p.Meals)
+                .HasForeignKey(d => d.NutritionScheduleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Food_Schedule_Account1");
+                .HasConstraintName("FK_Meal_NutritionSchedule");
         });
 
         modelBuilder.Entity<Message>(entity =>
@@ -169,23 +332,38 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.CreateDate).HasColumnType("date");
             entity.Property(e => e.Message1)
-                .HasMaxLength(200)
+                .HasMaxLength(300)
                 .IsUnicode(false)
                 .HasColumnName("Message");
-            entity.Property(e => e.ReciverId).HasColumnName("ReciverID");
+            entity.Property(e => e.RecieverId).HasColumnName("RecieverID");
             entity.Property(e => e.SenderId).HasColumnName("SenderID");
 
-            entity.HasOne(d => d.Reciver).WithMany(p => p.MessageRecivers)
-                .HasForeignKey(d => d.ReciverId)
+            entity.HasOne(d => d.Reciever).WithMany(p => p.MessageRecievers)
+                .HasForeignKey(d => d.RecieverId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Message_Account1");
+                .HasConstraintName("FK_Message_Account");
 
             entity.HasOne(d => d.Sender).WithMany(p => p.MessageSenders)
                 .HasForeignKey(d => d.SenderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Message_Account");
+                .HasConstraintName("FK_Message_Account1");
+        });
+
+        modelBuilder.Entity<NutritionSchedule>(entity =>
+        {
+            entity.ToTable("NutritionSchedule");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.Neid).HasColumnName("NEID");
+            entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
+
+            entity.HasOne(d => d.PackageGymer).WithMany(p => p.NutritionSchedules)
+                .HasForeignKey(d => d.PackageGymerId)
+                .HasConstraintName("FK_NutritionSchedule_PackageGymer");
         });
 
         modelBuilder.Entity<Package>(entity =>
@@ -195,11 +373,45 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.HasNe).HasColumnName("hasNE");
-            entity.Property(e => e.HasPt).HasColumnName("hasPT");
+            entity.Property(e => e.HasNe).HasColumnName("HasNE");
+            entity.Property(e => e.HasPt).HasColumnName("HasPT");
+            entity.Property(e => e.NumberOfsession).HasColumnName("NumberOFSession");
+        });
+
+        modelBuilder.Entity<PackageGymer>(entity =>
+        {
+            entity.ToTable("PackageGymer");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.Name)
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Neid).HasColumnName("NEID");
+            entity.Property(e => e.PackageId).HasColumnName("PackageID");
+            entity.Property(e => e.Ptid).HasColumnName("PTID");
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Gymer).WithMany(p => p.PackageGymerGymers)
+                .HasForeignKey(d => d.GymerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PackageGymer_Account2");
+
+            entity.HasOne(d => d.Ne).WithMany(p => p.PackageGymerNes)
+                .HasForeignKey(d => d.Neid)
+                .HasConstraintName("FK_PackageGymer_Account1");
+
+            entity.HasOne(d => d.Package).WithMany(p => p.PackageGymers)
+                .HasForeignKey(d => d.PackageId)
+                .HasConstraintName("FK_PackageGymer_Package");
+
+            entity.HasOne(d => d.Pt).WithMany(p => p.PackageGymerPts)
+                .HasForeignKey(d => d.Ptid)
+                .HasConstraintName("FK_PackageGymer_Account");
         });
 
         modelBuilder.Entity<Payment>(entity =>
@@ -209,81 +421,110 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.ContractId).HasColumnName("ContractID");
-            entity.Property(e => e.PaymentDate).HasColumnType("date");
+            entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
+            entity.Property(e => e.PaymentDate).HasColumnType("datetime");
 
-            entity.HasOne(d => d.Contract).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.ContractId)
+            entity.HasOne(d => d.PackageGymer).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.PackageGymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Payment_Contract");
+                .HasConstraintName("FK_Payment_PackageGymer");
         });
 
-        modelBuilder.Entity<Schedule>(entity =>
+        modelBuilder.Entity<Qualification>(entity =>
         {
-            entity.ToTable("Schedule");
+            entity.HasKey(e => e.ExpertId);
+
+            entity.ToTable("Qualification");
+
+            entity.Property(e => e.ExpertId)
+                .ValueGeneratedNever()
+                .HasColumnName("ExpertID");
+            entity.Property(e => e.Certificate).IsUnicode(false);
+            entity.Property(e => e.IsCetifide).HasColumnName("isCetifide");
+
+            entity.HasOne(d => d.Expert).WithOne(p => p.Qualification)
+                .HasForeignKey<Qualification>(d => d.ExpertId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Qualification_Account");
+        });
+
+        modelBuilder.Entity<Request>(entity =>
+        {
+            entity.ToTable("Request");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.ContractId).HasColumnName("ContractID");
-            entity.Property(e => e.CreatedDate).HasColumnType("date");
-            entity.Property(e => e.DateTime).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Contract).WithMany(p => p.Schedules)
-                .HasForeignKey(d => d.ContractId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Schedule_Contract");
-        });
-
-        modelBuilder.Entity<Workout>(entity =>
-        {
-            entity.ToTable("Workout");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.Description).IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(30)
+            entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.IsAccepted).HasColumnName("isAccepted");
+            entity.Property(e => e.Reason)
+                .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.VidieoId).HasColumnName("VidieoID");
+            entity.Property(e => e.ReceiverId).HasColumnName("ReceiverID");
+
+            entity.HasOne(d => d.Gymer).WithMany(p => p.RequestGymers)
+                .HasForeignKey(d => d.GymerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Request_Account");
+
+            entity.HasOne(d => d.Receiver).WithMany(p => p.RequestReceivers)
+                .HasForeignKey(d => d.ReceiverId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Request_Account1");
         });
 
-        modelBuilder.Entity<WorkoutList>(entity =>
+        modelBuilder.Entity<Session>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("WorkoutList");
+            entity.ToTable("Session");
 
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.DateAndTime).HasColumnType("datetime");
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
-            entity.Property(e => e.WorkoutId).HasColumnName("WorkoutID");
 
-            entity.HasOne(d => d.Schedule).WithMany()
+            entity.HasOne(d => d.Schedule).WithMany(p => p.Sessions)
                 .HasForeignKey(d => d.ScheduleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_WorkoutList_Schedule");
-
-            entity.HasOne(d => d.Workout).WithMany()
-                .HasForeignKey(d => d.WorkoutId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_WorkoutList_Workout");
+                .HasConstraintName("FK_Session_ExcerciseSchedule");
         });
 
-        modelBuilder.Entity<WorkoutResult>(entity =>
+        modelBuilder.Entity<SessionResult>(entity =>
         {
-            entity.ToTable("Workout_Result");
+            entity.ToTable("SessionResult");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.ContractId).HasColumnName("ContractID");
-            entity.Property(e => e.CreateDate).HasColumnType("date");
-            entity.Property(e => e.Description).IsUnicode(false);
+            entity.Property(e => e.Result)
+                .HasMaxLength(300)
+                .IsUnicode(false);
+            entity.Property(e => e.SessionId).HasColumnName("SessionID");
 
-            entity.HasOne(d => d.Contract).WithMany(p => p.WorkoutResults)
-                .HasForeignKey(d => d.ContractId)
+            entity.HasOne(d => d.Session).WithMany(p => p.SessionResults)
+                .HasForeignKey(d => d.SessionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Workout_Result_Contract");
+                .HasConstraintName("FK_SessionResult_Session");
+        });
+
+        modelBuilder.Entity<Suspend>(entity =>
+        {
+            entity.ToTable("Suspend");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.From).HasColumnType("datetime");
+            entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
+            entity.Property(e => e.Reson)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.To).HasColumnType("datetime");
+
+            entity.HasOne(d => d.PackageGymer).WithMany(p => p.Suspends)
+                .HasForeignKey(d => d.PackageGymerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Suspend_PackageGymer");
         });
 
         OnModelCreatingPartial(modelBuilder);

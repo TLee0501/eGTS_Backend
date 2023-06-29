@@ -42,22 +42,22 @@ namespace eGTS.Controllers
         }
 
         /// <summary>
-        /// This function is use to get all accounts with isLock Condition appllied in DB
+        /// This function is use to get all accounts with IsLock Condition appllied in DB
         /// </summary>
-        /// <param name="isLock"></param>
+        /// <param name="IsLock"></param>
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllAccountsWithStatus
-        [HttpGet("{isLock}")]
+        [HttpGet("{IsLock}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllAccountsWithStatus(bool isLock)
+        public async Task<ActionResult<IEnumerable<Account>>> GetAllAccountsWithStatus(bool IsLock)
         {
             if (_context.Accounts == null)
             {
                 return NotFound();
             }
 
-            if (isLock)
+            if (IsLock)
                 return await _context.Accounts.Where(a => a.IsLock == true).ToListAsync();
             else
                 return await _context.Accounts.Where(a => a.IsLock == false).ToListAsync();
@@ -83,22 +83,22 @@ namespace eGTS.Controllers
         }
 
         /// <summary>
-        /// This function is use to get all Staff accounts with isLock Condition appllied in DB
+        /// This function is use to get all Staff accounts with IsLock Condition appllied in DB
         /// </summary>
-        /// <param name="isLock"></param>
+        /// <param name="IsLock"></param>
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllStaffAccountsWithStatus
-        [HttpGet("{isLock}")]
+        [HttpGet("{IsLock}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllStaffAccountsWithStatus(bool isLock)
+        public async Task<ActionResult<IEnumerable<Account>>> GetAllStaffAccountsWithStatus(bool IsLock)
         {
             if (_context.Accounts == null)
             {
                 return NotFound();
             }
 
-            if (isLock)
+            if (IsLock)
                 return await _context.Accounts.Where(a => a.IsLock == true && a.Role.Equals("Staff")).ToListAsync();
             else
                 return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("Staff")).ToListAsync();
@@ -124,22 +124,22 @@ namespace eGTS.Controllers
         }
 
         /// <summary>
-        /// This function is use to get all PT accounts with isLock Condition appllied in DB
+        /// This function is use to get all PT accounts with IsLock Condition appllied in DB
         /// </summary>
-        /// <param name="isLock"></param>
+        /// <param name="IsLock"></param>
         /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllPTAccountsWithStatus
-        [HttpGet("{isLock}")]
+        // GET: api/Accounts/GetAllPTAccountsWithIsLock
+        [HttpGet("{IsLock}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllPTAccountsWithStatus(bool isLock)
+        public async Task<ActionResult<IEnumerable<Account>>> GetAllPTAccountsWithIsLock(bool IsLock)
         {
             if (_context.Accounts == null)
             {
                 return NotFound();
             }
 
-            if (isLock)
+            if (IsLock)
                 return await _context.Accounts.Where(a => a.IsLock == true && a.Role.Equals("PT")).ToListAsync();
             else
                 return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("PT")).ToListAsync();
@@ -165,22 +165,22 @@ namespace eGTS.Controllers
         }
 
         /// <summary>
-        /// This function is use to get all NE accounts with isLock Condition appllied in DB
+        /// This function is use to get all NE accounts with IsLock Condition appllied in DB
         /// </summary>
-        /// <param name="isLock"></param>
+        /// <param name="IsLock"></param>
         /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllNEAccountsWithStatus
-        [HttpGet("{isLock}")]
+        // GET: api/Accounts/GetAllNEAccountsWithIsLock
+        [HttpGet("{IsLock}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllNEAccountsWithStatus(bool isLock)
+        public async Task<ActionResult<IEnumerable<Account>>> GetAllNEAccountsWithIsLock(bool IsLock)
         {
             if (_context.Accounts == null)
             {
                 return NotFound();
             }
 
-            if (isLock)
+            if (IsLock)
                 return await _context.Accounts.Where(a => a.IsLock == true && a.Role.Equals("NE")).ToListAsync();
             else
                 return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("NE")).ToListAsync();
@@ -206,22 +206,22 @@ namespace eGTS.Controllers
         }
 
         /// <summary>
-        /// This function is use to get all NE accounts with isLock Condition appllied in DB
+        /// This function is use to get all NE accounts with IsLock Condition appllied in DB
         /// </summary>
-        /// /// <param name="isLock"></param>
+        /// /// <param name="IsLock"></param>
         /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllGymerAccountsWithStatus
-        [HttpGet("{isLock}")]
+        // GET: api/Accounts/GetAllGymerAccountsWithIsLock
+        [HttpGet("{IsLock}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllGymerAccountsWithStatus(bool isLock)
+        public async Task<ActionResult<IEnumerable<Account>>> GetAllGymerAccountsWithIsLock(bool IsLock)
         {
             if (_context.Accounts == null)
             {
                 return NotFound();
             }
 
-            if (isLock)
+            if (IsLock)
                 return await _context.Accounts.Where(a => a.IsLock == true && a.Role.Equals("Gymer")).ToListAsync();
             else
                 return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("Gymer")).ToListAsync();
@@ -295,7 +295,7 @@ namespace eGTS.Controllers
             if (Fullname.Length > 11)
                 return BadRequest();
 
-            var result = await _context.Accounts.Where(a => a.FullName.Contains(Fullname)).ToListAsync();
+            var result = await _context.Accounts.Where(a => a.Fullname.Contains(Fullname)).ToListAsync();
 
             if (result.Count == 0)
                 return NotFound();
@@ -314,6 +314,7 @@ namespace eGTS.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NO CONTENT
         public async Task<IActionResult> PutAccount(Guid id, Account account)
         {
             if (id != account.Id)
@@ -359,9 +360,11 @@ namespace eGTS.Controllers
                 return BadRequest();
             if (PhoneNoExists(model.PhoneNo))
                 return BadRequest();
+            if (!PhoneNoIsValid(model.PhoneNo))
+                return BadRequest();
 
             Guid id = Guid.NewGuid();
-            Account account = new Account(id, model.PhoneNo, model.Password, model.Role, model.FullName, DateTime.Now, true);
+            Account account = new Account(id, model.PhoneNo, model.Password, model.Fullname, model.Gender, model.Role, true, DateTime.Now);
 
             await _context.Accounts.AddAsync(account);
             await _context.SaveChangesAsync();
@@ -369,6 +372,11 @@ namespace eGTS.Controllers
             return CreatedAtAction("CreateAccount", new { id = account.Id }, account);
         }
 
+        /// <summary>
+        /// Delete Account by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/Accounts/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccount(Guid id)
@@ -400,9 +408,10 @@ namespace eGTS.Controllers
         {
             return (_context.Accounts?.Any(a => a.PhoneNo.Equals(PhoneNo))).GetValueOrDefault();
         }
+        // Check if PhoneNo is valid
         private bool PhoneNoIsValid(string PhoneNo)
         {
-            return Regex.IsMatch(PhoneNo, "/(84|0[3|5|7|8|9])+([0-9]{8})\b/g");
+            return Regex.IsMatch(PhoneNo, @"^\d{9,11}$");
         }
     }
 }
