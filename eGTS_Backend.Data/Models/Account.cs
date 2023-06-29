@@ -11,29 +11,51 @@ public partial class Account
 
     public string Password { get; set; } = null!;
 
+    public string Fullname { get; set; } = null!;
+
+    public string Gender { get; set; } = null!;
+
     public string Role { get; set; } = null!;
-
-    public string FullName { get; set; } = null!;
-
-    public DateTime CreateTime { get; set; }
-
-    public string? Description { get; set; }
-
-    public string? Certificate { get; set; }
-
-    public double? Weight { get; set; }
-
-    public double? Height { get; set; }
 
     public bool IsLock { get; set; }
 
-    public virtual ICollection<Contract> ContractGymers { get; set; } = new List<Contract>();
+    public DateTime CreateDate { get; set; }
 
-    public virtual ICollection<Contract> ContractPts { get; set; } = new List<Contract>();
+    public Account(Guid id, string phoneNo, string password, string fullname, string gender, string role, bool isLock, DateTime createDate)
+    {
+        Id = id;
+        PhoneNo = phoneNo;
+        Password = password;
+        Fullname = fullname;
+        Gender = gender;
+        Role = role;
+        IsLock = isLock;
+        CreateDate = createDate;
+    }
 
-    public virtual ICollection<FoodSchedule> FoodSchedules { get; set; } = new List<FoodSchedule>();
+    public virtual BodyPerameter? BodyPerameter { get; set; }
 
-    public virtual ICollection<Message> MessageRecivers { get; set; } = new List<Message>();
+    public virtual ICollection<ExcerciseSchedule> ExcerciseScheduleGymers { get; set; } = new List<ExcerciseSchedule>();
+
+    public virtual ICollection<ExcerciseSchedule> ExcerciseSchedulePts { get; set; } = new List<ExcerciseSchedule>();
+
+    public virtual ICollection<ExcerciseType> ExcerciseTypes { get; set; } = new List<ExcerciseType>();
+
+    public virtual ICollection<FeedBack> FeedBacks { get; set; } = new List<FeedBack>();
+
+    public virtual ICollection<Message> MessageRecievers { get; set; } = new List<Message>();
 
     public virtual ICollection<Message> MessageSenders { get; set; } = new List<Message>();
+
+    public virtual ICollection<PackageGymer> PackageGymerGymers { get; set; } = new List<PackageGymer>();
+
+    public virtual ICollection<PackageGymer> PackageGymerNes { get; set; } = new List<PackageGymer>();
+
+    public virtual ICollection<PackageGymer> PackageGymerPts { get; set; } = new List<PackageGymer>();
+
+    public virtual Qualification? Qualification { get; set; }
+
+    public virtual ICollection<Request> RequestGymers { get; set; } = new List<Request>();
+
+    public virtual ICollection<Request> RequestReceivers { get; set; } = new List<Request>();
 }

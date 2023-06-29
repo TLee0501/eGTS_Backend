@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\eGTS.Bussiness\eGTS.Bussiness.csproj" />
     <ProjectReference Include="..\eGTS_Backend.Data\eGTS_Backend.Data.csproj" />
   </ItemGroup>
 
