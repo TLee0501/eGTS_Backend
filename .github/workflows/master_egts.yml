@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'eGTS'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_74C56156D77C47ECB9773F2A4C411DE0 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F7C70C66B7EB434FA8656AA79F81AC37 }}
           package: .
