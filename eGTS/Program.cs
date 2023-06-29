@@ -19,7 +19,15 @@ builder.Services.AddDbContext<EGtsContext>(options =>
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+
+//swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+
+//swagger
+app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -27,6 +35,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//swagger
+app.UseSwagger(x => x.SerializeAsV2 = true);
 
 app.UseHttpsRedirection();
 
