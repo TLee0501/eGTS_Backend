@@ -30,7 +30,7 @@ namespace eGTS.Controllers
 
         // GET: api/Packages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Package>>> GetPackages()
+        public async Task<ActionResult<IEnumerable<PackageViewModel>>> GetPackages()
         {
             var result = await _packageService.GetPackages();
             if (result != null)
@@ -52,7 +52,7 @@ namespace eGTS.Controllers
             }
             else
                 return NotFound(new ErrorResponse(404, "No Package Found"));
-            
+
         }
 
         // PUT: api/Packages/5
@@ -99,7 +99,7 @@ namespace eGTS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePackage(Guid id)
         {
-            if(id == null) return BadRequest();
+            if (id == null) return BadRequest();
             var result = await _packageService.DeletePackage(id);
             if (result == true) return StatusCode(200);
             else

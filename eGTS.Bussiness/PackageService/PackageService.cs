@@ -73,7 +73,7 @@ namespace eGTS.Bussiness.PackageService
         {
             var packages = await _context.Packages.ToListAsync();
 
-            if (packages != null)
+            if (packages.Count > 0)
             {
                 List<PackageViewModel> result = new List<PackageViewModel>();
                 foreach (var package in packages)
