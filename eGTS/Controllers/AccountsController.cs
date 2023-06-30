@@ -42,7 +42,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllAccounts
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllAccountsWithConditons(string? role, bool? IsLock)
         {
@@ -52,7 +52,7 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<List<AccountViewModel>>(200, "List of Accounts found", result));
             }
             else
-                return NotFound(new ErrorResponse(404, "No Account Found"));
+                return NotFound(new ErrorResponse(204, "No Account Found"));
         }
 
         /*/// <summary>
@@ -61,7 +61,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllAccounts
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllAccounts()
         {
@@ -79,7 +79,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllAccountsWithStatus
         [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllAccountsWithStatus(bool IsLock)
         {
@@ -101,7 +101,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllStaffAccounts
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllStaffAccounts()
         {
@@ -120,7 +120,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllStaffAccountsWithStatus
         [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllStaffAccountsWithStatus(bool IsLock)
         {
@@ -142,7 +142,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllPTAccounts
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllPTAccounts()
         {
@@ -161,7 +161,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllPTAccountsWithIsLock
         [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllPTAccountsWithIsLock(bool IsLock)
         {
@@ -183,7 +183,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllPTAccounts
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllNEAccounts()
         {
@@ -202,7 +202,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllNEAccountsWithIsLock
         [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllNEAccountsWithIsLock(bool IsLock)
         {
@@ -224,7 +224,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllPTAccounts
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllGymerAccounts()
         {
@@ -243,7 +243,7 @@ namespace eGTS.Controllers
         /// <returns> List<Account> </returns>
         // GET: api/Accounts/GetAllGymerAccountsWithIsLock
         [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<Account>>> GetAllGymerAccountsWithIsLock(bool IsLock)
         {
@@ -266,7 +266,7 @@ namespace eGTS.Controllers
         /// <returns>Account</returns>
         // GET: api/Accounts/GetAccountByID
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NO Content
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<AccountViewModel>> GetAccountByID(Guid id)
         {
@@ -284,7 +284,7 @@ namespace eGTS.Controllers
         /// <returns>List<Account></returns>
         // GET: api/Accounts/SearchAccountByPhoneNo
         [HttpGet("{PhoneNo}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<AccountViewModel>>> SearchAccountByPhoneNo(string PhoneNo)
@@ -295,7 +295,7 @@ namespace eGTS.Controllers
             var result = await _accountService.SearchAccountByPhoneNo(PhoneNo);
 
             if (result.Count == 0)
-                return NotFound(new ErrorResponse(404, "No account found"));
+                return NotFound(new ErrorResponse(204, "No account found"));
 
             return result;
 
@@ -307,7 +307,7 @@ namespace eGTS.Controllers
         /// <returns>List<Account></returns>
         // GET: api/Accounts/SearchAccountByName
         [HttpGet("{Fullname}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<AccountViewModel>>> SearchAccountByName(string Fullname)
@@ -318,7 +318,7 @@ namespace eGTS.Controllers
             var result = await _accountService.SearchAccountByName(Fullname);
 
             if (result.Count == 0)
-                return NotFound(new ErrorResponse(404, "No account found"));
+                return NotFound(new ErrorResponse(204, "No account found"));
 
             return result;
 
@@ -333,7 +333,7 @@ namespace eGTS.Controllers
         // PUT: api/Accounts/5
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<IActionResult> UpdateAccount(Guid id, AccountUpdateViewModel request)
         {
@@ -412,7 +412,7 @@ namespace eGTS.Controllers
         /// <returns></returns>
         // DELETE: api/Accounts/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteAccount(Guid id)
         {
             if (await _accountService.DeleteAccount(id))
@@ -422,7 +422,7 @@ namespace eGTS.Controllers
             }
             else
             {
-                return NotFound(new ErrorResponse(404, "Account Not Found In DataBase"));
+                return NotFound(new ErrorResponse(204, "Account Not Found In DataBase"));
             }
 
         }

@@ -43,7 +43,7 @@ namespace eGTS.Controllers
         /// <returns>IEnumerable<Account></returns>
         [HttpPost(Name = "Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NO Content
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]//UNAUTHORIZED REQUEST
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]//NOT FOUND
@@ -57,7 +57,7 @@ namespace eGTS.Controllers
             var result = await _loginService.Login(model);
 
             if (result == null)
-                return NotFound(new ErrorResponse(404, "Phone numer/Password is incorrect"));
+                return NotFound(new ErrorResponse(204, "Phone numer/Password is incorrect"));
             else if (result.IsLock == true)
                 return Unauthorized(new ErrorResponse(401, "Account Is Lock"));
 
@@ -74,7 +74,7 @@ namespace eGTS.Controllers
         /// <returns>IEnumerable<Account></returns>
         [HttpGet(Name = "Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]//UNAUTHORIZED REQUEST
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]//NOT FOUND
