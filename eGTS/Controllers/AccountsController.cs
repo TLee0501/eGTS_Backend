@@ -10,6 +10,9 @@ using eGTS_Backend.Data.ViewModel;
 using System.Data;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Net;
+using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.AccountService;
 
 namespace eGTS.Controllers
 {
@@ -18,13 +21,41 @@ namespace eGTS.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly EGtsContext _context;
+        private readonly ILogger<AccountsController> _logger;
+        private readonly IConfiguration _configuration;
+        private readonly IAccountService _accountService;
 
-        public AccountsController(EGtsContext context)
+        public AccountsController(EGtsContext context, ILogger<AccountsController> logger, IConfiguration configuration, IAccountService accountService)
         {
             _context = context;
+            _logger = logger;
+            _configuration = configuration;
+            _accountService = accountService;
         }
 
+
+
+
         /// <summary>
+        /// This function is use to get all accounts in DB with conditions applied
+        /// </summary>
+        /// <returns> List<Account> </returns>
+        // GET: api/Accounts/GetAllAccounts
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<IEnumerable<Account>>> GetAllAccountsWithConditons(string? role, bool? IsLock)
+        {
+            var result = await _accountService.GetAllAccountsOtionalRoleAndIsLock(role, IsLock);
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<AccountViewModel>>(200, "List of Accounts found", result));
+            }
+            else
+                return NotFound(new ErrorResponse(404, "No Account Found"));
+        }
+
+        /*/// <summary>
         /// This function is use to get all accounts in DB
         /// </summary>
         /// <returns> List<Account> </returns>
@@ -226,7 +257,7 @@ namespace eGTS.Controllers
             else
                 return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("Gymer")).ToListAsync();
 
-        }
+        }*/
 
         /// <summary>
         /// This Function is use to get Account by ID
@@ -237,20 +268,13 @@ namespace eGTS.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<Account>> GetAccountByID(Guid id)
+        public async Task<ActionResult<AccountViewModel>> GetAccountByID(Guid id)
         {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-            var result = await _context.Accounts.FindAsync(id);
-
+            var result = await _accountService.GetAccountByID(id);
             if (result == null)
-            {
-                return NotFound();
-            }
-
-            return result;
+                return NotFound(new ErrorResponse(400, "Account ID Not Found"));
+            else
+                return result;
         }
 
         /// <summary>
@@ -263,23 +287,21 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> SearchAccountByPhoneNo(string PhoneNo)
+        public async Task<ActionResult<IEnumerable<AccountViewModel>>> SearchAccountByPhoneNo(string PhoneNo)
         {
             if (PhoneNo == null)
-                return BadRequest();
-            if (PhoneNo.Length > 11)
-                return BadRequest();
+                return BadRequest(new ErrorResponse(400, "PhoneNo is empty."));
 
-            var result = await _context.Accounts.Where(a => a.PhoneNo.Contains(PhoneNo)).ToListAsync();
+            var result = await _accountService.SearchAccountByPhoneNo(PhoneNo);
 
             if (result.Count == 0)
-                return NotFound();
+                return NotFound(new ErrorResponse(404, "No account found"));
 
             return result;
 
         }
         /// <summary>
-        /// This Function is use to search for accounts by Phone Number
+        /// This Function is use to search for accounts by Name
         /// </summary>
         /// <param name="Fullname"></param>
         /// <returns>List<Account></returns>
@@ -288,24 +310,22 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> SearchAccountByName(string Fullname)
+        public async Task<ActionResult<IEnumerable<AccountViewModel>>> SearchAccountByName(string Fullname)
         {
             if (Fullname == null)
-                return BadRequest();
-            if (Fullname.Length > 11)
-                return BadRequest();
+                return BadRequest(new ErrorResponse(400, "Fullname is empty."));
 
-            var result = await _context.Accounts.Where(a => a.Fullname.Contains(Fullname)).ToListAsync();
+            var result = await _accountService.SearchAccountByName(Fullname);
 
             if (result.Count == 0)
-                return NotFound();
+                return NotFound(new ErrorResponse(404, "No account found"));
 
             return result;
 
         }
 
         /// <summary>
-        /// Update Account TBA
+        /// Update Account 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="account"></param>
@@ -313,34 +333,47 @@ namespace eGTS.Controllers
         // PUT: api/Accounts/5
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status204NoContent)]//NO CONTENT
-        public async Task<IActionResult> PutAccount(Guid id, Account account)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<IActionResult> UpdateAccount(Guid id, AccountUpdateViewModel request)
         {
-            if (id != account.Id)
+
+
+
+            if (!request.PhoneNo.Equals("") && !PhoneNoIsValid(request.PhoneNo))
+
+                return BadRequest(new ErrorResponse(400, "Invalid Phone Numer"));
+
+            if (PhoneNoExists(request.PhoneNo))
+
+                return BadRequest(new ErrorResponse(400, "Phone Numer in use"));
+
+            if (request.Gender == null)
+
+                return BadRequest(new ErrorResponse(400, "Invalid Gender"));
+
+
+
+            if (!request.Role.Equals("PT") && !request.Role.Equals("NE") && !request.Role.Equals("Gymer") && !request.Role.Equals("Staff") && !request.Role.Equals("") && !request.PhoneNo.Equals("string"))
+                return BadRequest(new ErrorResponse(400, "Invalid Role"));
+
+            if (request.IsLock == null)
             {
-                return BadRequest();
+                return BadRequest(new ErrorResponse(400, "Invalid Lock State"));
             }
 
-            _context.Entry(account).State = EntityState.Modified;
-
-            try
+            if (await _accountService.UpdateAccount(id, request))
             {
-                await _context.SaveChangesAsync();
+                _logger.LogInformation($"Update Account with ID: {id}");
+                return Ok(new SuccessResponse<AccountUpdateViewModel>(200, "Update Success.", request));
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!AccountExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(new ErrorResponse(400, "Unable to update Account"));
             }
 
-            return NoContent();
+
+
         }
 
         /// <summary>
@@ -352,24 +385,24 @@ namespace eGTS.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status201Created)]//CREATED
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<Account>> CreateAccount(AccountCreateViewModel model)
         {
             if (model.PhoneNo.Equals("") || model.Password.Equals(""))
-                return BadRequest();
+                return BadRequest(new ErrorResponse(400, "PhoneNumer Or password is empty."));
             if (!PhoneNoIsValid(model.PhoneNo))
-                return BadRequest();
+                return BadRequest(new ErrorResponse(400, "PhoneNumer is invalid."));
             if (PhoneNoExists(model.PhoneNo))
-                return BadRequest();
-            if (!PhoneNoIsValid(model.PhoneNo))
-                return BadRequest();
+                return BadRequest(new ErrorResponse(400, "PhoneNumer is in use."));
 
-            Guid id = Guid.NewGuid();
-            Account account = new Account(id, model.PhoneNo, model.Password, model.Fullname, model.Gender, model.Role, true, DateTime.Now);
 
-            await _context.Accounts.AddAsync(account);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("CreateAccount", new { id = account.Id }, account);
+            if (await _accountService.CreateAccount(model))
+            {
+                _logger.LogInformation($"Created Account with Phone number: {model.PhoneNo}");
+                return Ok(new SuccessResponse<AccountCreateViewModel>(200, "Create Success.", model));
+            }
+            else
+                return BadRequest(new ErrorResponse(400, "Invalid Data"));
         }
 
         /// <summary>
@@ -379,22 +412,19 @@ namespace eGTS.Controllers
         /// <returns></returns>
         // DELETE: api/Accounts/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAccount(Guid id)
         {
-            if (_context.Accounts == null)
+            if (await _accountService.DeleteAccount(id))
             {
-                return NotFound();
+                _logger.LogInformation($"Deleted Account with ID: {id}");
+                return NoContent();
             }
-            var account = await _context.Accounts.FindAsync(id);
-            if (account == null)
+            else
             {
-                return NotFound();
+                return NotFound(new ErrorResponse(404, "Account Not Found In DataBase"));
             }
 
-            _context.Accounts.Remove(account);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
 
