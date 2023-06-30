@@ -14,7 +14,6 @@ namespace eGTS_Backend.Data.ViewModel
         public string Gender { get; set; } = null!;
         public string Role { get; set; } = null!;
         public Boolean IsLock { get; set; }
-        public DateTime CreateDate { get; set; }
 
     }
 }

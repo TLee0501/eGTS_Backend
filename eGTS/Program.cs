@@ -1,3 +1,4 @@
+using AutoMapper;
 using eGTS.Bussiness.AccountService;
 using eGTS.Bussiness.LoginService;
 using eGTS_Backend.Data.Models;
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<EGtsContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("EGTSDbConnection"));
 });
+
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
