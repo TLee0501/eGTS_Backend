@@ -38,7 +38,7 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<List<PackageViewModel>>(200, "List of Packages found", result));
             }
             else
-                return NotFound(new ErrorResponse(404, "No Package Found"));
+                return StatusCode(204);
         }
 
         // GET: api/Packages/5
@@ -69,7 +69,7 @@ namespace eGTS.Controllers
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
-                return StatusCode(204);
+                return StatusCode(400);
             }
         }
 
