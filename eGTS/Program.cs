@@ -1,6 +1,7 @@
 using AutoMapper;
 using eGTS.Bussiness.AccountService;
 using eGTS.Bussiness.LoginService;
+using eGTS.Bussiness.PackageService;
 using eGTS_Backend.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<EGtsContext>(options =>
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IPackageService, PackageService>();
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -37,6 +39,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//fix cors error
+app.UseCors(builder => builder.WithOrigins("*")
+                               .AllowAnyMethod()
+                               .AllowAnyHeader());
 
 //swagger
 app.UseSwagger(x => x.SerializeAsV2 = true);
