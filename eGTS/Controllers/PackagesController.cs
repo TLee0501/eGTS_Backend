@@ -69,7 +69,7 @@ namespace eGTS.Controllers
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
-                return StatusCode(400);
+                return StatusCode(204);
             }
         }
 
