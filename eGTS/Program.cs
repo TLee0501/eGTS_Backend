@@ -38,6 +38,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+//fix cors error
+app.UseCors(builder => builder.WithOrigins("*")
+                               .AllowAnyMethod()
+                               .AllowAnyHeader());
+
 //swagger
 app.UseSwagger(x => x.SerializeAsV2 = true);
 
