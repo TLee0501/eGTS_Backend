@@ -5,6 +5,8 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class BodyPerameter
 {
+    public Guid Id { get; set; }
+
     public Guid GymerId { get; set; }
 
     public double? Weight { get; set; }
