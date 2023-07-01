@@ -94,20 +94,21 @@ public partial class EGtsContext : DbContext
 
         modelBuilder.Entity<BodyPerameter>(entity =>
         {
-            entity.HasKey(e => e.GymerId).HasName("PK_PhysicalPerameter");
+            entity.HasKey(e => e.Id).HasName("PK_PhysicalPerameter");
 
             entity.ToTable("BodyPerameter");
 
-            entity.Property(e => e.GymerId)
+            entity.Property(e => e.Id)
                 .ValueGeneratedNever()
-                .HasColumnName("GymerID");
+                .HasColumnName("ID");
             entity.Property(e => e.Bmi).HasColumnName("BMI");
             entity.Property(e => e.CreateDate).HasColumnType("date");
+            entity.Property(e => e.GymerId).HasColumnName("GymerID");
 
-            entity.HasOne(d => d.Gymer).WithOne(p => p.BodyPerameter)
-                .HasForeignKey<BodyPerameter>(d => d.GymerId)
+            entity.HasOne(d => d.Gymer).WithMany(p => p.BodyPerameters)
+                .HasForeignKey(d => d.GymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PhysicalPerameter_Account");
+                .HasConstraintName("FK_BodyPerameter_Account");
         });
 
         modelBuilder.Entity<Excercise>(entity =>

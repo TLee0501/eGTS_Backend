@@ -333,7 +333,7 @@ namespace eGTS.Controllers
         // PUT: api/Accounts/5
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<IActionResult> UpdateAccount(Guid id, AccountUpdateViewModel request)
         {
