@@ -41,7 +41,11 @@ public partial class Account
 
     public virtual ICollection<ExcerciseType> ExcerciseTypes { get; set; } = new List<ExcerciseType>();
 
+    public virtual ICollection<Excercise> Excercises { get; set; } = new List<Excercise>();
+
     public virtual ICollection<FeedBack> FeedBacks { get; set; } = new List<FeedBack>();
+
+    public virtual ICollection<FoodAndSuppliment> FoodAndSuppliments { get; set; } = new List<FoodAndSuppliment>();
 
     public virtual ICollection<Message> MessageRecievers { get; set; } = new List<Message>();
 
