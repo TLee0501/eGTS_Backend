@@ -1,5 +1,6 @@
 using AutoMapper;
 using eGTS.Bussiness.AccountService;
+using eGTS.Bussiness.FoodAndSupplimentService;
 using eGTS.Bussiness.LoginService;
 using eGTS.Bussiness.PackageService;
 using eGTS_Backend.Data.Models;
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<EGtsContext>(options =>
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPackageService, PackageService>();
+builder.Services.AddScoped<IFoodAndSupplimentService, FoodAndSupplimentService>();
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();
