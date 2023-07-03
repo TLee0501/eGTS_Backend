@@ -118,13 +118,20 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.CreateDate).HasColumnType("date");
             entity.Property(e => e.Description)
                 .HasMaxLength(300)
                 .IsUnicode(false);
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Ptid).HasColumnName("PTID");
             entity.Property(e => e.Video).IsUnicode(false);
+
+            entity.HasOne(d => d.Pt).WithMany(p => p.Excercises)
+                .HasForeignKey(d => d.Ptid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Excercise_Account");
         });
 
         modelBuilder.Entity<ExcerciseSchedule>(entity =>
@@ -247,9 +254,16 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.CreateDate).HasColumnType("date");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Neid).HasColumnName("NEID");
+
+            entity.HasOne(d => d.Ne).WithMany(p => p.FoodAndSuppliments)
+                .HasForeignKey(d => d.Neid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FoodAndSuppliment_Account");
         });
 
         modelBuilder.Entity<FoodAndSupplimentInFoodAndSupplimentType>(entity =>
