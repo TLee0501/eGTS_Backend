@@ -42,6 +42,9 @@ namespace eGTS.Bussiness.ExcerciseService
 
         public async Task<bool> DeleteExcercise(Guid id)
         {
+            if (_context.Excercises == null)
+                return false;
+
             var excercise = await _context.Excercises.FindAsync(id);
             if (excercise != null)
             {
@@ -52,14 +55,16 @@ namespace eGTS.Bussiness.ExcerciseService
             return false;
         }
 
-        public async Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID)
+        public async Task<List<ExcerciseViewModel>> GetAllExcercise()
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
-            ExcerciseViewModel result = new ExcerciseViewModel();
-            var excercises = await _context.Excercises.Where(e => e.Ptid == PTID).ToListAsync();
+
+            var excercises = await _context.Excercises.ToListAsync();
+
             foreach (Excercise e in excercises)
             {
-                result.id = e.Ptid;
+                ExcerciseViewModel result = new ExcerciseViewModel();
+                result.id = e.Id;
                 result.Ptid = e.Ptid;
                 result.Name = e.Name;
                 result.Description = e.Description;
@@ -68,7 +73,33 @@ namespace eGTS.Bussiness.ExcerciseService
                 resultList.Add(result);
             }
 
-            return resultList;
+            if (resultList.Count > 0)
+                return resultList;
+            else
+                return null;
+
+        }
+
+        public async Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID)
+        {
+            List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
+            ExcerciseViewModel result = new ExcerciseViewModel();
+            var excercises = await _context.Excercises.Where(e => e.Ptid == PTID).ToListAsync();
+            foreach (Excercise e in excercises)
+            {
+                result.id = e.Id;
+                result.Ptid = e.Ptid;
+                result.Name = e.Name;
+                result.Description = e.Description;
+                result.Video = e.Video;
+                result.CreateDate = e.CreateDate;
+                resultList.Add(result);
+            }
+
+            if (resultList.Count > 0)
+                return resultList;
+            else
+                return null;
         }
 
         public Task<bool> UpdateExcercise(Guid id, ExcerciseUpdateViewModel model)

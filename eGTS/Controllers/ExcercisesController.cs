@@ -32,13 +32,36 @@ namespace eGTS.Controllers
 
         // GET: api/Excercises
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Excercise>>> GetExcercises()
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Excercise>>> GetAllExcercises()
         {
-            if (_context.Excercises == null)
+            var result = await _excerciseService.GetAllExcercise();
+            if (result == null)
             {
-                return NotFound();
+                return NotFound(new ErrorResponse(204, "No Excercise Found"));
             }
-            return await _context.Excercises.ToListAsync();
+            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
+        }
+
+        // GET: api/Excercises
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<ExcerciseViewModel>>> GetExcercisesByPTID(Guid PTID)
+        {
+            if (PTID.Equals("") || PTID == null)
+            {
+                return BadRequest(new ErrorResponse(400, "PTID is empty."));
+            }
+            var result = await _excerciseService.GetExcerciseByPTID(PTID);
+            if (result == null)
+            {
+                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+            }
+            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
         }
 
         // GET: api/Excercises/5
@@ -100,7 +123,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status201Created)]//CREATED
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<Excercise>> PostExcercise(ExcerciseCreateViewModel model)
+        public async Task<ActionResult<Excercise>> CreateExcercise(ExcerciseCreateViewModel model)
         {
             if (model.Ptid.Equals("") || model.Ptid == null || model.Ptid.Equals("string"))
             {
@@ -123,22 +146,17 @@ namespace eGTS.Controllers
 
         // DELETE: api/Excercises/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//OK
         public async Task<IActionResult> DeleteExcercise(Guid id)
         {
-            if (_context.Excercises == null)
+            if (await _excerciseService.DeleteExcercise(id))
             {
-                return NotFound();
+                _logger.LogInformation($"Deleted Excercise with ID: {id}");
+                return NoContent();
             }
-            var excercise = await _context.Excercises.FindAsync(id);
-            if (excercise == null)
-            {
-                return NotFound();
-            }
+            return BadRequest(new ErrorResponse(400, $"Unable to delete Excercise with ID: {id}"));
 
-            _context.Excercises.Remove(excercise);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool ExcerciseExists(Guid id)
