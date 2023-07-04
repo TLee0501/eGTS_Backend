@@ -1,5 +1,6 @@
 using AutoMapper;
 using eGTS.Bussiness.AccountService;
+using eGTS.Bussiness.ExcerciseService;
 using eGTS.Bussiness.FoodAndSupplimentService;
 using eGTS.Bussiness.LoginService;
 using eGTS.Bussiness.PackageService;
@@ -25,6 +26,7 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPackageService, PackageService>();
 builder.Services.AddScoped<IFoodAndSupplimentService, FoodAndSupplimentService>();
+builder.Services.AddScoped<IExcerciseService, ExcerciseService>();
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();

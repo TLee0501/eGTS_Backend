@@ -259,6 +259,9 @@ public partial class EGtsContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Neid).HasColumnName("NEID");
+            entity.Property(e => e.UnitOfMesuament)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Ne).WithMany(p => p.FoodAndSuppliments)
                 .HasForeignKey(d => d.Neid)
@@ -319,9 +322,6 @@ public partial class EGtsContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Neid).HasColumnName("NEID");
-            entity.Property(e => e.UnitOfMeasument)
-                .HasMaxLength(50)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Meal>(entity =>
