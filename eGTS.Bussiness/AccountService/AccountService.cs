@@ -87,12 +87,13 @@ namespace eGTS.Bussiness.AccountService
         public async Task<List<AccountViewModel>> GetAllAccountsOtionalRoleAndIsLock(string? role, bool? isLock)
         {
             List<AccountViewModel> resultList = new List<AccountViewModel>();
+            AccountViewModel result = new AccountViewModel();
             if (role != null && isLock != null)
             {
                 var accounts = await _context.Accounts.Where(a => a.IsLock == isLock && a.Role.Equals(role)).ToListAsync();
                 foreach (Account account in accounts)
                 {
-                    AccountViewModel result = new AccountViewModel();
+
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
@@ -110,7 +111,6 @@ namespace eGTS.Bussiness.AccountService
                 var accounts = await _context.Accounts.Where(a => a.Role.Equals(role)).ToListAsync();
                 foreach (Account account in accounts)
                 {
-                    AccountViewModel result = new AccountViewModel();
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
@@ -128,7 +128,6 @@ namespace eGTS.Bussiness.AccountService
                 var accounts = await _context.Accounts.Where(a => a.IsLock == isLock).ToListAsync();
                 foreach (Account account in accounts)
                 {
-                    AccountViewModel result = new AccountViewModel();
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
@@ -145,7 +144,6 @@ namespace eGTS.Bussiness.AccountService
                 var accounts = await _context.Accounts.ToListAsync();
                 foreach (Account account in accounts)
                 {
-                    AccountViewModel result = new AccountViewModel();
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
@@ -198,10 +196,10 @@ namespace eGTS.Bussiness.AccountService
         public async Task<List<AccountViewModel>> SearchAccountByName(string Fullname)
         {
             List<AccountViewModel> resultList = new List<AccountViewModel>();
+            AccountViewModel result = new AccountViewModel();
             var accounts = await _context.Accounts.Where(a => a.Fullname.Contains(Fullname)).ToListAsync();
             foreach (Account account in accounts)
             {
-                AccountViewModel result = new AccountViewModel();
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
@@ -218,10 +216,10 @@ namespace eGTS.Bussiness.AccountService
         public async Task<List<AccountViewModel>> SearchAccountByPhoneNo(string PhoneNo)
         {
             List<AccountViewModel> resultList = new List<AccountViewModel>();
+            AccountViewModel result = new AccountViewModel();
             var accounts = await _context.Accounts.Where(a => a.PhoneNo.Contains(PhoneNo)).ToListAsync();
             foreach (Account account in accounts)
             {
-                AccountViewModel result = new AccountViewModel();
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;

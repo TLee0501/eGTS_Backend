@@ -9,8 +9,6 @@ public partial class FoodAndSupplimentType
 
     public string Name { get; set; } = null!;
 
-    public string UnitOfMeasument { get; set; } = null!;
-
     public Guid Neid { get; set; }
 
     public virtual ICollection<FoodAndSupplimentInFoodAndSupplimentType> FoodAndSupplimentInFoodAndSupplimentTypes { get; set; } = new List<FoodAndSupplimentInFoodAndSupplimentType>();
