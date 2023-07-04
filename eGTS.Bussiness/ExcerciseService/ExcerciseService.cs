@@ -25,7 +25,8 @@ namespace eGTS.Bussiness.ExcerciseService
         public async Task<bool> CreateExcercise(ExcerciseCreateViewModel model)
         {
             Guid id = Guid.NewGuid();
-            Excercise excercise = new Excercise(id, model.Ptid, model.Name, model.Description, model.Video, DateTime.Now);
+            DateTime createDate = DateTime.Now;
+            Excercise excercise = new Excercise(id, model.Ptid, model.Name, model.Description, model.Video, createDate);
             try
             {
                 await _context.Excercises.AddAsync(excercise);

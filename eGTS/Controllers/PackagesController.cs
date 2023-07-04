@@ -12,6 +12,7 @@ using eGTS_Backend.Data.ViewModel;
 using System.Data;
 using System.Runtime.CompilerServices;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eGTS.Controllers
 {
@@ -29,7 +30,7 @@ namespace eGTS.Controllers
         }
 
         // GET: api/Packages
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<PackageViewModel>>> GetPackages()
         {
             var result = await _packageService.GetPackages();

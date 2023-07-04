@@ -8,6 +8,12 @@ using eGTS.Bussiness.LoginService;
 using Azure.Core;
 using coffee_kiosk_solution.Data.Responses;
 using eGTS_Backend.Data.ViewModel;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.IdentityModel.JsonWebTokens;
+using System.IdentityModel.Tokens.Jwt;
+using eGTS_Backend.Data.Responses;
 
 namespace eGTS.Controllers
 {
@@ -63,7 +69,9 @@ namespace eGTS.Controllers
 
 
             _logger.LogInformation($"Login by {model.PhoneNo}");
-            return Ok(new SuccessResponse<AccountViewModel>(200, "Login Success.", result));
+
+            var token = CreateToken(result);
+            return Ok(new LoginResponse<AccountViewModel>(200, "Login Success.", result, token));
         }
         /*// GET: api/Login
         /// <summary>
@@ -93,5 +101,27 @@ namespace eGTS.Controllers
 
             return Ok(account);
         }*/
+
+        private string CreateToken(AccountViewModel request)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, request.PhoneNo),
+                new Claim(ClaimTypes.Role, request.Role)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Appsettings:Token").Value!));
+
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(15),
+                signingCredentials: cred);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
     }
 }

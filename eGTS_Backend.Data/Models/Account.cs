@@ -33,6 +33,10 @@ public partial class Account
         CreateDate = createDate;
     }
 
+    public Account()
+    {
+    }
+
     public virtual ICollection<BodyPerameter> BodyPerameters { get; set; } = new List<BodyPerameter>();
 
     public virtual ICollection<ExcerciseSchedule> ExcerciseScheduleGymers { get; set; } = new List<ExcerciseSchedule>();
