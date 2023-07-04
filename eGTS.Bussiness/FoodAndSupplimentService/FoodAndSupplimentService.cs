@@ -1,18 +1,37 @@
 ﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace eGTS.Bussiness.FoodAndSupplimentService
 {
     public class FoodAndSupplimentService : IFoodAndSupplimentService
     {
         private readonly EGtsContext _context;
-        public FoodAndSupplimentService(EGtsContext context)
+        //private readonly HttpContextAccessor _httpContextAccessor;
+        public FoodAndSupplimentService(EGtsContext context/*, HttpContextAccessor httpContextAccessor*/)
         {
             _context = context;
+            //_httpContextAccessor = httpContextAccessor;
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
+            /*//Check exist name NE create
+            var accountRequest = GetNEID();
+            var foodAndSupplimentsOfNE = await _context.FoodAndSuppliments.Where(a => a.Name.Equals(request.Name) && a.Neid.Equals(accountRequest)).ToListAsync();
+            if (foodAndSupplimentsOfNE.Count > 0)
+            {
+                return false;
+            }
+            //Check exist name Staff create
+            var staffID = GetStaffID();
+            var foodAndSupplimentsOfStaff = await _context.FoodAndSuppliments.Where(a => a.Name.Equals(request.Name) && a.Neid.Equals(staffID)).ToListAsync();
+            if (foodAndSupplimentsOfStaff.Count > 0)
+            {
+                return false;
+            }*/
+
             Guid id = Guid.NewGuid();
             var createdate = DateTime.Now;
             FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(id, request.Neid, request.Name, request.Ammount, request.Calories, createdate);
@@ -125,5 +144,24 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                 return false;
             }
         }
+
+        /*private Guid GetNEID()
+        {
+            var result = Guid.Empty;
+            if (_httpContextAccessor.HttpContext is not null)
+            {
+                var nePhoneRequest = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+                Account accountRequest = (Account)_context.Accounts.Where(a => a.PhoneNo == nePhoneRequest);
+                result = accountRequest.Id;
+            }
+            return result;
+        }
+
+        private Guid GetStaffID()
+        {
+            var result = Guid.Empty;
+            _context.Accounts.Where(a => a.Role.Equals("Staff"));
+            return result;
+        }*/
     }
 }
