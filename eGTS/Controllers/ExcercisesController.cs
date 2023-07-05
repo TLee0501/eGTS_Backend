@@ -30,6 +30,10 @@ namespace eGTS.Controllers
             _excerciseService = excerciseService;
         }
 
+        /// <summary>
+        /// Get all excercises
+        /// </summary>
+        /// <returns></returns>
         // GET: api/Excercises
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
@@ -45,6 +49,11 @@ namespace eGTS.Controllers
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
         }
 
+        /// <summary>
+        /// Get Excercise by PTID
+        /// </summary>
+        /// <param name="PTID"></param>
+        /// <returns></returns>
         // GET: api/Excercises
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
@@ -64,9 +73,14 @@ namespace eGTS.Controllers
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
         }
 
+        /// <summary>
+        /// Get Excercise by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: api/Excercises/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Excercise>> GetExcercise(Guid id)
+        public async Task<ActionResult<Excercise>> GetExcerciseByID(Guid id)
         {
             if (_context.Excercises == null)
             {
