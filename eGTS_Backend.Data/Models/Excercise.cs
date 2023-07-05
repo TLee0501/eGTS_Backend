@@ -5,16 +5,6 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class Excercise
 {
-    public Excercise(Guid id, Guid ptid, string name, string? description, string? video, DateTime createDate)
-    {
-        Id = id;
-        Ptid = ptid;
-        Name = name;
-        Description = description;
-        Video = video;
-        CreateDate = createDate;
-    }
-
     public Guid Id { get; set; }
 
     public Guid Ptid { get; set; }
