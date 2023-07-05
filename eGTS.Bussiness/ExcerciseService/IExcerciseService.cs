@@ -13,6 +13,8 @@ namespace eGTS.Bussiness.ExcerciseService
         Task<bool> UpdateExcercise(Guid id, ExcerciseUpdateViewModel model);
         Task<bool> DeleteExcercise(Guid id);
         Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID);
+        Task<ExcerciseViewModel> GetExcerciseByID(Guid PTID);
         Task<List<ExcerciseViewModel>> GetAllExcercise();
+        Task<List<ExcerciseViewModel>> GetExcerciseByName();
     }
 }
