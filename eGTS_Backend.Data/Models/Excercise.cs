@@ -27,6 +27,16 @@ public partial class Excercise
 
     public DateTime CreateDate { get; set; }
 
+    public Excercise(Guid id, Guid ptid, string name, string? description, string? video, DateTime createDate)
+    {
+        Id = id;
+        Ptid = ptid;
+        Name = name;
+        Description = description;
+        Video = video;
+        CreateDate = createDate;
+    }
+
     public virtual ICollection<ExerciseInExerciseType> ExerciseInExerciseTypes { get; set; } = new List<ExerciseInExerciseType>();
 
     public virtual ICollection<ExserciseInSession> ExserciseInSessions { get; set; } = new List<ExserciseInSession>();
