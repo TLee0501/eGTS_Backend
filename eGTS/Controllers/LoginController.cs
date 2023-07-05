@@ -14,6 +14,7 @@ using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.IdentityModel.Tokens.Jwt;
 using eGTS_Backend.Data.Responses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eGTS.Controllers
 {
@@ -31,8 +32,9 @@ namespace eGTS.Controllers
             _context = context;
         }*/
 
-        public LoginController(ILoginService loginService, ILogger<LoginController> logger, IConfiguration configuration)
+        public LoginController(EGtsContext context, ILoginService loginService, ILogger<LoginController> logger, IConfiguration configuration)
         {
+            _context = context;
             _loginService = loginService;
             _logger = logger;
             _configuration = configuration;
@@ -122,6 +124,19 @@ namespace eGTS.Controllers
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
+        }
+
+        [HttpGet, Authorize]
+        public ActionResult<string> getPhoneNoAndID()
+        {
+            var roleClaim = User?.FindAll(ClaimTypes.Name);
+            var phoneNo = roleClaim?.Select(c => c.Value).SingleOrDefault().ToString();
+            if (phoneNo == null)
+            {
+                return Ok(new { phoneNo, V = "Null" });
+            }
+            var id = _context.Accounts.SingleOrDefault(x => x.PhoneNo.Equals(phoneNo))?.Id.ToString();
+            return Ok(new { phoneNo, id });
         }
     }
 }

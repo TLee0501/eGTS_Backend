@@ -16,6 +16,8 @@ namespace eGTS_Backend.Data.ViewModel
 
         public short Ammount { get; set; }
 
+        public string UnitOfMesuament { get; set; } = null!;
+
         public double Calories { get; set; }
 
         public DateTime CreateDate { get; set; }

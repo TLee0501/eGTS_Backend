@@ -9,12 +9,13 @@ public partial class FoodAndSuppliment
     {
     }
 
-    public FoodAndSuppliment(Guid id, Guid neid, string name, short ammount, double calories, DateTime createdate)
+    public FoodAndSuppliment(Guid id, Guid neid, string name, short ammount, string unitofmesuament, double calories, DateTime createdate)
     {
         Id = id;
         Neid = neid;
         Name = name;
         Ammount = ammount;
+        UnitOfMesuament = unitofmesuament;
         Calories = calories;
         CreateDate = createdate;
     }

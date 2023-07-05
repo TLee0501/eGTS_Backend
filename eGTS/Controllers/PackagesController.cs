@@ -30,7 +30,7 @@ namespace eGTS.Controllers
         }
 
         // GET: api/Packages
-        [HttpGet, Authorize]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<PackageViewModel>>> GetPackages()
         {
             var result = await _packageService.GetPackages();

@@ -9,32 +9,36 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
     public class FoodAndSupplimentService : IFoodAndSupplimentService
     {
         private readonly EGtsContext _context;
-        //private readonly HttpContextAccessor _httpContextAccessor;
-        public FoodAndSupplimentService(EGtsContext context/*, HttpContextAccessor httpContextAccessor*/)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public FoodAndSupplimentService(EGtsContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            //_httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
-            /*//Check exist name NE create
-            var accountRequest = GetNEID();
-            var foodAndSupplimentsOfNE = await _context.FoodAndSuppliments.Where(a => a.Name.Equals(request.Name) && a.Neid.Equals(accountRequest)).ToListAsync();
-            if (foodAndSupplimentsOfNE.Count > 0)
+            //Check exist name NE create
+            Guid accountRequest = GetNEID();
+            if (accountRequest == Guid.Empty)
+            {
+                return false;
+            }
+            var foodAndSupplimentsOfNE = await _context.FoodAndSuppliments.SingleOrDefaultAsync(a => a.Name.Equals(request.Name) && a.Neid.Equals(accountRequest));
+            if (foodAndSupplimentsOfNE == null)
             {
                 return false;
             }
             //Check exist name Staff create
-            var staffID = GetStaffID();
-            var foodAndSupplimentsOfStaff = await _context.FoodAndSuppliments.Where(a => a.Name.Equals(request.Name) && a.Neid.Equals(staffID)).ToListAsync();
-            if (foodAndSupplimentsOfStaff.Count > 0)
+            Guid staffID = GetStaffID();
+            var foodAndSupplimentsOfStaff = await _context.FoodAndSuppliments.SingleOrDefaultAsync(a => a.Name.Equals(request.Name) && a.Neid.Equals(staffID));
+            if (foodAndSupplimentsOfStaff == null)
             {
                 return false;
-            }*/
+            }
 
             Guid id = Guid.NewGuid();
             var createdate = DateTime.Now;
-            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(id, request.Neid, request.Name, request.Ammount, request.Calories, createdate);
+            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(id, request.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, createdate);
             _context.FoodAndSuppliments.Add(foodAndSuppliment);
             try
             {
@@ -131,7 +135,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         {
             var inDatabase = await _context.FoodAndSuppliments.FindAsync(request.Id);
             _context.ChangeTracker.Clear();
-            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(request.Id, inDatabase.Neid, request.Name, request.Ammount, request.Calories, inDatabase.CreateDate);
+            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(request.Id, inDatabase.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, inDatabase.CreateDate);
             _context.Entry(foodAndSuppliment).State = EntityState.Modified;
             try
             {
@@ -145,23 +149,35 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
             }
         }
 
-        /*private Guid GetNEID()
+        private Guid GetNEID()
         {
-            var result = Guid.Empty;
+            Guid result = Guid.Empty;
             if (_httpContextAccessor.HttpContext is not null)
             {
-                var nePhoneRequest = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-                Account accountRequest = (Account)_context.Accounts.Where(a => a.PhoneNo == nePhoneRequest);
-                result = accountRequest.Id;
+                /*var roleClaim = User?.FindAll(ClaimTypes.Name);
+                var phoneNo = roleClaim?.Select(c => c.Value).SingleOrDefault().ToString();
+                var id = _context.Accounts.SingleOrDefault(x => x.PhoneNo.Equals(phoneNo))?.Id.ToString();*/
+
+                
+                //var nePhoneClaimRequest = _httpContextAccessor.HttpContext.User.Identity.Name;
+                var nePhoneClaimRequest = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+                if (nePhoneClaimRequest != null)
+                {
+                    var accountRequest = _context.Accounts.SingleOrDefault(x => x.PhoneNo.Equals(nePhoneClaimRequest)).Id.ToString();
+                    result = Guid.Parse(accountRequest);
+                }
             }
             return result;
         }
 
         private Guid GetStaffID()
         {
-            var result = Guid.Empty;
-            _context.Accounts.Where(a => a.Role.Equals("Staff"));
+            Guid result = Guid.Empty;
+            var account = _context.Accounts.AsQueryable().Where(a => a.Role.Equals("Staff"));
+            //var account = _context.Accounts.Where(a => a.Role.Equals("Staff"));
+
+            result = account.First().Id;
             return result;
-        }*/
+        }
     }
 }
