@@ -78,6 +78,21 @@ namespace eGTS.Bussiness.RequestService
                     packagegymer.Ptid = request.ReceiverId;
                 }
                 else packagegymer.Neid = request.ReceiverId;
+
+                //Update status PackageGymer
+                if(packagegymer.Ptid != null && packagegymer.Neid != null)
+                {
+                    packagegymer.Status = "Active";
+                }
+                var packageType = await _context.Packages.FindAsync(packagegymer.PackageId);
+                if(packageType.HasPt == false && packagegymer.Neid != null)
+                {
+                    packagegymer.Status = "Active";
+                }
+                if (packageType.HasNe == false && packagegymer.Ptid != null)
+                {
+                    packagegymer.Status = "Active";
+                }
             }
 
             _context.Entry(newRequest).State = EntityState.Modified;
