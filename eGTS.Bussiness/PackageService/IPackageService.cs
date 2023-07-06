@@ -15,7 +15,6 @@ namespace eGTS.Bussiness.PackageService
         Task<bool> UpdatePackage(PackageViewModel package);
         Task<bool> CreatePackage(PackageCreateViewModel package);
         Task<bool> DeletePackage(Guid id);
-        Task<List<GymerPackageActiveViewModel>> GetGymerPackageActiveByNE(Guid NEID);
 
     }
 }

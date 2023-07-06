@@ -476,7 +476,6 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.IsAccepted).HasColumnName("isAccepted");
-            entity.Property(e => e.IsDone).HasColumnName("isDone");
             entity.Property(e => e.IsPt).HasColumnName("isPT");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
             entity.Property(e => e.ReceiverId).HasColumnName("ReceiverID");

@@ -75,7 +75,7 @@ namespace eGTS.Controllers
                 throw new Exception(ex.Message, ex);
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/PackageGymers
@@ -93,7 +93,7 @@ namespace eGTS.Controllers
         }
 
         // DELETE: api/PackageGymers/5
-        [HttpDelete("{id}")]
+       /* [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePackageGymer(Guid id)
         {
             if (_context.PackageGymers == null)
@@ -110,7 +110,7 @@ namespace eGTS.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
+        }*/
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PackageGymerViewModel>>> GetPackageGymerByGymerID(Guid request)
@@ -118,6 +118,17 @@ namespace eGTS.Controllers
             var data = await _packageGymersService.GetPackageGymerByGymerID(request);
             if (data == null) return NoContent();
             return Ok(new SuccessResponse<List<PackageGymerViewModel>>(200, "List of PackageGymer found", data)); ;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackageActiveByNE(Guid NEID)
+        {
+            try
+            {
+                var result = await _packageGymersService.GetGymerPackageActiveByNE(NEID);
+                return Ok(result);
+            }
+            catch { return BadRequest(); }
         }
 
         private bool PackageGymerExists(Guid id)

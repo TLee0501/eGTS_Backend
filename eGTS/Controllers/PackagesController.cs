@@ -17,7 +17,7 @@ using System.Collections;
 
 namespace eGTS.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class PackagesController : ControllerBase
     {
@@ -108,17 +108,6 @@ namespace eGTS.Controllers
             {
                 return StatusCode(400);
             }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackageActiveByNE(Guid NEID)
-        {
-            try
-            {
-                var result = _packageService.GetGymerPackageActiveByNE(NEID);
-                return Ok(result);
-            }
-            catch { return BadRequest(); }
         }
 
     }

@@ -11,6 +11,9 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using eGTS.Bussiness.NutritionScheduleService;
+using eGTS.Bussiness.PackageGymersService;
+using eGTS.Bussiness.RequestService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,9 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPackageService, PackageService>();
 builder.Services.AddScoped<IFoodAndSupplimentService, FoodAndSupplimentService>();
 builder.Services.AddScoped<IExcerciseService, ExcerciseService>();
+builder.Services.AddScoped<IPackageGymersService, PackageGymersService>();
+builder.Services.AddScoped<INutritionScheduleService, NutritionScheduleService>();
+builder.Services.AddScoped<IRequestService, RequestService>();
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();
