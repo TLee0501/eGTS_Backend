@@ -102,18 +102,13 @@ namespace eGTS.Bussiness.ExcerciseService
 
         }
 
-        public Task<List<ExcerciseViewModel>> GetExcerciseByName()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID)
+        public async Task<List<ExcerciseViewModel>> GetExcerciseByName(string Name)
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
-            ExcerciseViewModel result = new ExcerciseViewModel();
-            var excercises = await _context.Excercises.Where(e => e.Ptid == PTID).ToListAsync();
+            var excercises = await _context.Excercises.Where(e => e.Name.Contains(Name)).ToListAsync();
             foreach (Excercise e in excercises)
             {
+                ExcerciseViewModel result = new ExcerciseViewModel();
                 result.id = e.Id;
                 result.Ptid = e.Ptid;
                 result.Name = e.Name;
@@ -129,9 +124,51 @@ namespace eGTS.Bussiness.ExcerciseService
                 return null;
         }
 
-        public Task<bool> UpdateExcercise(Guid id, ExcerciseUpdateViewModel model)
+        public async Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID)
         {
-            throw new NotImplementedException();
+            List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
+            var excercises = await _context.Excercises.Where(e => e.Ptid == PTID).ToListAsync();
+            foreach (Excercise e in excercises)
+            {
+                ExcerciseViewModel result = new ExcerciseViewModel();
+                result.id = e.Id;
+                result.Ptid = e.Ptid;
+                result.Name = e.Name;
+                result.Description = e.Description;
+                result.Video = e.Video;
+                result.CreateDate = e.CreateDate;
+                resultList.Add(result);
+            }
+
+            if (resultList.Count > 0)
+                return resultList;
+            else
+                return null;
+        }
+
+        public async Task<bool> UpdateExcercise(Guid id, ExcerciseUpdateViewModel request)
+        {
+            var excercise = await _context.Excercises.FindAsync(id);
+            if (excercise == null)
+                return false;
+            if (!request.Name.Equals(""))
+                excercise.Name = request.Name;
+            if (!request.Description.Equals(""))
+                excercise.Description = request.Description;
+            if (!request.Video.Equals(""))
+                excercise.Video = request.Video;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to save changes");
+            }
+            return false;
+
         }
     }
 }

@@ -23,7 +23,7 @@ namespace eGTS.Bussiness.PackageService
         public async Task<bool> CreatePackage(PackageCreateViewModel request)
         {
             Guid id = Guid.NewGuid();
-            Package package = new Package(id, request.HasPt, request.HasNe, request.NumberOfsession, request.Price);
+            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.Price);
             _context.Packages.Add(package);
             try
             {
@@ -93,7 +93,7 @@ namespace eGTS.Bussiness.PackageService
 
         public async Task<bool> UpdatePackage(PackageViewModel request)
         {
-            Package package = new Package(request.Id, request.HasPt, request.HasNe, request.NumberOfsession, request.Price);
+            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.Price);
             _context.Entry(package).State = EntityState.Modified;
             try
             {
