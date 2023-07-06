@@ -9,6 +9,7 @@ namespace eGTS_Backend.Data.ViewModel
     public class PackageViewModel
     {
         public Guid Id { get; set; }
+        public string Name { get; set; }
 
         public bool HasPt { get; set; }
 

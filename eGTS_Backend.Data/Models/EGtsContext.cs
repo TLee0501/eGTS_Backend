@@ -476,15 +476,20 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.IsAccepted).HasColumnName("isAccepted");
-            entity.Property(e => e.Reason)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.IsDone).HasColumnName("isDone");
+            entity.Property(e => e.IsPt).HasColumnName("isPT");
+            entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
             entity.Property(e => e.ReceiverId).HasColumnName("ReceiverID");
 
             entity.HasOne(d => d.Gymer).WithMany(p => p.RequestGymers)
                 .HasForeignKey(d => d.GymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Request_Account");
+
+            entity.HasOne(d => d.PackageGymer).WithMany(p => p.Requests)
+                .HasForeignKey(d => d.PackageGymerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Request_PackageGymer");
 
             entity.HasOne(d => d.Receiver).WithMany(p => p.RequestReceivers)
                 .HasForeignKey(d => d.ReceiverId)

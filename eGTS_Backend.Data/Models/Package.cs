@@ -5,9 +5,9 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class Package
 {
-
-    public Package(string name, bool hasPt, bool hasNe, short numberOfsession, double price)
+    public Package(Guid id, string name, bool hasPt, bool hasNe, short numberOfsession, double price)
     {
+        Id = id;
         Name = name;
         HasPt = hasPt;
         HasNe = hasNe;

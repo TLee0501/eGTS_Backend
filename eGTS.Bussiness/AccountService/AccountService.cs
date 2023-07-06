@@ -165,7 +165,7 @@ namespace eGTS.Bussiness.AccountService
         {
             var account = await _context.Accounts.FindAsync(id);
             if (account == null)
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
+                return false;
 
             if (!request.PhoneNo.Equals(""))
                 account.PhoneNo = request.PhoneNo;

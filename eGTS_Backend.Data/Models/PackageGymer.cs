@@ -37,5 +37,7 @@ public partial class PackageGymer
 
     public virtual Account? Pt { get; set; }
 
+    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
+
     public virtual ICollection<Suspend> Suspends { get; set; } = new List<Suspend>();
 }
