@@ -30,6 +30,25 @@ namespace eGTS.Controllers
             _excerciseService = excerciseService;
         }
 
+
+        /// <summary>
+        /// Get ALL Excercise Type
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult<ExcerciseType>> GetAllExcerciseType()
+        {
+            var result = await _excerciseService.GetAllExcerciseType();
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<ExcerciseTypeViewModel>>(200, "List Of Excercise Type Found.", result));
+            }
+            else
+            {
+                return BadRequest(new ErrorResponse(400, "List Of Excercise Type not found"));
+            }
+        }
+
         /// <summary>
         /// Get Excercise Type with ID 
         /// </summary>
@@ -49,7 +68,11 @@ namespace eGTS.Controllers
                 return BadRequest(new ErrorResponse(400, "Excercise Type not found"));
             }
         }
-
+        /// <summary>
+        /// Get Excercise Type with PTID 
+        /// </summary>
+        /// <param name="PTID"></param>
+        /// <returns></returns>
         // GET: api/ExcerciseTypesByID
         [HttpGet("{PTID}")]
         public async Task<ActionResult<ExcerciseType>> GetExcerciseTypeByPTID(Guid PTID)

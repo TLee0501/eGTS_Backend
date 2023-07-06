@@ -23,6 +23,7 @@ namespace eGTS.Bussiness.ExcerciseService
         Task<List<ExcerciseViewModel>> GetExcerciseByType(Guid TypeID);
         Task<List<ExcerciseViewModel>> GetAllExcercise();
         Task<List<ExcerciseViewModel>> GetExcerciseByName(string Name);
+        Task<List<ExcerciseTypeViewModel>> GetAllExcerciseType();
         Task<List<ExcerciseTypeViewModel>> GetExcerciseTypeByPTID(Guid PTID);
         Task<ExcerciseTypeViewModel> GetExcerciseTypeByID(Guid PTID);
         Task<List<ExcerciseTypeViewModel>> GetExcerciseTypeByName(string Name);
