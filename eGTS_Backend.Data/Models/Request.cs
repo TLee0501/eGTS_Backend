@@ -11,11 +11,17 @@ public partial class Request
 
     public Guid ReceiverId { get; set; }
 
+    public Guid PackageGymerId { get; set; }
+
+    public bool IsPt { get; set; }
+
     public bool IsAccepted { get; set; }
 
-    public string? Reason { get; set; }
+    public bool IsDone { get; set; }
 
     public virtual Account Gymer { get; set; } = null!;
+
+    public virtual PackageGymer PackageGymer { get; set; } = null!;
 
     public virtual Account Receiver { get; set; } = null!;
 }
