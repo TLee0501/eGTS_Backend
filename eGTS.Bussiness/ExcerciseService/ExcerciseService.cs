@@ -81,6 +81,27 @@ namespace eGTS.Bussiness.ExcerciseService
 
         }
 
+        public async Task<ExcerciseViewModel> GetExcerciseByID(Guid ID)
+        {
+
+            var excercise = await _context.Excercises.FindAsync(ID);
+            if (excercise == null)
+                return null;
+            else
+            {
+                ExcerciseViewModel result = new ExcerciseViewModel();
+                result.id = excercise.Id;
+                result.Ptid = excercise.Ptid;
+                result.Name = excercise.Name;
+                result.Description = excercise.Description;
+                result.Video = excercise.Video;
+                result.CreateDate = excercise.CreateDate;
+
+                return result;
+            }
+
+        }
+
         public async Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID)
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();

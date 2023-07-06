@@ -391,6 +391,9 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.HasNe).HasColumnName("HasNE");
             entity.Property(e => e.HasPt).HasColumnName("HasPT");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.NumberOfsession).HasColumnName("NumberOFSession");
         });
 

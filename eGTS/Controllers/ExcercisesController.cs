@@ -80,20 +80,21 @@ namespace eGTS.Controllers
         /// <returns></returns>
         // GET: api/Excercises/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Excercise>> GetExcerciseByID(Guid id)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ExcerciseViewModel>> GetExcerciseByID(Guid id)
         {
-            if (_context.Excercises == null)
+            var result = await _excerciseService.GetExcerciseByID(id);
+            if (result != null)
             {
-                return NotFound();
+                return Ok(new SuccessResponse<ExcerciseViewModel>(200, "Excercise Found.", result));
             }
-            var excercise = await _context.Excercises.FindAsync(id);
-
-            if (excercise == null)
+            else
             {
-                return NotFound();
+                return BadRequest(new ErrorResponse(400, "Excercise not found"));
             }
 
-            return excercise;
         }
 
         // PUT: api/Excercises/5
