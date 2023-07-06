@@ -13,6 +13,7 @@ using System.Data;
 using System.Runtime.CompilerServices;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections;
 
 namespace eGTS.Controllers
 {
@@ -107,6 +108,17 @@ namespace eGTS.Controllers
             {
                 return StatusCode(400);
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackageActiveByNE(Guid NEID)
+        {
+            try
+            {
+                var result = _packageService.GetGymerPackageActiveByNE(NEID);
+                return Ok(result);
+            }
+            catch { return BadRequest(); }
         }
 
     }

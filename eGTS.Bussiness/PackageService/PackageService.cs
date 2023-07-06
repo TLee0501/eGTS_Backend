@@ -106,5 +106,22 @@ namespace eGTS.Bussiness.PackageService
                 return false;
             }
         }
+
+        public async Task<List<GymerPackageActiveViewModel>> GetGymerPackageActiveByNE(Guid NEID)
+        {
+            List<GymerPackageActiveViewModel> result = new List<GymerPackageActiveViewModel>();
+
+            var listGymerPackage = await _context.PackageGymers.Where(a => a.Neid == NEID).ToListAsync();
+            foreach (var item in listGymerPackage)
+            {
+                var gymerActive = new GymerPackageActiveViewModel();
+                gymerActive.GymerId = item.GymerId;
+                //gymerActive.PackageName = item.Name;
+                gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
+                result.Add(gymerActive);
+            }
+
+            return null;
+        }
     }
 }
