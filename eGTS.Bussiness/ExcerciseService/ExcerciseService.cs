@@ -102,6 +102,11 @@ namespace eGTS.Bussiness.ExcerciseService
 
         }
 
+        public Task<List<ExcerciseViewModel>> GetExcerciseByName()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID)
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
