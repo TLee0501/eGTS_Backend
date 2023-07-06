@@ -70,6 +70,25 @@ namespace eGTS.Controllers
         }
 
         /// <summary>
+        /// Get excercises by Type
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/ExcercisesByName
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Excercise>>> GetExcercisesByType(Guid TypeID)
+        {
+            var result = await _excerciseService.GetExcerciseByType(TypeID);
+            if (result == null)
+            {
+                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+            }
+            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
+        }
+
+        /// <summary>
         /// Get Excercise by PTID
         /// </summary>
         /// <param name="PTID"></param>

@@ -15,12 +15,17 @@ namespace eGTS.Bussiness.ExcerciseService
         Task<bool> CreateExcerciseType(ExcerciseTypeCreateViewModel model);
         Task<bool> UpdateExcerciseType(Guid id, ExcerciseTypeUpdateViewModel request);
         Task<bool> DeleteExcerciseType(Guid id);
+        Task<bool> CreateExcerciseInType(ExcerciseInTypeCreateViewModel model);
+        Task<bool> UpdateExcerciseInType(Guid id, ExcerciseInTypeUpdateViewModel request);
+        Task<bool> DeleteExcerciseInType(Guid id);
         Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID);
         Task<ExcerciseViewModel> GetExcerciseByID(Guid PTID);
+        Task<List<ExcerciseViewModel>> GetExcerciseByType(Guid TypeID);
         Task<List<ExcerciseViewModel>> GetAllExcercise();
         Task<List<ExcerciseViewModel>> GetExcerciseByName(string Name);
         Task<List<ExcerciseTypeViewModel>> GetExcerciseTypeByPTID(Guid PTID);
         Task<ExcerciseTypeViewModel> GetExcerciseTypeByID(Guid PTID);
         Task<List<ExcerciseTypeViewModel>> GetExcerciseTypeByName(string Name);
+        Task<List<ExcerciseInTypeViewModel>> GetAllExcerciseInType();
     }
 }

@@ -71,7 +71,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<Excercise>>> GetExcercisesByName(string Name)
+        public async Task<ActionResult<IEnumerable<Excercise>>> GetExcerciseTypesByName(string Name)
         {
             var result = await _excerciseService.GetExcerciseTypeByName(Name);
             if (result == null)
