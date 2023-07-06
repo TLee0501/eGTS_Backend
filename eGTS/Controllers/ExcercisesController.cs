@@ -10,6 +10,7 @@ using eGTS.Bussiness.AccountService;
 using eGTS_Backend.Data.ViewModel;
 using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.ExcerciseService;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace eGTS.Controllers
 {
@@ -42,6 +43,25 @@ namespace eGTS.Controllers
         public async Task<ActionResult<IEnumerable<Excercise>>> GetAllExcercises()
         {
             var result = await _excerciseService.GetAllExcercise();
+            if (result == null)
+            {
+                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+            }
+            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
+        }
+
+        /// <summary>
+        /// Get excercises by name
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/ExcercisesByName
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Excercise>>> GetExcercisesByName(string Name)
+        {
+            var result = await _excerciseService.GetExcerciseByName(Name);
             if (result == null)
             {
                 return NotFound(new ErrorResponse(204, "No Excercise Found"));
@@ -97,35 +117,23 @@ namespace eGTS.Controllers
 
         }
 
+        /// <summary>
+        /// Update Excercise with {ID}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         // PUT: api/Excercises/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutExcercise(Guid id, Excercise excercise)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<IActionResult> UpdateExcercise(Guid id, ExcerciseUpdateViewModel request)
         {
-            if (id != excercise.Id)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(excercise).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ExcerciseExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            if (await _excerciseService.UpdateExcercise(id, request))
+                return Ok(new SuccessResponse<ExcerciseUpdateViewModel>(200, $"Excercise with ID: {id} Updated.", request));
+            else
+                return BadRequest(new ErrorResponse(400, "Unable to update Excercise"));
         }
 
         /// <summary>
@@ -146,7 +154,7 @@ namespace eGTS.Controllers
             }
             if (model.Name.Equals("") || model.Name == null || model.Name.Equals("string"))
             {
-                return BadRequest(new ErrorResponse(400, "PTID is empty."));
+                return BadRequest(new ErrorResponse(400, "Name is empty."));
             }
 
             if (await _excerciseService.CreateExcercise(model))
@@ -159,6 +167,12 @@ namespace eGTS.Controllers
 
         }
 
+
+        /// <summary>
+        /// Delete Excercise with ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/Excercises/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
