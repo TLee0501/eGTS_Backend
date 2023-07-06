@@ -167,6 +167,27 @@ namespace eGTS.Bussiness.ExcerciseService
                 return null;
         }
 
+        public async Task<List<ExcerciseTypeViewModel>> GetAllExcerciseType()
+        {
+            List<ExcerciseTypeViewModel> resultList = new List<ExcerciseTypeViewModel>();
+
+            var excerciseType = await _context.ExcerciseTypes.ToListAsync();
+
+            foreach (ExcerciseType e in excerciseType)
+            {
+                ExcerciseTypeViewModel result = new ExcerciseTypeViewModel();
+                result.Id = e.Id;
+                result.Ptid = e.Ptid;
+                result.Name = e.Name;
+                resultList.Add(result);
+            }
+
+            if (resultList.Count > 0)
+                return resultList;
+            else
+                return null;
+        }
+
         public async Task<ExcerciseViewModel> GetExcerciseByID(Guid ID)
         {
 
