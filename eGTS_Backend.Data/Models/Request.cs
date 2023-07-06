@@ -15,9 +15,7 @@ public partial class Request
 
     public bool IsPt { get; set; }
 
-    public bool IsAccepted { get; set; }
-
-    public bool IsDone { get; set; }
+    public bool? IsAccepted { get; set; }
 
     public virtual Account Gymer { get; set; } = null!;
 
