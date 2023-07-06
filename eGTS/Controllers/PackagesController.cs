@@ -13,10 +13,11 @@ using System.Data;
 using System.Runtime.CompilerServices;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections;
 
 namespace eGTS.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class PackagesController : ControllerBase
     {
