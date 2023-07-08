@@ -11,6 +11,13 @@ public partial class Session
 
     public DateTime DateAndTime { get; set; }
 
+    public Session(Guid id, Guid scheduleId, DateTime dateAndTime)
+    {
+        Id = id;
+        ScheduleId = scheduleId;
+        DateAndTime = dateAndTime;
+    }
+
     public virtual ICollection<ExserciseInSession> ExserciseInSessions { get; set; } = new List<ExserciseInSession>();
 
     public virtual ExcerciseSchedule Schedule { get; set; } = null!;

@@ -142,9 +142,11 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.From).HasColumnType("date");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
             entity.Property(e => e.Ptid).HasColumnName("PTID");
+            entity.Property(e => e.To).HasColumnType("date");
 
             entity.HasOne(d => d.Gymer).WithMany(p => p.ExcerciseScheduleGymers)
                 .HasForeignKey(d => d.GymerId)
