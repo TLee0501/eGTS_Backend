@@ -13,6 +13,10 @@ public partial class ExcerciseSchedule
 
     public Guid PackageGymerId { get; set; }
 
+    public DateTime From { get; set; }
+
+    public DateTime To { get; set; }
+
     public virtual Account Gymer { get; set; } = null!;
 
     public virtual PackageGymer PackageGymer { get; set; } = null!;
