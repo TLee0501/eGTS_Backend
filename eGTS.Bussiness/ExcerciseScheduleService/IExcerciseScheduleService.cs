@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.ExcerciseScheduleService
 {
-    public class IExcerciseScheduleService
+    public interface IExcerciseScheduleService
     {
-
-        Task<List<ExScheduleViewModel>> GetExcerciseScheduleWithConditions();
+        Task<bool> CreateExcerciseSchedule(ExScheduleCreateViewModel model);
+        Task<bool> UpdateExcerciseSchedule(Guid id, ExScheduleViewModel model);
 
     }
 }
