@@ -9,6 +9,8 @@ namespace eGTS_Backend.Data.ViewModel
     public class ExScheduleViewModel
     {
 
+        public Guid id { get; set; }
+
         public Guid GymerId { get; set; }
 
         public Guid Ptid { get; set; }
