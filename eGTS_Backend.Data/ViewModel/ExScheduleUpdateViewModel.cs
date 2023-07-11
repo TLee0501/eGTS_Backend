@@ -11,11 +11,9 @@ namespace eGTS_Backend.Data.ViewModel
 
         public Guid Ptid { get; set; }
 
-        public Guid PackageGymerId { get; set; }
+        public string From { get; set; }
 
-        public DateTime From { get; set; }
-
-        public DateTime To { get; set; }
+        public string To { get; set; }
 
     }
 }

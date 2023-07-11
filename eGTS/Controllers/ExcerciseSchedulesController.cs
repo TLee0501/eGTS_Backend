@@ -6,127 +6,157 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using eGTS_Backend.Data.Models;
+using eGTS.Bussiness.AccountService;
+using eGTS.Bussiness.ExcerciseScheduleService;
+using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.ViewModel;
 
 namespace eGTS.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ExcerciseSchedulesController : ControllerBase
     {
         private readonly EGtsContext _context;
+        private readonly ILogger<ExcerciseSchedulesController> _logger;
+        private readonly IConfiguration _configuration;
+        private readonly IExcerciseScheduleService _exSCheduleService;
 
-        public ExcerciseSchedulesController(EGtsContext context)
+        public ExcerciseSchedulesController(EGtsContext context, ILogger<ExcerciseSchedulesController> logger, IConfiguration configuration, IExcerciseScheduleService exSCheduleService)
         {
             _context = context;
+            _logger = logger;
+            _configuration = configuration;
+            _exSCheduleService = exSCheduleService;
         }
+
+
+
 
         // GET: api/ExcerciseSchedules
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ExcerciseSchedule>>> GetExcerciseSchedules()
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<IEnumerable<ExScheduleViewModel>>> GetExcerciseSchedules(bool? isExpired)
         {
-          if (_context.ExcerciseSchedules == null)
-          {
-              return NotFound();
-          }
-            return await _context.ExcerciseSchedules.ToListAsync();
+            var result = await _exSCheduleService.DEBUGGetAllExcerciseSchedule(isExpired);
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "List of Schedule found", result));
+            }
+            else
+            {
+                return NotFound(new ErrorResponse(204, "No Schedule Found"));
+            }
         }
 
         // GET: api/ExcerciseSchedules/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ExcerciseSchedule>> GetExcerciseSchedule(Guid id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<ExScheduleViewModel>> GetExcerciseSchedule(Guid id)
         {
-          if (_context.ExcerciseSchedules == null)
-          {
-              return NotFound();
-          }
-            var excerciseSchedule = await _context.ExcerciseSchedules.FindAsync(id);
-
-            if (excerciseSchedule == null)
+            var result = await _exSCheduleService.GetExcerciseScheduleByID(id);
+            if (result != null)
             {
-                return NotFound();
+                return Ok(new SuccessResponse<ExScheduleViewModel>(200, "Schedule found", result));
             }
+            else
+                return NotFound(new ErrorResponse(204, "No Schedule Found"));
+        }
 
-            return excerciseSchedule;
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<List<ExScheduleViewModel>>> GetExcerciseScheduleByPTID(Guid id, bool? isExpired)
+        {
+            var result = await _exSCheduleService.GetExcerciseSchedulesWithPTID(id, isExpired);
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Schedule found", result));
+            }
+            else
+                return NotFound(new ErrorResponse(204, "No Schedule Found"));
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<List<ExScheduleViewModel>>> GetExcerciseScheduleBygymerID(Guid id, bool? isExpired)
+        {
+            var result = await _exSCheduleService.GetExcerciseSchedulesWithGymerID(id, isExpired);
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Schedule found", result));
+            }
+            else
+                return NotFound(new ErrorResponse(204, "No Schedule Found"));
         }
 
         // PUT: api/ExcerciseSchedules/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutExcerciseSchedule(Guid id, ExcerciseSchedule excerciseSchedule)
+        public async Task<IActionResult> UpdateExcerciseSchedule(Guid id, ExScheduleUpdateViewModel request)
         {
-            if (id != excerciseSchedule.Id)
-            {
-                return BadRequest();
-            }
+            DateTime fromDate = DateTime.MinValue;
+            DateTime toDate = DateTime.MinValue;
+            if (!request.From.Equals(""))
+                fromDate = Convert.ToDateTime(request.From);
+            if (!request.To.Equals(""))
+                toDate = Convert.ToDateTime(request.To);
 
-            _context.Entry(excerciseSchedule).State = EntityState.Modified;
-
-            try
+            if (await _exSCheduleService.UpdateExcerciseSchedule(id, request))
             {
-                await _context.SaveChangesAsync();
+                _logger.LogInformation($"Uodate ExCerciseSchedule with ID: {id}");
+                return Ok(new SuccessResponse<ExScheduleUpdateViewModel>(200, "Update Success.", request));
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ExcerciseScheduleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            else
+                return BadRequest(new ErrorResponse(400, "Invalid Data"));
 
-            return NoContent();
         }
 
         // POST: api/ExcerciseSchedules
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ExcerciseSchedule>> PostExcerciseSchedule(ExcerciseSchedule excerciseSchedule)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status201Created)]//CREATED
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<ExcerciseSchedule>> CreateNewExcerciseSchedule(ExScheduleCreateViewModel model)
         {
-          if (_context.ExcerciseSchedules == null)
-          {
-              return Problem("Entity set 'EGtsContext.ExcerciseSchedules'  is null.");
-          }
-            _context.ExcerciseSchedules.Add(excerciseSchedule);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ExcerciseScheduleExists(excerciseSchedule.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            if (model.GymerId.Equals("") || model.GymerId == null)
+                return BadRequest(new ErrorResponse(400, "GymerId empty."));
+            if (model.Ptid.Equals("") || model.Ptid == null)
+                return BadRequest(new ErrorResponse(400, "Ptid empty."));
+            if (model.PackageGymerId.Equals("") || model.PackageGymerId == null)
+                return BadRequest(new ErrorResponse(400, "PackageGymerId empty."));
+            if (model.To < DateTime.Now)
+                return BadRequest(new ErrorResponse(400, "invalid End Date"));
+            if (model.From >= model.To)
+                return BadRequest(new ErrorResponse(400, "invalid Start Date"));
 
-            return CreatedAtAction("GetExcerciseSchedule", new { id = excerciseSchedule.Id }, excerciseSchedule);
+            if (await _exSCheduleService.CreateExcerciseSchedule(model))
+            {
+                _logger.LogInformation($"Created ExCerciseSchedule for Gymer with ID: {model.GymerId} and PT with ID {model.GymerId}");
+                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Create Success.", model));
+            }
+            else
+                return BadRequest(new ErrorResponse(400, "Invalid Data"));
+
+
         }
-
         // DELETE: api/ExcerciseSchedules/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExcerciseSchedule(Guid id)
         {
-            if (_context.ExcerciseSchedules == null)
+            if (await _exSCheduleService.DeleteExcerciseSchedule(id))
             {
-                return NotFound();
+                _logger.LogInformation($"Deleted Schedule with ID: {id}");
+                return NoContent();
             }
-            var excerciseSchedule = await _context.ExcerciseSchedules.FindAsync(id);
-            if (excerciseSchedule == null)
+            else
             {
-                return NotFound();
+                return NotFound(new ErrorResponse(204, "Schedule Not Found In DataBase"));
             }
-
-            _context.ExcerciseSchedules.Remove(excerciseSchedule);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool ExcerciseScheduleExists(Guid id)

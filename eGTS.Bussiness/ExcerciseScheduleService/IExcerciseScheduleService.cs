@@ -10,7 +10,13 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
     public interface IExcerciseScheduleService
     {
         Task<bool> CreateExcerciseSchedule(ExScheduleCreateViewModel model);
-        Task<bool> UpdateExcerciseSchedule(Guid id, ExScheduleViewModel model);
+        Task<bool> UpdateExcerciseSchedule(Guid id, ExScheduleUpdateViewModel request);
+        Task<bool> DeleteExcerciseSchedule(Guid id);
+        Task<ExScheduleViewModel> GetExcerciseScheduleByID(Guid id);
+        Task<List<ExScheduleViewModel>> DEBUGGetAllExcerciseSchedule(bool? isExpired);
+        Task<List<ExScheduleViewModel>> GetExcerciseSchedulesWithPTID(Guid PTID, bool? isExpired);
+        Task<List<ExScheduleViewModel>> GetExcerciseSchedulesWithGymerID(Guid GymerID, bool? isExpired);
+
 
     }
 }
