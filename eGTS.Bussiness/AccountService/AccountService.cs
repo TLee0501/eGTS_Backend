@@ -31,7 +31,7 @@ namespace eGTS.Bussiness.AccountService
 
 
             Guid id = Guid.NewGuid();
-            Account account = new Account(id, model.PhoneNo, model.Password, model.Fullname, model.Gender, model.Role, model.IsLock, DateTime.Now);
+            Account account = new Account(id, model.PhoneNo, model.Password, model.Fullname, model.Gender, model.Role, false, DateTime.Now);
             try
             {
                 await _context.Accounts.AddAsync(account);
