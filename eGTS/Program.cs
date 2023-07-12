@@ -15,6 +15,7 @@ using eGTS.Bussiness.NutritionScheduleService;
 using eGTS.Bussiness.PackageGymersService;
 using eGTS.Bussiness.RequestService;
 using eGTS.Bussiness.ExcerciseScheduleService;
+using eGTS.Bussiness.SessionService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,7 @@ builder.Services.AddScoped<IPackageGymersService, PackageGymersService>();
 builder.Services.AddScoped<INutritionScheduleService, NutritionScheduleService>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IExcerciseScheduleService, ExcerciseScheduleService>();
+builder.Services.AddScoped<ISessionService, SessionService>();
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();

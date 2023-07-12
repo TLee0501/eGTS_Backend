@@ -7,133 +7,110 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using eGTS_Backend.Data.Models;
 using eGTS.Bussiness.AccountService;
+using eGTS.Bussiness.SessionService;
+using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Azure.Core;
 
 namespace eGTS.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class SessionsController : ControllerBase
     {
         private readonly EGtsContext _context;
         private readonly ILogger<AccountsController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly IAccountService _accountService;
+        private readonly ISessionService _sessionService;
 
-        public SessionsController(EGtsContext context, ILogger<AccountsController> logger, IConfiguration configuration, IAccountService accountService)
+        public SessionsController(EGtsContext context, ILogger<AccountsController> logger, IConfiguration configuration, ISessionService accountService)
         {
             _context = context;
             _logger = logger;
             _configuration = configuration;
-            _accountService = accountService;
+            _sessionService = accountService;
         }
 
         // GET: api/Sessions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Session>>> GetSessions()
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<IEnumerable<SessionViewModel>>> DEBUGGetALLSessions()
         {
-            if (_context.Sessions == null)
+            var resultList = await _sessionService.DebugGetAllSessionList();
+            if (resultList != null)
             {
-                return NotFound();
+                return Ok(new SuccessResponse<List<SessionViewModel>>(200, "List of Sessions found", resultList));
             }
-            return await _context.Sessions.ToListAsync();
+            else
+                return NotFound(new ErrorResponse(204, "No Session Found"));
         }
 
         // GET: api/Sessions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Session>> GetSession(Guid id)
+        public async Task<ActionResult<SessionViewModel>> GetSessionByID(Guid id)
         {
-            if (_context.Sessions == null)
-            {
-                return NotFound();
-            }
-            var session = await _context.Sessions.FindAsync(id);
-
-            if (session == null)
-            {
-                return NotFound();
-            }
-
-            return session;
+            var result = await _sessionService.GetSessionByID(id);
+            if (result == null)
+                return NotFound(new ErrorResponse(400, "ID Not Match With session in DB"));
+            else
+                return result;
         }
 
         // PUT: api/Sessions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSession(Guid id, Session session)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<IActionResult> UpdateSession(Guid id, SessionUpdateViewModel request)
         {
-            if (id != session.Id)
+            if (await _sessionService.UpdateSession(id, request))
             {
-                return BadRequest();
+                _logger.LogInformation($"Update Session with ID: {id}");
+                return Ok(new SuccessResponse<SessionUpdateViewModel>(200, "Update Success.", request));
             }
-
-            _context.Entry(session).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SessionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            else
+                return BadRequest(new ErrorResponse(400, "Unable to update Session"));
         }
 
         // POST: api/Sessions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Session>> PostSession(Session session)
+        public async Task<ActionResult<Session>> CreatNewSession(SessionCreateViewModel model)
         {
-            if (_context.Sessions == null)
+
+            if (model.ScheduleId == null || model.ScheduleId.Equals(""))
             {
-                return Problem("Entity set 'EGtsContext.Sessions'  is null.");
-            }
-            _context.Sessions.Add(session);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (SessionExists(session.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(new ErrorResponse(400, "Schedule ID is empty."));
             }
 
-            return CreatedAtAction("GetSession", new { id = session.Id }, session);
+            if (model.DateAndTime == null || model.DateAndTime.Equals(""))
+            {
+                return BadRequest(new ErrorResponse(400, "Date And Time is empty."));
+            }
+
+            if (await _sessionService.CreateSession(model))
+            {
+                _logger.LogInformation($"Created Session with for schedule with ID: {model.ScheduleId}");
+                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Create Success.", model));
+            }
+            else
+                return BadRequest(new ErrorResponse(400, "Invalid Data"));
         }
 
         // DELETE: api/Sessions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSession(Guid id)
         {
-            if (_context.Sessions == null)
+            if (await _sessionService.DeleteSession(id))
             {
-                return NotFound();
+                _logger.LogInformation($"Deleted Session with ID: {id}");
+                return NoContent();
             }
-            var session = await _context.Sessions.FindAsync(id);
-            if (session == null)
-            {
-                return NotFound();
-            }
-
-            _context.Sessions.Remove(session);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            else
+                return NotFound(new ErrorResponse(204, "Session Not Found In DataBase"));
         }
 
         private bool SessionExists(Guid id)

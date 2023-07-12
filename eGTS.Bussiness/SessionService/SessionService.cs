@@ -1,4 +1,5 @@
 ﻿using eGTS.Bussiness.AccountService;
+using eGTS.Bussiness.ExcerciseScheduleService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -15,30 +16,44 @@ namespace eGTS.Bussiness.SessionService
     {
 
         private readonly EGtsContext _context;
+        private readonly IExcerciseScheduleService _excerciseScheduleService;
         private readonly ILogger<IAccountService> _logger;
 
-        public SessionService(EGtsContext context, ILogger<IAccountService> logger)
+        public SessionService(EGtsContext context, IExcerciseScheduleService excerciseScheduleService, ILogger<IAccountService> logger)
         {
             _context = context;
+            _excerciseScheduleService = excerciseScheduleService;
             _logger = logger;
         }
 
         public async Task<bool> CreateSession(SessionCreateViewModel model)
         {
-            Guid id = Guid.NewGuid();
-            Session session = new Session(id, model.ScheduleId, model.DateAndTime);
+            var exSchedule = await _excerciseScheduleService.GetExcerciseScheduleByID(model.ScheduleId);
+            if (exSchedule != null)
+            {
+                if (exSchedule.From <= model.DateAndTime && model.DateAndTime <= exSchedule.To)
+                {
+                    Guid id = Guid.NewGuid();
+                    Session session = new Session(id, model.ScheduleId, model.DateAndTime);
 
-            try
-            {
-                await _context.Sessions.AddAsync(session);
-                await _context.SaveChangesAsync();
-                return true;
+                    try
+                    {
+                        await _context.Sessions.AddAsync(session);
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Invalid Data");
+                        return false;
+                    }
+                }
+                else
+                    return false;
+
             }
-            catch (Exception ex)
-            {
-                _logger.LogError("Invalid Data");
+            else
                 return false;
-            }
 
         }
 
@@ -51,6 +66,7 @@ namespace eGTS.Bussiness.SessionService
                 foreach (var session in sessions)
                 {
                     SessionViewModel model = new SessionViewModel();
+                    model.id = session.Id;
                     model.ScheduleId = session.ScheduleId;
                     model.DateAndTime = session.DateAndTime;
 
@@ -68,6 +84,7 @@ namespace eGTS.Bussiness.SessionService
             {
                 _context.Sessions.Remove(session);
                 await _context.SaveChangesAsync();
+                return true;
             }
             return false;
         }
@@ -78,6 +95,7 @@ namespace eGTS.Bussiness.SessionService
             if (session != null)
             {
                 SessionViewModel result = new SessionViewModel();
+                result.id = session.Id;
                 result.ScheduleId = session.ScheduleId;
                 result.DateAndTime = session.DateAndTime;
                 return result;
@@ -110,10 +128,7 @@ namespace eGTS.Bussiness.SessionService
             var session = await _context.Sessions.FindAsync(id);
             if (session == null)
                 return false;
-            if (request.ScheduleId != null || !request.ScheduleId.Equals(""))
-            {
-                session.ScheduleId = request.ScheduleId;
-            }
+
             if (request.DateAndTime != null || !request.DateAndTime.Equals(""))
             {
                 session.DateAndTime = request.DateAndTime;
