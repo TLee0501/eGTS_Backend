@@ -8,7 +8,6 @@ namespace eGTS_Backend.Data.ViewModel
 {
     public class SessionCreateViewModel
     {
-        public Guid Id { get; set; }
 
         public Guid ScheduleId { get; set; }
 
