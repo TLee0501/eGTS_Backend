@@ -125,23 +125,29 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<bool> UpdateSession(Guid id, SessionUpdateViewModel request)
         {
+
             var session = await _context.Sessions.FindAsync(id);
             if (session == null)
                 return false;
 
+
+
             if (request.DateAndTime != null || !request.DateAndTime.Equals(""))
             {
-                session.DateAndTime = request.DateAndTime;
-            }
-
-            try
-            {
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Unable to Update Session");
+                var exSchedule = await _excerciseScheduleService.GetExcerciseScheduleByID(session.ScheduleId);
+                if (exSchedule.From <= request.DateAndTime && request.DateAndTime <= exSchedule.To)
+                {
+                    session.DateAndTime = request.DateAndTime;
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Unable to Update Session");
+                    }
+                }
             }
             return false;
         }
