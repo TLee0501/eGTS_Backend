@@ -5,16 +5,6 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class Package
 {
-    public Package(Guid id, string name, bool hasPt, bool hasNe, short numberOfsession, double price)
-    {
-        Id = id;
-        Name = name;
-        HasPt = hasPt;
-        HasNe = hasNe;
-        NumberOfsession = numberOfsession;
-        Price = price;
-    }
-
     public Guid Id { get; set; }
 
     public string Name { get; set; } = null!;
@@ -25,7 +15,15 @@ public partial class Package
 
     public short NumberOfsession { get; set; }
 
+    public double? Ptcost { get; set; }
+
+    public double? Necost { get; set; }
+
+    public double? CenterCost { get; set; }
+
     public double Price { get; set; }
+
+    public bool IsDelete { get; set; }
 
     public virtual ICollection<PackageGymer> PackageGymers { get; set; } = new List<PackageGymer>();
 }

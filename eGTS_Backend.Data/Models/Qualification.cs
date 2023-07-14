@@ -13,5 +13,7 @@ public partial class Qualification
 
     public bool IsCetifide { get; set; }
 
+    public bool IsDelete { get; set; }
+
     public virtual Account Expert { get; set; } = null!;
 }

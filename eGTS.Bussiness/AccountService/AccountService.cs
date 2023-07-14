@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using coffee_kiosk_solution.Data.Responses;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
@@ -31,7 +32,7 @@ namespace eGTS.Bussiness.AccountService
 
 
             Guid id = Guid.NewGuid();
-            Account account = new Account(id, model.PhoneNo, model.Password, model.Fullname, model.Gender, model.Role, false, DateTime.Now);
+            Account account = new Account(id, model.PhoneNo, model.Password, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
             try
             {
                 await _context.Accounts.AddAsync(account);
@@ -46,7 +47,7 @@ namespace eGTS.Bussiness.AccountService
 
         }
 
-        public async Task<bool> DeleteAccount(Guid id)
+        public async Task<bool> DeleteAccountPERMANENT(Guid id)
         {
             var account = await _context.Accounts.FindAsync(id);
 
@@ -78,18 +79,17 @@ namespace eGTS.Bussiness.AccountService
                 result.Gender = account.Gender;
                 result.Role = account.Role;
                 result.CreateDate = account.CreateDate;
-                result.IsLock = account.IsLock;
                 return result;
             }
         }
 
 
-        public async Task<List<AccountViewModel>> GetAllAccountsOtionalRoleAndIsLock(string? role, bool? isLock)
+        public async Task<List<AccountViewModel>> GetAllAccountsOtionalRoleAndIsLock(string? role, bool? isDelete)
         {
             List<AccountViewModel> resultList = new List<AccountViewModel>();
-            if (role != null && isLock != null)
+            if (role != null && isDelete != null)
             {
-                var accounts = await _context.Accounts.Where(a => a.IsLock == isLock && a.Role.Equals(role)).ToListAsync();
+                var accounts = await _context.Accounts.Where(a => a.IsDelete == isDelete && a.Role.Equals(role)).ToListAsync();
                 foreach (Account account in accounts)
                 {
                     AccountViewModel result = new AccountViewModel();
@@ -100,7 +100,6 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
-                    result.IsLock = account.IsLock;
                     resultList.Add(result);
                 }
             }
@@ -118,14 +117,13 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
-                    result.IsLock = account.IsLock;
                     resultList.Add(result);
                 }
             }
             else
-            if (isLock != null)
+            if (isDelete != null)
             {
-                var accounts = await _context.Accounts.Where(a => a.IsLock == isLock).ToListAsync();
+                var accounts = await _context.Accounts.Where(a => a.IsDelete == isDelete).ToListAsync();
                 foreach (Account account in accounts)
                 {
                     AccountViewModel result = new AccountViewModel();
@@ -136,7 +134,6 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
-                    result.IsLock = account.IsLock;
                     resultList.Add(result);
                 }
             }
@@ -153,7 +150,6 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
-                    result.IsLock = account.IsLock;
                     resultList.Add(result);
                 }
             }
@@ -181,7 +177,7 @@ namespace eGTS.Bussiness.AccountService
             if (!request.Role.Equals("") && !request.Role.Equals("string"))
                 account.Role = request.Role;
 
-            account.IsLock = request.IsLock;
+            account.IsDelete = request.IsDelete;
 
             try
             {
@@ -210,7 +206,6 @@ namespace eGTS.Bussiness.AccountService
                 result.Gender = account.Gender;
                 result.Role = account.Role;
                 result.CreateDate = account.CreateDate;
-                result.IsLock = account.IsLock;
                 resultList.Add(result);
             }
             return resultList;
@@ -231,7 +226,6 @@ namespace eGTS.Bussiness.AccountService
                 result.Gender = account.Gender;
                 result.Role = account.Role;
                 result.CreateDate = account.CreateDate;
-                result.IsLock = account.IsLock;
                 resultList.Add(result);
             }
             return resultList;
@@ -253,5 +247,24 @@ namespace eGTS.Bussiness.AccountService
             return Regex.IsMatch(PhoneNo, @"^\d{9,11}$");
         }
 
+        public async Task<bool> DeleteAccount(Guid id)
+        {
+            var account = await _context.Accounts.FindAsync(id);
+            if (account == null)
+                return false;
+
+            account.IsDelete = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to Delete");
+            }
+            return false;
+        }
     }
 }

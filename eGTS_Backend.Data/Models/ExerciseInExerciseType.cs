@@ -11,13 +11,6 @@ public partial class ExerciseInExerciseType
 
     public Guid ExerciseId { get; set; }
 
-    public ExerciseInExerciseType(Guid id, Guid exerciseTypeId, Guid exerciseId)
-    {
-        Id = id;
-        ExerciseTypeId = exerciseTypeId;
-        ExerciseId = exerciseId;
-    }
-
     public virtual Excercise Exercise { get; set; } = null!;
 
     public virtual ExcerciseType ExerciseType { get; set; } = null!;

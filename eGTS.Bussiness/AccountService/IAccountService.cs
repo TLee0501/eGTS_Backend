@@ -14,6 +14,7 @@ namespace eGTS.Bussiness.AccountService
     {
         Task<bool> CreateAccount(AccountCreateViewModel model);
         Task<bool> DeleteAccount(Guid id);
+        Task<bool> DeleteAccountPERMANENT(Guid id);
         Task<bool> UpdateAccount(Guid id, AccountUpdateViewModel request);
         Task<List<AccountViewModel>> SearchAccountByName(string Fullname);
         Task<List<AccountViewModel>> SearchAccountByPhoneNo(string PhoneNo);

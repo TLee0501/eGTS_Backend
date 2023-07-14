@@ -11,6 +11,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
     {
         Task<bool> CreateExcerciseSchedule(ExScheduleCreateViewModel model);
         Task<bool> UpdateExcerciseSchedule(Guid id, ExScheduleUpdateViewModel request);
+        Task<bool> DeleteExcerciseSchedulePERMANENT(Guid id);
         Task<bool> DeleteExcerciseSchedule(Guid id);
         Task<ExScheduleViewModel> GetExcerciseScheduleByID(Guid id);
         Task<List<ExScheduleViewModel>> DEBUGGetAllExcerciseSchedule(bool? isExpired);

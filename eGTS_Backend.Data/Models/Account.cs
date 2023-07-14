@@ -17,11 +17,11 @@ public partial class Account
 
     public string Role { get; set; } = null!;
 
-    public bool IsLock { get; set; }
-
     public DateTime CreateDate { get; set; }
 
-    public Account(Guid id, string phoneNo, string password, string fullname, string gender, string role, bool isLock, DateTime createDate)
+    public bool IsDelete { get; set; }
+
+    public Account(Guid id, string phoneNo, string password, string fullname, string gender, string role, DateTime createDate, bool isDelete)
     {
         Id = id;
         PhoneNo = phoneNo;
@@ -29,12 +29,8 @@ public partial class Account
         Fullname = fullname;
         Gender = gender;
         Role = role;
-        IsLock = isLock;
         CreateDate = createDate;
-    }
-
-    public Account()
-    {
+        IsDelete = isDelete;
     }
 
     public virtual ICollection<BodyPerameter> BodyPerameters { get; set; } = new List<BodyPerameter>();

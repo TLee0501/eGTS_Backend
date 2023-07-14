@@ -63,8 +63,7 @@ public partial class EGtsContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-         => optionsBuilder.UseSqlServer("server =egts.database.windows.net; database = eGTS;uid=egts;pwd=Passdoan2023@;Trusted_Connection=True;Encrypt=False;Integrated Security=False");
-    //=> optionsBuilder.UseSqlServer("server =localhost; database = eGTS;uid=sa;pwd=123;Trusted_Connection=True;Encrypt=False;Integrated Security=False");
+        => optionsBuilder.UseSqlServer("server =(local); database = eGTS;uid=sa;pwd=123;Trusted_Connection=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -82,6 +81,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Gender)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Password)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -105,6 +105,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Bmi).HasColumnName("BMI");
             entity.Property(e => e.CreateDate).HasColumnType("date");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
             entity.HasOne(d => d.Gymer).WithMany(p => p.BodyPerameters)
                 .HasForeignKey(d => d.GymerId)
@@ -123,6 +124,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(300)
                 .IsUnicode(false);
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -144,6 +146,7 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.From).HasColumnType("date");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
             entity.Property(e => e.Ptid).HasColumnName("PTID");
             entity.Property(e => e.To).HasColumnType("date");
@@ -171,6 +174,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -236,6 +240,7 @@ public partial class EGtsContext : DbContext
                 .HasMaxLength(300)
                 .IsUnicode(false)
                 .HasColumnName("Feedback");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
             entity.Property(e => e.PtidorNeid).HasColumnName("PTIDorNEID");
 
@@ -258,6 +263,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.CreateDate).HasColumnType("date");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -321,6 +327,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -335,6 +342,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.Datetime).HasColumnType("datetime");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.NutritionScheduleId).HasColumnName("NutritionScheduleID");
 
             entity.HasOne(d => d.NutritionSchedule).WithMany(p => p.Meals)
@@ -350,6 +358,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Message1)
                 .HasMaxLength(300)
                 .IsUnicode(false)
@@ -376,11 +385,13 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Neid).HasColumnName("NEID");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
 
             entity.HasOne(d => d.PackageGymer).WithMany(p => p.NutritionSchedules)
                 .HasForeignKey(d => d.PackageGymerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_NutritionSchedule_PackageGymer");
         });
 
@@ -393,10 +404,13 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.HasNe).HasColumnName("HasNE");
             entity.Property(e => e.HasPt).HasColumnName("HasPT");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Necost).HasColumnName("NECost");
             entity.Property(e => e.NumberOfsession).HasColumnName("NumberOFSession");
+            entity.Property(e => e.Ptcost).HasColumnName("PTCost");
         });
 
         modelBuilder.Entity<PackageGymer>(entity =>
@@ -407,6 +421,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -462,6 +477,7 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ExpertID");
             entity.Property(e => e.Certificate).IsUnicode(false);
             entity.Property(e => e.IsCetifide).HasColumnName("isCetifide");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
             entity.HasOne(d => d.Expert).WithOne(p => p.Qualification)
                 .HasForeignKey<Qualification>(d => d.ExpertId)
@@ -478,6 +494,7 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.IsAccepted).HasColumnName("isAccepted");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.IsPt).HasColumnName("isPT");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
             entity.Property(e => e.ReceiverId).HasColumnName("ReceiverID");
@@ -506,6 +523,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.DateAndTime).HasColumnType("datetime");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
 
             entity.HasOne(d => d.Schedule).WithMany(p => p.Sessions)
@@ -521,6 +539,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Result)
                 .HasMaxLength(300)
                 .IsUnicode(false);
@@ -540,6 +559,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.From).HasColumnType("datetime");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
             entity.Property(e => e.Reson)
                 .HasMaxLength(100)

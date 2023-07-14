@@ -44,7 +44,7 @@ namespace eGTS.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllAccountsWithConditons(string? role, bool? IsLock)
+        public async Task<ActionResult<IEnumerable<AccountViewModel>>> GetAllAccountsWithConditons(string? role, bool? IsLock)
         {
             var result = await _accountService.GetAllAccountsOtionalRoleAndIsLock(role, IsLock);
             if (result != null)
@@ -357,9 +357,9 @@ namespace eGTS.Controllers
             if (!request.Role.Equals("PT") && !request.Role.Equals("NE") && !request.Role.Equals("Gymer") && !request.Role.Equals("Staff") && !request.Role.Equals("") && !request.PhoneNo.Equals("string"))
                 return BadRequest(new ErrorResponse(400, "Invalid Role"));
 
-            if (request.IsLock == null)
+            if (request.IsDelete == null)
             {
-                return BadRequest(new ErrorResponse(400, "Invalid Lock State"));
+                return BadRequest(new ErrorResponse(400, "Invalid Delete State"));
             }
 
             if (await _accountService.UpdateAccount(id, request))
@@ -406,6 +406,28 @@ namespace eGTS.Controllers
         }
 
         /// <summary>
+        /// PERMANENT Delete Account by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // DELETE: api/Accounts/5
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteAccountPERMANENT(Guid id)
+        {
+            if (await _accountService.DeleteAccountPERMANENT(id))
+            {
+                _logger.LogInformation($"Deleted Account with ID: {id}");
+                return NoContent();
+            }
+            else
+            {
+                return NotFound(new ErrorResponse(204, "Account Not Found In DataBase"));
+            }
+
+        }
+
+        /// <summary>
         /// Delete Account by ID
         /// </summary>
         /// <param name="id"></param>
@@ -426,7 +448,6 @@ namespace eGTS.Controllers
             }
 
         }
-
 
         // check if ID in use
         private bool AccountExists(Guid id)
