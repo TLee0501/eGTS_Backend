@@ -17,6 +17,8 @@ public partial class FeedBack
 
     public DateTime CreateDate { get; set; }
 
+    public bool IsDelete { get; set; }
+
     public virtual PackageGymer PackageGymer { get; set; } = null!;
 
     public virtual Account PtidorNe { get; set; } = null!;

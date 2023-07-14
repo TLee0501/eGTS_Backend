@@ -17,15 +17,7 @@ public partial class Excercise
 
     public DateTime CreateDate { get; set; }
 
-    public Excercise(Guid id, Guid ptid, string name, string? description, string? video, DateTime createDate)
-    {
-        Id = id;
-        Ptid = ptid;
-        Name = name;
-        Description = description;
-        Video = video;
-        CreateDate = createDate;
-    }
+    public bool IsDelete { get; set; }
 
     public virtual ICollection<ExerciseInExerciseType> ExerciseInExerciseTypes { get; set; } = new List<ExerciseInExerciseType>();
 

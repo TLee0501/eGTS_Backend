@@ -98,7 +98,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 return null;
         }
 
-        public async Task<bool> DeleteExcerciseSchedule(Guid id)
+        public async Task<bool> DeleteExcerciseSchedulePERMANENT(Guid id)
         {
             var exSchedule = await _context.ExcerciseSchedules.FindAsync(id);
             if (exSchedule != null)
@@ -279,6 +279,11 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             return false;
 
+        }
+
+        public Task<bool> DeleteExcerciseSchedule(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

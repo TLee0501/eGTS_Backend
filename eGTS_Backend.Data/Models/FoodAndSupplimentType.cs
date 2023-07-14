@@ -11,5 +11,7 @@ public partial class FoodAndSupplimentType
 
     public Guid Neid { get; set; }
 
+    public bool IsDelete { get; set; }
+
     public virtual ICollection<FoodAndSupplimentInFoodAndSupplimentType> FoodAndSupplimentInFoodAndSupplimentTypes { get; set; } = new List<FoodAndSupplimentInFoodAndSupplimentType>();
 }

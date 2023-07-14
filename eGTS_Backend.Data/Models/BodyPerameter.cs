@@ -23,5 +23,7 @@ public partial class BodyPerameter
 
     public DateTime CreateDate { get; set; }
 
+    public bool IsDelete { get; set; }
+
     public virtual Account Gymer { get; set; } = null!;
 }

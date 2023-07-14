@@ -5,21 +5,6 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class FoodAndSuppliment
 {
-    public FoodAndSuppliment()
-    {
-    }
-
-    public FoodAndSuppliment(Guid id, Guid neid, string name, short ammount, string unitofmesuament, double calories, DateTime createdate)
-    {
-        Id = id;
-        Neid = neid;
-        Name = name;
-        Ammount = ammount;
-        UnitOfMesuament = unitofmesuament;
-        Calories = calories;
-        CreateDate = createdate;
-    }
-
     public Guid Id { get; set; }
 
     public Guid Neid { get; set; }
@@ -33,6 +18,8 @@ public partial class FoodAndSuppliment
     public double Calories { get; set; }
 
     public DateTime CreateDate { get; set; }
+
+    public bool IsDelete { get; set; }
 
     public virtual ICollection<FoodAndSupplimentInFoodAndSupplimentType> FoodAndSupplimentInFoodAndSupplimentTypes { get; set; } = new List<FoodAndSupplimentInFoodAndSupplimentType>();
 

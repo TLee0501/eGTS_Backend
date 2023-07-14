@@ -11,9 +11,11 @@ public partial class NutritionSchedule
 
     public Guid Neid { get; set; }
 
-    public Guid? PackageGymerId { get; set; }
+    public Guid PackageGymerId { get; set; }
+
+    public bool IsDelete { get; set; }
 
     public virtual ICollection<Meal> Meals { get; set; } = new List<Meal>();
 
-    public virtual PackageGymer? PackageGymer { get; set; }
+    public virtual PackageGymer PackageGymer { get; set; } = null!;
 }

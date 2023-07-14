@@ -26,13 +26,11 @@ namespace eGTS.Bussiness.LoginService
 
             AccountViewModel result = new AccountViewModel
             {
-                Id = account.Id,
                 PhoneNo = account.PhoneNo,
                 Password = account.Password,
                 Fullname = account.Fullname,
                 Gender = account.Gender,
                 Role = account.Role,
-                IsLock = account.IsLock,
                 CreateDate = account.CreateDate,
 
             };

@@ -11,5 +11,7 @@ public partial class SessionResult
 
     public string Result { get; set; } = null!;
 
+    public bool IsDelete { get; set; }
+
     public virtual Session Session { get; set; } = null!;
 }

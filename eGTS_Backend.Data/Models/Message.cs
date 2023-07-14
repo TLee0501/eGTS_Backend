@@ -13,6 +13,8 @@ public partial class Message
 
     public string Message1 { get; set; } = null!;
 
+    public bool IsDelete { get; set; }
+
     public virtual Account Reciever { get; set; } = null!;
 
     public virtual Account Sender { get; set; } = null!;

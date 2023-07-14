@@ -15,5 +15,7 @@ public partial class Suspend
 
     public string Reson { get; set; } = null!;
 
+    public bool IsDelete { get; set; }
+
     public virtual PackageGymer PackageGymer { get; set; } = null!;
 }

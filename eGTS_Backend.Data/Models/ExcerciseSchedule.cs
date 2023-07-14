@@ -17,15 +17,7 @@ public partial class ExcerciseSchedule
 
     public DateTime To { get; set; }
 
-    public ExcerciseSchedule(Guid id, Guid gymerId, Guid ptid, Guid packageGymerId, DateTime from, DateTime to)
-    {
-        Id = id;
-        GymerId = gymerId;
-        Ptid = ptid;
-        PackageGymerId = packageGymerId;
-        From = from;
-        To = to;
-    }
+    public bool IsDelete { get; set; }
 
     public virtual Account Gymer { get; set; } = null!;
 
