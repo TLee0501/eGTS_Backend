@@ -331,7 +331,7 @@ namespace eGTS.Controllers
         /// <param name="account"></param>
         /// <returns></returns>
         // PUT: api/Accounts/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
