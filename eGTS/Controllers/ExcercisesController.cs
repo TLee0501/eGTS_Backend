@@ -45,7 +45,7 @@ namespace eGTS.Controllers
             var result = await _excerciseService.GetAllExcercise();
             if (result == null)
             {
-                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+                return NoContent();
             }
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
         }
@@ -64,7 +64,7 @@ namespace eGTS.Controllers
             var result = await _excerciseService.GetExcerciseByName(Name);
             if (result == null)
             {
-                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+                return NoContent();
             }
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
         }
@@ -83,7 +83,7 @@ namespace eGTS.Controllers
             var result = await _excerciseService.GetExcerciseByType(TypeID);
             if (result == null)
             {
-                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+                return NoContent();
             }
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
         }
@@ -107,7 +107,7 @@ namespace eGTS.Controllers
             var result = await _excerciseService.GetExcerciseByPTID(PTID);
             if (result == null)
             {
-                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+                return NoContent();
             }
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
         }
@@ -199,6 +199,20 @@ namespace eGTS.Controllers
         public async Task<IActionResult> DeleteExcercise(Guid id)
         {
             if (await _excerciseService.DeleteExcercise(id))
+            {
+                _logger.LogInformation($"Deleted Excercise with ID: {id}");
+                return NoContent();
+            }
+            return BadRequest(new ErrorResponse(400, $"Unable to delete Excercise with ID: {id}"));
+
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//OK
+        public async Task<IActionResult> DeleteExcercisePARMANENT(Guid id)
+        {
+            if (await _excerciseService.DeleteExcercisePEMANENT(id))
             {
                 _logger.LogInformation($"Deleted Excercise with ID: {id}");
                 return NoContent();

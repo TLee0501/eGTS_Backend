@@ -1,4 +1,5 @@
-﻿using eGTS.Bussiness.AccountService;
+﻿using Azure.Core;
+using eGTS.Bussiness.AccountService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -58,6 +59,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -73,6 +75,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -88,6 +91,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -122,6 +126,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 result.PackageGymerId = ExS.PackageGymerId;
                 result.From = ExS.From;
                 result.To = ExS.To;
+                result.IsDeleted = ExS.IsDelete;
                 return result;
             }
             return null;
@@ -143,6 +148,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -158,6 +164,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -173,6 +180,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -199,6 +207,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -214,6 +223,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -229,6 +239,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     result.PackageGymerId = exSchedule.PackageGymerId;
                     result.From = exSchedule.From;
                     result.To = exSchedule.To;
+                    result.IsDeleted = exSchedule.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -264,6 +275,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 exSchedule.To = toDate;
             }
 
+            exSchedule.IsDelete = request.IsDeleted;
+
             try
             {
                 if (exSchedule.From > exSchedule.To)
@@ -281,9 +294,31 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
         }
 
-        public Task<bool> DeleteExcerciseSchedule(Guid id)
+        public async Task<bool> DeleteExcerciseSchedule(Guid id)
         {
-            throw new NotImplementedException();
+            var exSchedule = await _context.ExcerciseSchedules.FindAsync(id);
+            if (exSchedule == null)
+            {
+                return false;
+            }
+
+
+            exSchedule.IsDelete = true;
+
+            try
+            {
+                if (exSchedule.From > exSchedule.To)
+                {
+                    throw new Exception();
+                }
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to save changes");
+            }
+            return false;
         }
     }
 }

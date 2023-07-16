@@ -9,5 +9,6 @@ namespace eGTS_Backend.Data.ViewModel
     public class ExcerciseTypeUpdateViewModel
     {
         public string Name { get; set; } = null!;
+        public bool IsDelete { get; set; }
     }
 }

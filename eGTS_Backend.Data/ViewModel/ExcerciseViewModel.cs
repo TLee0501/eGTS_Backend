@@ -19,5 +19,6 @@ namespace eGTS_Backend.Data.ViewModel
         public string? Video { get; set; }
 
         public DateTime CreateDate { get; set; }
+        public bool IsDelete { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace eGTS_Backend.Data.ViewModel
         public string From { get; set; }
 
         public string To { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 }

@@ -84,7 +84,7 @@ namespace eGTS.Controllers
             var result = await _excerciseService.GetExcerciseTypeByPTID(PTID);
             if (result == null)
             {
-                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+                return NoContent();
             }
             return Ok(new SuccessResponse<List<ExcerciseTypeViewModel>>(200, "Excercises Found.", result));
         }
@@ -99,7 +99,7 @@ namespace eGTS.Controllers
             var result = await _excerciseService.GetExcerciseTypeByName(Name);
             if (result == null)
             {
-                return NotFound(new ErrorResponse(204, "No Excercise Found"));
+                return NoContent();
             }
             return Ok(new SuccessResponse<List<ExcerciseTypeViewModel>>(200, "Excercises Found.", result));
         }
@@ -156,6 +156,19 @@ namespace eGTS.Controllers
         public async Task<IActionResult> DeleteExcerciseType(Guid id)
         {
             if (await _excerciseService.DeleteExcerciseType(id))
+            {
+                _logger.LogInformation($"Deleted Excercise Type with ID: {id}");
+                return NoContent();
+            }
+            return BadRequest(new ErrorResponse(400, $"Unable to delete Excercise Type with ID: {id}"));
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteExcerciseTypePERMANENT(Guid id)
+        {
+            if (await _excerciseService.DeleteExcerciseTypePEMANENT(id))
             {
                 _logger.LogInformation($"Deleted Excercise Type with ID: {id}");
                 return NoContent();

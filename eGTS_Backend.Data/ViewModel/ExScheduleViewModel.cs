@@ -21,5 +21,7 @@ namespace eGTS_Backend.Data.ViewModel
 
         public DateTime To { get; set; }
 
+        public bool IsDeleted { get; set; }
+
     }
 }

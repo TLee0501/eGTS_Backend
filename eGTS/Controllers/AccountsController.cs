@@ -52,7 +52,7 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<List<AccountViewModel>>(200, "List of Accounts found", result));
             }
             else
-                return NotFound(new ErrorResponse(204, "No Account Found"));
+                return NoContent();
         }
 
         /*/// <summary>
@@ -272,7 +272,7 @@ namespace eGTS.Controllers
         {
             var result = await _accountService.GetAccountByID(id);
             if (result == null)
-                return NotFound(new ErrorResponse(400, "Account ID Not Found"));
+                return NoContent();
             else
                 return result;
         }
@@ -295,7 +295,7 @@ namespace eGTS.Controllers
             var result = await _accountService.SearchAccountByPhoneNo(PhoneNo);
 
             if (result.Count == 0)
-                return NotFound(new ErrorResponse(204, "No account found"));
+                return NoContent();
 
             return result;
 
@@ -318,7 +318,7 @@ namespace eGTS.Controllers
             var result = await _accountService.SearchAccountByName(Fullname);
 
             if (result.Count == 0)
-                return NotFound(new ErrorResponse(204, "No account found"));
+                return NoContent();
 
             return result;
 
@@ -418,11 +418,11 @@ namespace eGTS.Controllers
             if (await _accountService.DeleteAccountPERMANENT(id))
             {
                 _logger.LogInformation($"Deleted Account with ID: {id}");
-                return NoContent();
+                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Delete Success.", null));
             }
             else
             {
-                return NotFound(new ErrorResponse(204, "Account Not Found In DataBase"));
+                return NoContent();
             }
 
         }
@@ -440,11 +440,11 @@ namespace eGTS.Controllers
             if (await _accountService.DeleteAccount(id))
             {
                 _logger.LogInformation($"Deleted Account with ID: {id}");
-                return NoContent();
+                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Delete Success.", null));
             }
             else
             {
-                return NotFound(new ErrorResponse(204, "Account Not Found In DataBase"));
+                return NoContent();
             }
 
         }
