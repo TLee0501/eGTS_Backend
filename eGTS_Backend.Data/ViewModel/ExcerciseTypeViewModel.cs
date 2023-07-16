@@ -14,6 +14,7 @@ namespace eGTS_Backend.Data.ViewModel
         public string Name { get; set; } = null!;
 
         public Guid Ptid { get; set; }
+        public bool IsDelete { get; set; }
 
     }
 }

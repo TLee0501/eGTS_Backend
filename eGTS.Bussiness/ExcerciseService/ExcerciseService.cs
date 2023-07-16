@@ -1,4 +1,5 @@
-﻿using eGTS.Bussiness.AccountService;
+﻿using Azure.Core;
+using eGTS.Bussiness.AccountService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ namespace eGTS.Bussiness.ExcerciseService
         {
             Guid id = Guid.NewGuid();
             DateTime createDate = DateTime.Now;
-            Excercise excercise = new Excercise(id, model.Ptid, model.Name, model.Description, model.Video, createDate, true);
+            Excercise excercise = new Excercise(id, model.Ptid, model.Name, model.Description, model.Video, createDate, false);
             try
             {
                 await _context.Excercises.AddAsync(excercise);
@@ -76,7 +77,7 @@ namespace eGTS.Bussiness.ExcerciseService
             }
         }
 
-        public async Task<bool> DeleteExcercise(Guid id)
+        public async Task<bool> DeleteExcercisePEMANENT(Guid id)
         {
             if (_context.Excercises == null)
                 return false;
@@ -106,7 +107,25 @@ namespace eGTS.Bussiness.ExcerciseService
             return false;
         }
 
-        public async Task<bool> DeleteExcerciseType(Guid id)
+        public async Task<bool> DeleteExcercise(Guid id)
+        {
+            var excercise = await _context.Excercises.FindAsync(id);
+
+            excercise.IsDelete = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to save changes");
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteExcerciseTypePEMANENT(Guid id)
         {
             if (_context.ExcerciseTypes == null)
                 return false;
@@ -117,6 +136,24 @@ namespace eGTS.Bussiness.ExcerciseService
                 _context.ExcerciseTypes.Remove(excerciseType);
                 await _context.SaveChangesAsync();
                 return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteExcerciseType(Guid id)
+        {
+            var excerciseType = await _context.ExcerciseTypes.FindAsync(id);
+
+            excerciseType.IsDelete = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to save changes");
             }
             return false;
         }
@@ -136,6 +173,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Description = e.Description;
                 result.Video = e.Video;
                 result.CreateDate = e.CreateDate;
+                result.IsDelete = e.IsDelete;
                 resultList.Add(result);
             }
 
@@ -179,6 +217,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Id = e.Id;
                 result.Ptid = e.Ptid;
                 result.Name = e.Name;
+                result.IsDelete = e.IsDelete;
                 resultList.Add(result);
             }
 
@@ -203,6 +242,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Description = excercise.Description;
                 result.Video = excercise.Video;
                 result.CreateDate = excercise.CreateDate;
+                result.IsDelete = excercise.IsDelete;
 
                 return result;
             }
@@ -222,6 +262,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Description = e.Description;
                 result.Video = e.Video;
                 result.CreateDate = e.CreateDate;
+                result.IsDelete = e.IsDelete;
                 resultList.Add(result);
             }
 
@@ -244,6 +285,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Description = e.Description;
                 result.Video = e.Video;
                 result.CreateDate = e.CreateDate;
+                result.IsDelete = e.IsDelete;
                 resultList.Add(result);
             }
 
@@ -267,6 +309,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Description = excercise.Description;
                 result.Video = excercise.Video;
                 result.CreateDate = excercise.CreateDate;
+                result.IsDelete = excercise.IsDelete;
                 resultList.Add(result);
             }
             if (resultList.Count > 0)
@@ -286,6 +329,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Id = excerciseType.Id;
                 result.Ptid = excerciseType.Ptid;
                 result.Name = excerciseType.Name;
+                result.IsDelete = excerciseType.IsDelete;
 
                 return result;
             }
@@ -301,6 +345,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Id = e.Id;
                 result.Ptid = e.Ptid;
                 result.Name = e.Name;
+                result.IsDelete = e.IsDelete;
                 resultList.Add(result);
             }
 
@@ -320,6 +365,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Id = e.Id;
                 result.Ptid = e.Ptid;
                 result.Name = e.Name;
+                result.IsDelete = e.IsDelete;
                 resultList.Add(result);
             }
 
@@ -340,6 +386,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 excercise.Description = request.Description;
             if (!request.Video.Equals(""))
                 excercise.Video = request.Video;
+            excercise.IsDelete = request.IsDelete;
 
             try
             {
@@ -364,6 +411,7 @@ namespace eGTS.Bussiness.ExcerciseService
             if (!request.ExerciseId.Equals(""))
                 excerciseInType.ExerciseId = request.ExerciseId;
 
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -383,6 +431,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 return false;
             if (!request.Name.Equals(""))
                 excerciseType.Name = request.Name;
+            excerciseType.IsDelete = request.IsDelete;
 
             try
             {

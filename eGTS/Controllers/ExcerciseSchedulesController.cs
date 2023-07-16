@@ -46,7 +46,7 @@ namespace eGTS.Controllers
             }
             else
             {
-                return NotFound(new ErrorResponse(204, "No Schedule Found"));
+                return NoContent();
             }
         }
 
@@ -62,7 +62,7 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<ExScheduleViewModel>(200, "Schedule found", result));
             }
             else
-                return NotFound(new ErrorResponse(204, "No Schedule Found"));
+                return NoContent();
         }
 
         [HttpGet("{id}")]
@@ -76,7 +76,7 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Schedule found", result));
             }
             else
-                return NotFound(new ErrorResponse(204, "No Schedule Found"));
+                return NoContent();
         }
 
         [HttpGet("{id}")]
@@ -90,7 +90,7 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Schedule found", result));
             }
             else
-                return NotFound(new ErrorResponse(204, "No Schedule Found"));
+                return NoContent();
         }
 
         // PUT: api/ExcerciseSchedules/5
@@ -146,16 +146,31 @@ namespace eGTS.Controllers
         }
         // DELETE: api/ExcerciseSchedules/5
         [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteExcerciseSchedulePERMANENT(Guid id)
+        {
+            if (await _exSCheduleService.DeleteExcerciseSchedulePERMANENT(id))
+            {
+                _logger.LogInformation($"Deleted Schedule with ID: {id}");
+                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Delete Success.", null));
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+        // DELETE: api/ExcerciseSchedules/5
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExcerciseSchedule(Guid id)
         {
             if (await _exSCheduleService.DeleteExcerciseSchedule(id))
             {
                 _logger.LogInformation($"Deleted Schedule with ID: {id}");
-                return NoContent();
+                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Delete Success.", null));
             }
             else
             {
-                return NotFound(new ErrorResponse(204, "Schedule Not Found In DataBase"));
+                return NoContent();
             }
         }
 
