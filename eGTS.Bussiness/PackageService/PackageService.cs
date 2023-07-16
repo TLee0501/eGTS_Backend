@@ -1,6 +1,7 @@
 ﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace eGTS.Bussiness.PackageService
         public async Task<bool> CreatePackage(PackageCreateViewModel request)
         {
             Guid id = Guid.NewGuid();
-            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.Price);
+            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.Ptcost, request.Necost, request.CenterCost, request.Price);
             _context.Packages.Add(package);
             try
             {
@@ -65,6 +66,11 @@ namespace eGTS.Bussiness.PackageService
                 result.HasPt = package.HasPt;
                 result.HasNe = package.HasNe;
                 result.NumberOfsession = package.NumberOfsession;
+                result.Name = package.Name;
+                result.Ptcost = package.Ptcost;
+                result.Necost = package.Necost;
+                result.CenterCost = package.CenterCost;
+                result.IsDelete = package.IsDelete;
                 return result;
             }
         }
@@ -80,10 +86,15 @@ namespace eGTS.Bussiness.PackageService
                 {
                     var viewModel = new PackageViewModel();
                     viewModel.Id = package.Id;
-                    viewModel.Price = package.Price;
+                    viewModel.Name = package.Name;
                     viewModel.HasPt = package.HasPt;
                     viewModel.HasNe = package.HasNe;
                     viewModel.NumberOfsession = package.NumberOfsession;
+                    viewModel.Ptcost = package.Ptcost;
+                    viewModel.Necost = package.Necost;
+                    viewModel.CenterCost = package.CenterCost;
+                    viewModel.Price = package.Price;
+                    viewModel.IsDelete = package.IsDelete;
                     result.Add(viewModel);
                 }
                 return result;
@@ -93,7 +104,7 @@ namespace eGTS.Bussiness.PackageService
 
         public async Task<bool> UpdatePackage(PackageViewModel request)
         {
-            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.Price);
+            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.IsDelete);
             _context.Entry(package).State = EntityState.Modified;
             try
             {

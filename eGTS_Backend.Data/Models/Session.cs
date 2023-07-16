@@ -5,6 +5,14 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class Session
 {
+    public Session(Guid id, Guid scheduleId, DateTime dateAndTime, bool isDelete)
+    {
+        Id = id;
+        ScheduleId = scheduleId;
+        DateAndTime = dateAndTime;
+        IsDelete = isDelete;
+    }
+
     public Guid Id { get; set; }
 
     public Guid ScheduleId { get; set; }

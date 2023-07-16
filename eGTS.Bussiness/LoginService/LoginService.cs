@@ -32,7 +32,7 @@ namespace eGTS.Bussiness.LoginService
                 Gender = account.Gender,
                 Role = account.Role,
                 CreateDate = account.CreateDate,
-
+                isDelete = account.IsDelete,
             };
 
             return result;

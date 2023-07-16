@@ -23,7 +23,7 @@ namespace eGTS.Bussiness.PackageGymersService
         {
             Guid id = Guid.NewGuid();
             var packageRequest = await _context.Packages.FindAsync(request.PackageID);
-            PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, "Pause");
+            PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, "Pause", false);
             _context.PackageGymers.Add(packageGymer);
             try
             {
@@ -59,7 +59,7 @@ namespace eGTS.Bussiness.PackageGymersService
         public async Task<bool> UpdatePackageGymer(PackageGymerViewModel request)
         {
             var packageGymerRequest = await _context.PackageGymers.FindAsync(request.Id);
-            PackageGymer packageGymer = new PackageGymer(request.Id, request.Name, request.GymerId, packageGymerRequest.PackageId, request.Ptid, request.Neid, request.NumberOfSession, request.Status);
+            PackageGymer packageGymer = new PackageGymer(request.Id, request.Name, request.GymerId, packageGymerRequest.PackageId, request.Ptid, request.Neid, request.NumberOfSession, request.Status, request.isDelete);
             _context.Entry(packageGymer).State = EntityState.Modified;
             try
             {

@@ -26,7 +26,7 @@ namespace eGTS.Bussiness.ExcerciseService
         {
             Guid id = Guid.NewGuid();
             DateTime createDate = DateTime.Now;
-            Excercise excercise = new Excercise(id, model.Ptid, model.Name, model.Description, model.Video, createDate);
+            Excercise excercise = new Excercise(id, model.Ptid, model.Name, model.Description, model.Video, createDate, true);
             try
             {
                 await _context.Excercises.AddAsync(excercise);
@@ -62,7 +62,7 @@ namespace eGTS.Bussiness.ExcerciseService
         {
             Guid id = Guid.NewGuid();
             DateTime createDate = DateTime.Now;
-            ExcerciseType excerciseType = new ExcerciseType(id, model.Name, model.Ptid);
+            ExcerciseType excerciseType = new ExcerciseType(id, model.Name, model.Ptid, false);
             try
             {
                 await _context.ExcerciseTypes.AddAsync(excerciseType);

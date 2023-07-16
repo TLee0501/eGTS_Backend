@@ -17,7 +17,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
-            //Check exist name NE create
+            /*//Check exist name NE create
             Guid accountRequest = GetNEID();
             if (accountRequest == Guid.Empty)
             {
@@ -34,11 +34,11 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
             if (foodAndSupplimentsOfStaff == null)
             {
                 return false;
-            }
+            }*/
 
             Guid id = Guid.NewGuid();
             var createdate = DateTime.Now;
-            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(id, request.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, createdate);
+            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(id, request.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, createdate, false);
             _context.FoodAndSuppliments.Add(foodAndSuppliment);
             try
             {
@@ -81,6 +81,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                 result.Ammount = foodAndSuppliment.Ammount;
                 result.Calories = foodAndSuppliment.Calories;
                 result.CreateDate = foodAndSuppliment.CreateDate;
+                result.IsDelete = foodAndSuppliment.IsDelete;
                 return result;
             }
         }
@@ -101,6 +102,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                     viewModel.Ammount = foodAndSuppliment.Ammount;
                     viewModel.Calories = foodAndSuppliment.Calories;
                     viewModel.CreateDate = foodAndSuppliment.CreateDate;
+                    viewModel.IsDelete = foodAndSuppliment.IsDelete;
                     result.Add(viewModel);
                 }
                 return result;
@@ -110,7 +112,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
 
         public async Task<List<FoodAndSupplimentViewModel>> GetFoodAndSupplimentsBYNE(Guid id)
         {
-            var foodAndSuppliments = await _context.FoodAndSuppliments.Where(a => a.Neid.Equals(id)).ToListAsync();
+            var foodAndSuppliments = await _context.FoodAndSuppliments.Where(a => a.Neid.Equals(id) && a.IsDelete == false).ToListAsync();
 
             if (foodAndSuppliments.Count > 0)
             {
@@ -135,7 +137,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         {
             var inDatabase = await _context.FoodAndSuppliments.FindAsync(request.Id);
             _context.ChangeTracker.Clear();
-            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(request.Id, inDatabase.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, inDatabase.CreateDate);
+            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(request.Id, inDatabase.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, inDatabase.CreateDate, inDatabase.IsDelete);
             _context.Entry(foodAndSuppliment).State = EntityState.Modified;
             try
             {

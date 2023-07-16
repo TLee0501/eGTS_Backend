@@ -26,7 +26,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         public async Task<bool> CreateExcerciseSchedule(ExScheduleCreateViewModel model)
         {
             Guid id = Guid.NewGuid();
-            ExcerciseSchedule exSchedule = new ExcerciseSchedule(id, model.GymerId, model.Ptid, model.PackageGymerId, model.From, model.To);
+            ExcerciseSchedule exSchedule = new ExcerciseSchedule(id, model.GymerId, model.Ptid, model.PackageGymerId, model.From, model.To, false);
 
             try
             {

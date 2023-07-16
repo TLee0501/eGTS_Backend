@@ -100,6 +100,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
+                    result.isDelete = account.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -117,6 +118,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
+                    result.isDelete = account.IsDelete;
                     resultList.Add(result);
                 }
             }

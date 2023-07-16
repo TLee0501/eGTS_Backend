@@ -34,7 +34,7 @@ namespace eGTS.Bussiness.SessionService
                 if (exSchedule.From <= model.DateAndTime && model.DateAndTime <= exSchedule.To)
                 {
                     Guid id = Guid.NewGuid();
-                    Session session = new Session(id, model.ScheduleId, model.DateAndTime);
+                    Session session = new Session(id, model.ScheduleId, model.DateAndTime, false);
 
                     try
                     {

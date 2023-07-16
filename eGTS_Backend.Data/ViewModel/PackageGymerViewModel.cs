@@ -15,5 +15,6 @@ namespace eGTS_Backend.Data.ViewModel
         public Guid? Neid { get; set; }
         public short NumberOfSession { get; set; }
         public string Status { get; set; } = null!;
+        public bool isDelete { get; set; }
     }
 }

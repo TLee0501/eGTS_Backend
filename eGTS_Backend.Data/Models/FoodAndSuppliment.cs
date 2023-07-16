@@ -5,6 +5,18 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class FoodAndSuppliment
 {
+    public FoodAndSuppliment(Guid id, Guid neid, string name, short ammount, string unitOfMesuament, double calories, DateTime createDate, bool isDelete)
+    {
+        Id = id;
+        Neid = neid;
+        Name = name;
+        Ammount = ammount;
+        UnitOfMesuament = unitOfMesuament;
+        Calories = calories;
+        CreateDate = createDate;
+        IsDelete = isDelete;
+    }
+
     public Guid Id { get; set; }
 
     public Guid Neid { get; set; }
