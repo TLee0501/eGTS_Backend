@@ -8,6 +8,7 @@ namespace eGTS_Backend.Data.ViewModel
 {
     public class AccountViewModel
     {
+        public Guid Id { get; set; }
         public string PhoneNo { get; set; } = null!;
 
         public string Password { get; set; } = null!;
@@ -19,6 +20,8 @@ namespace eGTS_Backend.Data.ViewModel
         public string Role { get; set; } = null!;
 
         public DateTime CreateDate { get; set; }
+
+        public bool isDelete { get; set; }
 
     }
 }

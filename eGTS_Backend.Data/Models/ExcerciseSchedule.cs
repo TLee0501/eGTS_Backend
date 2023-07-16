@@ -5,6 +5,17 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class ExcerciseSchedule
 {
+    public ExcerciseSchedule(Guid id, Guid gymerId, Guid ptid, Guid packageGymerId, DateTime from, DateTime to, bool isDelete)
+    {
+        Id = id;
+        GymerId = gymerId;
+        Ptid = ptid;
+        PackageGymerId = packageGymerId;
+        From = from;
+        To = to;
+        IsDelete = isDelete;
+    }
+
     public Guid Id { get; set; }
 
     public Guid GymerId { get; set; }

@@ -23,7 +23,7 @@ namespace eGTS.Bussiness.RequestService
         public async Task<bool> CreateRequest(RequestCreateViewModel request)
         {
             var id = Guid.NewGuid();
-            var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, null);
+            var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, null, false);
             _context.Requests.Add(requestService);
             try
             {
@@ -67,7 +67,7 @@ namespace eGTS.Bussiness.RequestService
 
         public async Task<bool> UpdateRequest(RequestViewModel request)
         {
-            Request newRequest = new Request(request.Id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, request.IsAccepted);
+            Request newRequest = new Request(request.Id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, request.IsAccepted, false);
 
             //Accepct
             if(request.IsAccepted != null)
