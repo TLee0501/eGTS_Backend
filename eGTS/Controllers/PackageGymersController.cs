@@ -58,7 +58,7 @@ namespace eGTS.Controllers
 
         // PUT: api/PackageGymers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdatePackageGymer(PackageGymerViewModel request)
         {
             if (request == null)
