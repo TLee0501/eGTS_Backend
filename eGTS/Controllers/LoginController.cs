@@ -66,7 +66,7 @@ namespace eGTS.Controllers
 
             if (result == null)
                 return NotFound(new ErrorResponse(204, "Phone numer/Password is incorrect"));
-            else if (result.isDelete == true)
+            else if (result.IsDelete == true)
                 return Unauthorized(new ErrorResponse(401, "Account Is Lock"));
 
 

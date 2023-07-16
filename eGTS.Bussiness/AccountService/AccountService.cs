@@ -79,6 +79,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Gender = account.Gender;
                 result.Role = account.Role;
                 result.CreateDate = account.CreateDate;
+                result.IsDelete = account.IsDelete;
                 return result;
             }
         }
@@ -100,7 +101,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
-                    result.isDelete = account.IsDelete;
+                    result.IsDelete = account.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -118,7 +119,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
-                    result.isDelete = account.IsDelete;
+                    result.IsDelete = account.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -136,6 +137,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
+                    result.IsDelete = account.IsDelete;
                     resultList.Add(result);
                 }
             }
@@ -152,11 +154,14 @@ namespace eGTS.Bussiness.AccountService
                     result.Gender = account.Gender;
                     result.Role = account.Role;
                     result.CreateDate = account.CreateDate;
+                    result.IsDelete = account.IsDelete;
                     resultList.Add(result);
                 }
             }
 
-            return resultList;
+            if (resultList.Count > 0)
+                return resultList;
+            return null;
         }
 
         public async Task<bool> UpdateAccount(Guid id, AccountUpdateViewModel request)
@@ -208,6 +213,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Gender = account.Gender;
                 result.Role = account.Role;
                 result.CreateDate = account.CreateDate;
+                result.IsDelete = account.IsDelete;
                 resultList.Add(result);
             }
             return resultList;
@@ -228,6 +234,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Gender = account.Gender;
                 result.Role = account.Role;
                 result.CreateDate = account.CreateDate;
+                result.IsDelete = account.IsDelete;
                 resultList.Add(result);
             }
             return resultList;

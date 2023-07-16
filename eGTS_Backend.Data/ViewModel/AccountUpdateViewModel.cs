@@ -18,9 +18,8 @@ namespace eGTS_Backend.Data.ViewModel
 
         public string Role { get; set; } = null!;
 
-        public DateTime CreateDate { get; set; }
-
         public bool IsDelete { get; set; }
+
 
     }
 }
