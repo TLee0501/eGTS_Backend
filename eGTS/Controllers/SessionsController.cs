@@ -44,7 +44,7 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<List<SessionViewModel>>(200, "List of Sessions found", resultList));
             }
             else
-                return NotFound(new ErrorResponse(204, "No Session Found"));
+                return NoContent();
         }
 
         // GET: api/Sessions/5
@@ -53,7 +53,7 @@ namespace eGTS.Controllers
         {
             var result = await _sessionService.GetSessionByID(id);
             if (result == null)
-                return NotFound(new ErrorResponse(400, "ID Not Match With session in DB"));
+                return BadRequest(new ErrorResponse(400, "ID Not Match With session in DB"));
             else
                 return result;
         }
@@ -107,10 +107,10 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSession(id))
             {
                 _logger.LogInformation($"Deleted Session with ID: {id}");
-                return NoContent();
+                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Delete Success.", null));
             }
             else
-                return NotFound(new ErrorResponse(204, "Session Not Found In DataBase"));
+                return NoContent();
         }
 
         private bool SessionExists(Guid id)

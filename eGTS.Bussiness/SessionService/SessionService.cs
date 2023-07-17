@@ -1,4 +1,5 @@
-﻿using eGTS.Bussiness.AccountService;
+﻿using Azure.Core;
+using eGTS.Bussiness.AccountService;
 using eGTS.Bussiness.ExcerciseScheduleService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
@@ -69,6 +70,7 @@ namespace eGTS.Bussiness.SessionService
                     model.id = session.Id;
                     model.ScheduleId = session.ScheduleId;
                     model.DateAndTime = session.DateAndTime;
+                    model.IsDelete = session.IsDelete;
 
                     resultList.Add(model);
                 }
@@ -78,6 +80,25 @@ namespace eGTS.Bussiness.SessionService
         }
 
         public async Task<bool> DeleteSession(Guid id)
+        {
+            var session = await _context.Sessions.FindAsync(id);
+            if (session == null)
+                return false;
+
+            session.IsDelete = true;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to Delete");
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteSessionPERMANENT(Guid id)
         {
             var session = await _context.Sessions.FindAsync(id);
             if (session != null)
@@ -98,6 +119,7 @@ namespace eGTS.Bussiness.SessionService
                 result.id = session.Id;
                 result.ScheduleId = session.ScheduleId;
                 result.DateAndTime = session.DateAndTime;
+                result.IsDelete = session.IsDelete;
                 return result;
             }
             else
@@ -115,6 +137,7 @@ namespace eGTS.Bussiness.SessionService
                     SessionViewModel model = new SessionViewModel();
                     model.ScheduleId = session.ScheduleId;
                     model.DateAndTime = session.DateAndTime;
+                    model.IsDelete = session.IsDelete;
 
                     resultList.Add(model);
                 }
@@ -130,7 +153,7 @@ namespace eGTS.Bussiness.SessionService
             if (session == null)
                 return false;
 
-
+            session.IsDelete = request.IsDelete;
 
             if (request.DateAndTime != null || !request.DateAndTime.Equals(""))
             {
