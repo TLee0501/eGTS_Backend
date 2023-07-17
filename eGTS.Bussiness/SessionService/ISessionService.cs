@@ -12,6 +12,7 @@ namespace eGTS.Bussiness.SessionService
         Task<bool> CreateSession(SessionCreateViewModel model);
         Task<bool> UpdateSession(Guid id, SessionUpdateViewModel request);
         Task<bool> DeleteSession(Guid id);
+        Task<bool> DeleteSessionPERMANENT(Guid id);
         Task<SessionViewModel> GetSessionByID(Guid id);
         Task<List<SessionViewModel>> GetSessionListWithSceduleID(Guid id);
         Task<List<SessionViewModel>> DebugGetAllSessionList();
