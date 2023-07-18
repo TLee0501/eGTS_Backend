@@ -37,7 +37,7 @@ namespace eGTS.Controllers
             var result = await _excerciseService.GetAllExcerciseInType();
             if (result == null)
             {
-                return NotFound(new ErrorResponse(204, "No Data Found"));
+                return NoContent();
             }
             return Ok(new SuccessResponse<List<ExcerciseInTypeViewModel>>(200, "Data Found.", result));
         }

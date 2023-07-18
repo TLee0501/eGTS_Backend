@@ -113,9 +113,25 @@ namespace eGTS.Controllers
                 return NoContent();
         }
 
+        // DELETE: api/Sessions/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSessionPEMANENT(Guid id)
+        {
+            if (await _sessionService.DeleteSessionPERMANENT(id))
+            {
+                _logger.LogInformation($"REMOVE Session with ID: {id}");
+                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "REMOVE Success.", null));
+            }
+            else
+                return NoContent();
+        }
+
         private bool SessionExists(Guid id)
         {
             return (_context.Sessions?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+
+
     }
 }
