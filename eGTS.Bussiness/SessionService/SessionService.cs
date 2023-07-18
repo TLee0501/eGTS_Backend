@@ -27,6 +27,23 @@ namespace eGTS.Bussiness.SessionService
             _logger = logger;
         }
 
+        public async Task<bool> CreateExcerciseInSession(ExInSessionCreateViewModel model)
+        {
+            Guid id = Guid.NewGuid();
+            ExserciseInSession EIS = new ExserciseInSession(id, model.SessionId, model.ExerciseId);
+            try
+            {
+                await _context.ExserciseInSessions.AddAsync(EIS);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Invalid data.");
+                return false;
+            }
+        }
+
         public async Task<bool> CreateSession(SessionCreateViewModel model)
         {
             var exSchedule = await _excerciseScheduleService.GetExcerciseScheduleByID(model.ScheduleId);
@@ -58,6 +75,25 @@ namespace eGTS.Bussiness.SessionService
 
         }
 
+        public async Task<List<ExInSessionViewModel>> DebugGetAllExcerciseInSessionList()
+        {
+            List<ExInSessionViewModel> resultList = new List<ExInSessionViewModel>();
+            var ExInsessions = await _context.ExserciseInSessions.ToListAsync();
+            if (ExInsessions.Count > 0)
+            {
+                foreach (var ex in ExInsessions)
+                {
+                    ExInSessionViewModel model = new ExInSessionViewModel();
+                    model.Id = ex.Id;
+                    model.SessionId = ex.SessionId;
+                    model.ExerciseId = ex.ExerciseId;
+                    resultList.Add(model);
+                }
+                return resultList;
+            }
+            return null;
+        }
+
         public async Task<List<SessionViewModel>> DebugGetAllSessionList()
         {
             List<SessionViewModel> resultList = new List<SessionViewModel>();
@@ -77,6 +113,18 @@ namespace eGTS.Bussiness.SessionService
                 return resultList;
             }
             return null;
+        }
+
+        public async Task<bool> DeleteExcerciseInSessionPERMANENT(Guid id)
+        {
+            var EIS = await _context.ExserciseInSessions.FindAsync(id);
+            if (EIS != null)
+            {
+                _context.ExserciseInSessions.Remove(EIS);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteSession(Guid id)
@@ -108,6 +156,41 @@ namespace eGTS.Bussiness.SessionService
                 return true;
             }
             return false;
+        }
+
+        public async Task<ExInSessionViewModel> GetExcerciseInSessionByID(Guid id)
+        {
+            var EIS = await _context.ExserciseInSessions.FindAsync(id);
+            if (EIS != null)
+            {
+                ExInSessionViewModel result = new ExInSessionViewModel();
+                result.Id = id;
+                result.SessionId = EIS.Id;
+                result.ExerciseId = EIS.ExerciseId;
+                return result;
+            }
+            else
+                return null;
+        }
+
+        public async Task<List<ExInSessionViewModel>> GetExcerciseInSessionBySessionID(Guid id)
+        {
+            List<ExInSessionViewModel> resultList = new List<ExInSessionViewModel>();
+            var EISs = await _context.ExserciseInSessions.Where(s => s.SessionId == id).ToListAsync();
+            if (EISs.Count > 0)
+            {
+                foreach (var EIS in EISs)
+                {
+                    ExInSessionViewModel model = new ExInSessionViewModel();
+                    model.Id = EIS.Id;
+                    model.SessionId = EIS.SessionId;
+                    model.ExerciseId = EIS.ExerciseId;
+
+                    resultList.Add(model);
+                }
+                return resultList;
+            }
+            return null;
         }
 
         public async Task<SessionViewModel> GetSessionByID(Guid id)
@@ -144,6 +227,29 @@ namespace eGTS.Bussiness.SessionService
                 return resultList;
             }
             return null;
+        }
+
+        public async Task<bool> UpdateExcerciseInSession(Guid id, ExInSessionUpdateViewModel request)
+        {
+            var EIS = await _context.ExserciseInSessions.FindAsync(id);
+            if (EIS == null)
+                return false;
+            if (!request.ExerciseId.Equals(""))
+                EIS.ExerciseId = request.ExerciseId;
+            if (!request.SessionId.Equals(""))
+                EIS.SessionId = EIS.SessionId;
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to save changes");
+            }
+            return false;
         }
 
         public async Task<bool> UpdateSession(Guid id, SessionUpdateViewModel request)

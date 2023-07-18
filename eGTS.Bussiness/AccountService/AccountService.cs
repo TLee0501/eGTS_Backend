@@ -32,7 +32,7 @@ namespace eGTS.Bussiness.AccountService
 
 
             Guid id = Guid.NewGuid();
-            Account account = new Account(id, model.PhoneNo, model.Password, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
+            Account account = new Account(id, model.PhoneNo, model.Password, model.Image, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
             try
             {
                 await _context.Accounts.AddAsync(account);
@@ -75,6 +75,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
+                result.Image = account.Image;
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;
@@ -97,6 +98,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
+                    result.Image = account.Image;
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -115,6 +117,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
+                    result.Image = account.Image;
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -133,6 +136,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
+                    result.Image = account.Image;
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -150,6 +154,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
+                    result.Image = account.Image;
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -176,8 +181,12 @@ namespace eGTS.Bussiness.AccountService
             if (!request.Password.Equals(""))
                 account.Password = request.Password;
 
+            if (!request.Image.Equals(""))
+                account.Image = request.Image;
+
             if (!request.Fullname.Equals("") && !request.Fullname.Equals("string"))
                 account.Fullname = request.Fullname;
+
             if (!request.Gender.Equals(""))
                 account.Gender = request.Gender;
 
@@ -209,6 +218,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
+                result.Image = account.Image;
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;
@@ -230,6 +240,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
+                result.Image = account.Image;
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;
