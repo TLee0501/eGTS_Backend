@@ -11,6 +11,13 @@ public partial class ExserciseInSession
 
     public Guid ExerciseId { get; set; }
 
+    public ExserciseInSession(Guid id, Guid sessionId, Guid exerciseId)
+    {
+        Id = id;
+        SessionId = sessionId;
+        ExerciseId = exerciseId;
+    }
+
     public virtual Excercise Exercise { get; set; } = null!;
 
     public virtual Session Session { get; set; } = null!;

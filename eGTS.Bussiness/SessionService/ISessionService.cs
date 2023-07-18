@@ -10,12 +10,18 @@ namespace eGTS.Bussiness.SessionService
     public interface ISessionService
     {
         Task<bool> CreateSession(SessionCreateViewModel model);
+        Task<bool> CreateExcerciseInSession(ExInSessionCreateViewModel model);
         Task<bool> UpdateSession(Guid id, SessionUpdateViewModel request);
+        Task<bool> UpdateExcerciseInSession(Guid id, ExInSessionUpdateViewModel request);
         Task<bool> DeleteSession(Guid id);
         Task<bool> DeleteSessionPERMANENT(Guid id);
+        Task<bool> DeleteExcerciseInSessionPERMANENT(Guid id);
         Task<SessionViewModel> GetSessionByID(Guid id);
+        Task<ExInSessionViewModel> GetExcerciseInSessionByID(Guid id);
+        Task<List<ExInSessionViewModel>> GetExcerciseInSessionBySessionID(Guid id);
         Task<List<SessionViewModel>> GetSessionListWithSceduleID(Guid id);
         Task<List<SessionViewModel>> DebugGetAllSessionList();
+        Task<List<ExInSessionViewModel>> DebugGetAllExcerciseInSessionList();
 
     }
 }
