@@ -75,6 +75,23 @@ namespace eGTS.Bussiness.SessionService
 
         }
 
+        public async Task<bool> CreateSessionResult(SessionResultCreateViewModel model)
+        {
+            Guid id = Guid.NewGuid();
+            SessionResult sessionResult = new SessionResult(id, model.SessionId, model.Result, false);
+            try
+            {
+                await _context.SessionResults.AddAsync(sessionResult);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Invalid data.");
+                return false;
+            }
+        }
+
         public async Task<List<ExInSessionViewModel>> DebugGetAllExcerciseInSessionList()
         {
             List<ExInSessionViewModel> resultList = new List<ExInSessionViewModel>();
@@ -107,6 +124,27 @@ namespace eGTS.Bussiness.SessionService
                     model.ScheduleId = session.ScheduleId;
                     model.DateAndTime = session.DateAndTime;
                     model.IsDelete = session.IsDelete;
+
+                    resultList.Add(model);
+                }
+                return resultList;
+            }
+            return null;
+        }
+
+        public async Task<List<SessionResultViewModel>> DebugGetAllSessionResultList()
+        {
+            List<SessionResultViewModel> resultList = new List<SessionResultViewModel>();
+            var sessionResults = await _context.SessionResults.ToListAsync();
+            if (sessionResults.Count > 0)
+            {
+                foreach (var sessionResult in sessionResults)
+                {
+                    SessionResultViewModel model = new SessionResultViewModel();
+                    model.Id = sessionResult.Id;
+                    model.SessionId = sessionResult.SessionId;
+                    model.Result = sessionResult.Result;
+                    model.IsDelete = model.IsDelete;
 
                     resultList.Add(model);
                 }
@@ -152,6 +190,37 @@ namespace eGTS.Bussiness.SessionService
             if (session != null)
             {
                 _context.Sessions.Remove(session);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteSessionResult(Guid id)
+        {
+            var sessionResult = await _context.SessionResults.FindAsync(id);
+            if (sessionResult == null)
+                return false;
+
+            sessionResult.IsDelete = true;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to Delete");
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteSessionResultPERMANENT(Guid id)
+        {
+            var sessionResult = await _context.SessionResults.FindAsync(id);
+            if (sessionResult != null)
+            {
+                _context.SessionResults.Remove(sessionResult);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -229,6 +298,38 @@ namespace eGTS.Bussiness.SessionService
             return null;
         }
 
+        public async Task<SessionResultViewModel> GetSessionResultByID(Guid id)
+        {
+            var sessionResult = await _context.SessionResults.FindAsync(id);
+            if (sessionResult != null)
+            {
+                SessionResultViewModel result = new SessionResultViewModel();
+                result.Id = sessionResult.Id;
+                result.SessionId = sessionResult.SessionId;
+                result.Result = sessionResult.Result;
+                result.IsDelete = sessionResult.IsDelete;
+                return result;
+            }
+            else
+                return null;
+        }
+
+        public async Task<SessionResultViewModel> GetSessionResultBySessionID(Guid id)
+        {
+            var sessionResult = await _context.SessionResults.FirstOrDefaultAsync(r => r.SessionId.Equals(id));
+            if (sessionResult != null)
+            {
+                SessionResultViewModel result = new SessionResultViewModel();
+                result.Id = sessionResult.Id;
+                result.SessionId = sessionResult.SessionId;
+                result.Result = sessionResult.Result;
+                result.IsDelete = sessionResult.IsDelete;
+                return result;
+            }
+            else
+                return null;
+        }
+
         public async Task<bool> UpdateExcerciseInSession(Guid id, ExInSessionUpdateViewModel request)
         {
             var EIS = await _context.ExserciseInSessions.FindAsync(id);
@@ -279,6 +380,28 @@ namespace eGTS.Bussiness.SessionService
                 }
             }
             return false;
+        }
+
+        public async Task<bool> UpdateSessionResult(Guid id, SessionResultUpdateViewModel request)
+        {
+            var sessionResult = await _context.SessionResults.FindAsync(id);
+            if (sessionResult == null)
+                return false;
+            if (!request.Result.Equals(""))
+                sessionResult.Result = request.Result;
+            sessionResult.IsDelete = request.IsDelete;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to save changes");
+            }
+            return false;
+
         }
     }
 }
