@@ -81,6 +81,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Gender)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.Image).IsUnicode(false);
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Password)
                 .HasMaxLength(50)

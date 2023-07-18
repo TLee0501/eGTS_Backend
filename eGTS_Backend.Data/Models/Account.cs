@@ -11,6 +11,8 @@ public partial class Account
 
     public string Password { get; set; } = null!;
 
+    public string Image { get; set; } = null!;
+
     public string Fullname { get; set; } = null!;
 
     public string Gender { get; set; } = null!;
@@ -21,11 +23,12 @@ public partial class Account
 
     public bool IsDelete { get; set; }
 
-    public Account(Guid id, string phoneNo, string password, string fullname, string gender, string role, DateTime createDate, bool isDelete)
+    public Account(Guid id, string phoneNo, string password, string image, string fullname, string gender, string role, DateTime createDate, bool isDelete)
     {
         Id = id;
         PhoneNo = phoneNo;
         Password = password;
+        Image = image;
         Fullname = fullname;
         Gender = gender;
         Role = role;
