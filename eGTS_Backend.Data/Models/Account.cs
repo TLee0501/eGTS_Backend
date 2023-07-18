@@ -11,7 +11,7 @@ public partial class Account
 
     public string Password { get; set; } = null!;
 
-    public string Image { get; set; } = null!;
+    public string? Image { get; set; }
 
     public string Fullname { get; set; } = null!;
 
