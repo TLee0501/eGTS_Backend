@@ -10,6 +10,10 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
+    <PackageReference Include="FirebaseDatabase.net" Version="4.2.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.6.0" />
+    <PackageReference Include="Google.Cloud.Translate.V3" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.9" />
@@ -25,6 +29,12 @@
   <ItemGroup>
     <ProjectReference Include="..\eGTS.Bussiness\eGTS.Bussiness.csproj" />
     <ProjectReference Include="..\eGTS_Backend.Data\eGTS_Backend.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="egts-2023-firebase.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
