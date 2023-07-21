@@ -3,6 +3,8 @@ using Azure.Core;
 using coffee_kiosk_solution.Data.Responses;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,6 +15,8 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.WebPages;
 
 namespace eGTS.Bussiness.AccountService
 {
@@ -75,7 +79,10 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
-                result.Image = account.Image;
+                if (account.Image != null || account.Image.Length > 0)
+                {
+                    result.Image = getAvatar(account.Id);
+                }
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;
@@ -98,7 +105,10 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
-                    result.Image = account.Image;
+                    if (account.Image != null)
+                    {
+                        result.Image = getAvatar(account.Id);
+                    }
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -117,7 +127,10 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
-                    result.Image = account.Image;
+                    if (account.Image != null)
+                    {
+                        result.Image = getAvatar(account.Id);
+                    }
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -136,7 +149,10 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
-                    result.Image = account.Image;
+                    if (account.Image != null)
+                    {
+                        result.Image = getAvatar(account.Id);
+                    }
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -154,7 +170,10 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
-                    result.Image = account.Image;
+                    if (account.Image != null)
+                    {
+                        result.Image = getAvatar(account.Id);
+                    }
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -218,7 +237,10 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
-                result.Image = account.Image;
+                if (account.Image != null)
+                {
+                    result.Image = getAvatar(account.Id);
+                }
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;
@@ -240,7 +262,10 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
-                result.Image = account.Image;
+                if (account.Image != null)
+                {
+                    result.Image = getAvatar(account.Id);
+                }
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;
@@ -285,6 +310,33 @@ namespace eGTS.Bussiness.AccountService
                 _logger.LogError("Unable to Delete");
             }
             return false;
+        }
+
+        private byte[] getAvatar(Guid id)
+        {
+            string projectId = "egts-2023";
+            string bucketName = "egts-2023.appspot.com";
+            var account = _context.Accounts.Find(id);
+            string imagePath = account.Image;
+
+            var credential = GoogleCredential.FromFile("egts-2023-firebase.json");
+            var storageClient = StorageClient.Create(credential);
+
+            var imageObject = storageClient.GetObject(bucketName, imagePath);
+            var imageStream = new MemoryStream();
+            storageClient.DownloadObjectAsync(bucketName, imagePath, imageStream);
+            //await storageClient.DeleteObjectAsync(bucketName, imagePath);
+
+            // Reset the memory stream position
+            imageStream.Position = 0;
+
+            // Return the image stream
+            var inStream = new System.Web.Mvc.FileStreamResult(imageStream, "image/jpeg"); // or the appropriate content type
+            using (var memoryStream = new MemoryStream())
+            {
+                inStream.FileStream.CopyTo(memoryStream);
+                return memoryStream.ToArray();
+            };
         }
     }
 }

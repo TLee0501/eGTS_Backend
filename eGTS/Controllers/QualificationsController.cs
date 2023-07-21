@@ -2,6 +2,7 @@
 using eGTS_Backend.Data.Models;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
+using eGTS.Bussiness.FirebaseService;
 
 namespace eGTS.Controllers
 {
@@ -9,45 +10,26 @@ namespace eGTS.Controllers
     [ApiController]
     public class QualificationsController : ControllerBase
     {
-        private readonly EGtsContext _context;
+        private readonly IFirebaseService _iFrirebaseService;
 
-        public QualificationsController(EGtsContext context)
+        public QualificationsController(IFirebaseService iFrirebaseService)
         {
-            _context = context;
-        }
-
-
-        private async Task<string> UploadImageToFirebaseStorage(Stream imageStream, string imageName)
-        {
-            var credential = GoogleCredential.FromFile("egts-2023-firebase.json");
-            var storage = await StorageClient.CreateAsync(credential);
-
-            var bucketName = "egts-2023.appspot.com"; // Replace with your actual bucket name
-
-            using (var stream = imageStream)
-            {
-                var imageObject = await storage.UploadObjectAsync(bucketName, imageName, null, stream);
-                var url = $"https://storage.googleapis.com/{bucketName}/{imageName}";
-                return url;
-            }
+            _iFrirebaseService = iFrirebaseService;
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage(IFormFile imageFile)
+        public async Task<IActionResult> UploadAvatar(IFormFile imageFile, Guid Id)
         {
             if (imageFile == null || imageFile.Length == 0)
             {
                 return BadRequest("No image file provided");
             }
 
-            using var imageStream = imageFile.OpenReadStream();
-
             try
             {
-                var imageUrl = await UploadImageToFirebaseStorage(imageStream, imageFile.FileName);
+                var imageUrl = await _iFrirebaseService.UploadAvatarImage(imageFile, Id);
 
-                // Return the image URL in the API response
-                return Ok(new { imageUrl });
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -55,6 +37,59 @@ namespace eGTS.Controllers
                 return StatusCode(500, "Failed to upload image: " + ex.Message);
             }
         }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadQualification(IFormFile imageFile, Guid Id)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return BadRequest("No image file provided");
+            }
+
+            try
+            {
+                var imageUrl = await _iFrirebaseService.UploadCertificateImage(imageFile, Id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception accordingly
+                return StatusCode(500, "Failed to upload image: " + ex.Message);
+            }
+        }
+
+
+        [HttpGet("{imageName}")]
+        public async Task<IActionResult> GetImageForTest(string imageName)
+        {
+            try
+            {
+                string projectId = "egts-2023";
+                string bucketName = "egts-2023.appspot.com";
+                string imagePath = imageName;
+
+                var credential = GoogleCredential.FromFile("egts-2023-firebase.json");
+                var storageClient = StorageClient.Create(credential);
+
+                var imageObject = storageClient.GetObject(bucketName, imagePath);
+                var imageStream = new MemoryStream();
+                await storageClient.DownloadObjectAsync(bucketName, imagePath, imageStream);
+                //await storageClient.DeleteObjectAsync(bucketName, imagePath);
+
+                // Reset the memory stream position
+                imageStream.Position = 0;
+
+                // Return the image stream
+                return new FileStreamResult(imageStream, "image/jpeg"); // or the appropriate content type
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an appropriate response
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,29 +183,38 @@ namespace eGTS.Controllers
             return CreatedAtAction("GetQualification", new { id = qualification.ExpertId }, qualification);
         }*/
 
-        /*// DELETE: api/Qualifications/5
+        // DELETE: api/Qualifications/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQualification(Guid id)
         {
-            if (_context.Qualifications == null)
+            if (id == null)
             {
-                return NotFound();
+                return BadRequest();
             }
-            var qualification = await _context.Qualifications.FindAsync(id);
-            if (qualification == null)
+            var qualification = await _iFrirebaseService.DeleleQualification(id);
+            if (qualification == false)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            _context.Qualifications.Remove(qualification);
-            await _context.SaveChangesAsync();
+            return Ok();
+        }
 
-            return NoContent();
-        }*/
-
-        private bool QualificationExists(Guid id)
+        // DELETE: api/Qualifications/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAvatar(Guid id)
         {
-            return (_context.Qualifications?.Any(e => e.ExpertId == id)).GetValueOrDefault();
+            if (id == null)
+            {
+                return BadRequest();
+            }
+            var qualification = await _iFrirebaseService.DeleleAvatar(id);
+            if (qualification == false)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
     }
 }
