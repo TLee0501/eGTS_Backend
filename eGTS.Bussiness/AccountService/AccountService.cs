@@ -79,7 +79,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
-                if (account.Image != null || account.Image.Length > 0)
+                if (account.Image != null)
                 {
                     result.Image = getAvatar(account.Id);
                 }
