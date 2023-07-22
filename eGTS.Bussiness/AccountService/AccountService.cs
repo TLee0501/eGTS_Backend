@@ -1,22 +1,10 @@
-﻿using AutoMapper;
-using Azure.Core;
-using coffee_kiosk_solution.Data.Responses;
-using eGTS_Backend.Data.Models;
+﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.WebPages;
 
 namespace eGTS.Bussiness.AccountService
 {
@@ -33,13 +21,44 @@ namespace eGTS.Bussiness.AccountService
 
         public async Task<bool> CreateAccount(AccountCreateViewModel model)
         {
-
+            string originalFileName = null;
+            string newFileName = "";
 
             Guid id = Guid.NewGuid();
-            Account account = new Account(id, model.PhoneNo, model.Password, model.Image, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
+
+            if (model.Certification != null)
+            {
+                //Add img name
+                // Get the original file name
+                originalFileName = model.Certification.FileName;
+    
+                // Define the new file name
+                newFileName = "Qualification/" + originalFileName + "-" + id;
+            }
+            
+
+            Account account = new Account(id, model.PhoneNo, model.Password, originalFileName, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
             try
             {
                 await _context.Accounts.AddAsync(account);
+
+                if (model.Certification != null)
+                {
+                    using var imageStream = model.Certification.OpenReadStream();
+                    string imageUrl = await UploadImageToFirebaseStorage(imageStream, newFileName);
+
+                    //Store filePath to DB
+                    var certificate = new Qualification()
+                    {
+                        ExpertId = id,
+                        Certificate = newFileName,
+                        IsCetifide = false,
+                        IsDelete = false
+                    };
+                    _context.Qualifications.Add(certificate);
+                }
+                
+
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -81,7 +100,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Password = account.Password;
                 if (account.Image != null)
                 {
-                    result.Image = getAvatar(account.Id);
+                    result.Image = getAvatar(account.Id).Result;
                 }
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
@@ -107,7 +126,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Password = account.Password;
                     if (account.Image != null)
                     {
-                        result.Image = getAvatar(account.Id);
+                        result.Image = getAvatar(account.Id).Result;
                     }
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
@@ -129,7 +148,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Password = account.Password;
                     if (account.Image != null)
                     {
-                        result.Image = getAvatar(account.Id);
+                        result.Image = getAvatar(account.Id).Result;
                     }
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
@@ -151,7 +170,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Password = account.Password;
                     if (account.Image != null)
                     {
-                        result.Image = getAvatar(account.Id);
+                        result.Image = getAvatar(account.Id).Result;
                     }
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
@@ -172,7 +191,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Password = account.Password;
                     if (account.Image != null)
                     {
-                        result.Image = getAvatar(account.Id);
+                        result.Image = getAvatar(account.Id).Result;
                     }
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
@@ -239,7 +258,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Password = account.Password;
                 if (account.Image != null)
                 {
-                    result.Image = getAvatar(account.Id);
+                    result.Image = getAvatar(account.Id).Result;
                 }
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
@@ -264,7 +283,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Password = account.Password;
                 if (account.Image != null)
                 {
-                    result.Image = getAvatar(account.Id);
+                    result.Image = getAvatar(account.Id).Result;
                 }
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
@@ -312,11 +331,11 @@ namespace eGTS.Bussiness.AccountService
             return false;
         }
 
-        private byte[] getAvatar(Guid id)
+        private async Task<byte[]> getAvatar(Guid id)
         {
             string projectId = "egts-2023";
             string bucketName = "egts-2023.appspot.com";
-            var account = _context.Accounts.Find(id);
+            var account = await _context.Accounts.FindAsync(id);
             string imagePath = account.Image;
 
             var credential = GoogleCredential.FromFile("egts-2023-firebase.json");
@@ -324,19 +343,35 @@ namespace eGTS.Bussiness.AccountService
 
             var imageObject = storageClient.GetObject(bucketName, imagePath);
             var imageStream = new MemoryStream();
-            storageClient.DownloadObjectAsync(bucketName, imagePath, imageStream);
+            await storageClient.DownloadObjectAsync(bucketName, imagePath, imageStream);
             //await storageClient.DeleteObjectAsync(bucketName, imagePath);
 
             // Reset the memory stream position
             imageStream.Position = 0;
 
             // Return the image stream
-            var inStream = new System.Web.Mvc.FileStreamResult(imageStream, "image/jpeg"); // or the appropriate content type
-            using (var memoryStream = new MemoryStream())
+            //var inStream =  new FileStreamResult(imageStream, "image/jpeg"); // or the appropriate content type
+
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                inStream.FileStream.CopyTo(memoryStream);
+                imageStream.CopyTo(memoryStream);
                 return memoryStream.ToArray();
-            };
+            }
+        }
+
+        private async Task<string> UploadImageToFirebaseStorage(Stream imageStream, string filePath)
+        {
+            var credential = GoogleCredential.FromFile("egts-2023-firebase.json");
+            var storage = await StorageClient.CreateAsync(credential);
+
+            var bucketName = "egts-2023.appspot.com"; // Replace with your actual bucket name
+
+            using (var stream = imageStream)
+            {
+                var imageObject = await storage.UploadObjectAsync(bucketName, filePath, null, stream);
+                var url = $"https://storage.googleapis.com/{bucketName}/{filePath}";
+                return url;
+            }
         }
     }
 }
