@@ -1,27 +1,10 @@
-﻿using AutoMapper;
-using Azure.Core;
-using coffee_kiosk_solution.Data.Responses;
-using eGTS_Backend.Data.Models;
+﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using Firebase.Storage;
-using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
-using Microsoft.AspNetCore.Builder.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.WebPages;
-using FileStreamResult = Microsoft.AspNetCore.Mvc.FileStreamResult;
 
 namespace eGTS.Bussiness.AccountService
 {
@@ -38,13 +21,44 @@ namespace eGTS.Bussiness.AccountService
 
         public async Task<bool> CreateAccount(AccountCreateViewModel model)
         {
-
+            string originalFileName = null;
+            string newFileName = "";
 
             Guid id = Guid.NewGuid();
-            Account account = new Account(id, model.PhoneNo, model.Password, model.Image, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
+
+            if (model.Certification != null)
+            {
+                //Add img name
+                // Get the original file name
+                originalFileName = model.Certification.FileName;
+    
+                // Define the new file name
+                newFileName = "Qualification/" + originalFileName + "-" + id;
+            }
+            
+
+            Account account = new Account(id, model.PhoneNo, model.Password, originalFileName, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
             try
             {
                 await _context.Accounts.AddAsync(account);
+
+                if (model.Certification != null)
+                {
+                    using var imageStream = model.Certification.OpenReadStream();
+                    string imageUrl = await UploadImageToFirebaseStorage(imageStream, newFileName);
+
+                    //Store filePath to DB
+                    var certificate = new Qualification()
+                    {
+                        ExpertId = id,
+                        Certificate = newFileName,
+                        IsCetifide = false,
+                        IsDelete = false
+                    };
+                    _context.Qualifications.Add(certificate);
+                }
+                
+
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -342,6 +356,21 @@ namespace eGTS.Bussiness.AccountService
             {
                 imageStream.CopyTo(memoryStream);
                 return memoryStream.ToArray();
+            }
+        }
+
+        private async Task<string> UploadImageToFirebaseStorage(Stream imageStream, string filePath)
+        {
+            var credential = GoogleCredential.FromFile("egts-2023-firebase.json");
+            var storage = await StorageClient.CreateAsync(credential);
+
+            var bucketName = "egts-2023.appspot.com"; // Replace with your actual bucket name
+
+            using (var stream = imageStream)
+            {
+                var imageObject = await storage.UploadObjectAsync(bucketName, filePath, null, stream);
+                var url = $"https://storage.googleapis.com/{bucketName}/{filePath}";
+                return url;
             }
         }
     }
