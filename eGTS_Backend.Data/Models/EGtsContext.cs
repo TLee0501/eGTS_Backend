@@ -477,6 +477,9 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ExpertID");
             entity.Property(e => e.Certificate).IsUnicode(false);
+            entity.Property(e => e.Description)
+                .HasMaxLength(300)
+                .IsUnicode(false);
             entity.Property(e => e.IsCetifide).HasColumnName("isCetifide");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
