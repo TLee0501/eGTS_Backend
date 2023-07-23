@@ -19,53 +19,22 @@ namespace eGTS.Bussiness.AccountService
             _logger = logger;
         }
 
-        public async Task<bool> CreateAccount(AccountCreateViewModel model)
+        public async Task<Guid> CreateAccount(AccountCreateViewModel model)
         {
-            string originalFileName = null;
-            string newFileName = "";
-
             Guid id = Guid.NewGuid();
-
-            if (model.Certification != null)
-            {
-                //Add img name
-                // Get the original file name
-                originalFileName = model.Certification.FileName;
-    
-                // Define the new file name
-                newFileName = "Qualification/" + originalFileName + "-" + id;
-            }
             
 
-            Account account = new Account(id, model.PhoneNo, model.Password, originalFileName, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
+            Account account = new Account(id, model.PhoneNo, model.Password, null, model.Fullname, model.Gender, model.Role, DateTime.Now, false);
             try
             {
                 await _context.Accounts.AddAsync(account);
-
-                if (model.Certification != null)
-                {
-                    using var imageStream = model.Certification.OpenReadStream();
-                    string imageUrl = await UploadImageToFirebaseStorage(imageStream, newFileName);
-
-                    //Store filePath to DB
-                    var certificate = new Qualification()
-                    {
-                        ExpertId = id,
-                        Certificate = newFileName,
-                        IsCetifide = false,
-                        IsDelete = false
-                    };
-                    _context.Qualifications.Add(certificate);
-                }
-                
-
                 await _context.SaveChangesAsync();
-                return true;
+                return id;
             }
             catch (Exception ex)
             {
                 _logger.LogError("Invalid data.");
-                return false;
+                return Guid.Empty;
             }
 
         }
@@ -98,10 +67,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
-                if (account.Image != null)
-                {
-                    result.Image = getAvatar(account.Id).Result;
-                }
+                result.Image = account.Image;
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;
@@ -124,10 +90,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
-                    if (account.Image != null)
-                    {
-                        result.Image = getAvatar(account.Id).Result;
-                    }
+                    result.Image = account.Image;
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -146,10 +109,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
-                    if (account.Image != null)
-                    {
-                        result.Image = getAvatar(account.Id).Result;
-                    }
+                    result.Image = account.Image;
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -168,10 +128,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
-                    if (account.Image != null)
-                    {
-                        result.Image = getAvatar(account.Id).Result;
-                    }
+                    result.Image = account.Image;
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -189,10 +146,7 @@ namespace eGTS.Bussiness.AccountService
                     result.Id = account.Id;
                     result.PhoneNo = account.PhoneNo;
                     result.Password = account.Password;
-                    if (account.Image != null)
-                    {
-                        result.Image = getAvatar(account.Id).Result;
-                    }
+                    result.Image = account.Image;
                     result.Fullname = account.Fullname;
                     result.Gender = account.Gender;
                     result.Role = account.Role;
@@ -256,10 +210,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
-                if (account.Image != null)
-                {
-                    result.Image = getAvatar(account.Id).Result;
-                }
+                result.Image = account.Image;
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;
@@ -281,10 +232,7 @@ namespace eGTS.Bussiness.AccountService
                 result.Id = account.Id;
                 result.PhoneNo = account.PhoneNo;
                 result.Password = account.Password;
-                if (account.Image != null)
-                {
-                    result.Image = getAvatar(account.Id).Result;
-                }
+                result.Image = account.Image;
                 result.Fullname = account.Fullname;
                 result.Gender = account.Gender;
                 result.Role = account.Role;

@@ -1,4 +1,3 @@
-using AutoMapper;
 using eGTS.Bussiness.ExcerciseService;
 using eGTS.Bussiness.AccountService;
 using eGTS.Bussiness.FoodAndSupplimentService;
@@ -6,7 +5,6 @@ using eGTS.Bussiness.LoginService;
 using eGTS.Bussiness.PackageService;
 using eGTS_Backend.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.IdentityModel.Tokens;
@@ -16,7 +14,7 @@ using eGTS.Bussiness.PackageGymersService;
 using eGTS.Bussiness.RequestService;
 using eGTS.Bussiness.ExcerciseScheduleService;
 using eGTS.Bussiness.SessionService;
-using eGTS.Bussiness.FirebaseService;
+using eGTS.Bussiness.QualitificationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +41,7 @@ builder.Services.AddScoped<INutritionScheduleService, NutritionScheduleService>(
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IExcerciseScheduleService, ExcerciseScheduleService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
-builder.Services.AddScoped<IFirebaseService, FirebaseService>();
+builder.Services.AddScoped<IQualitificationService, QualitificationService>();
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();

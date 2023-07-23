@@ -14,7 +14,7 @@ namespace eGTS_Backend.Data.ViewModel
 
         public string Password { get; set; } = null!;
 
-        public byte[] Image { get; set; } = null!;
+        public string Image { get; set; } = null!;
 
         public string Fullname { get; set; } = null!;
 

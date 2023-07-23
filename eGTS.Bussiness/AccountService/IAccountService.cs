@@ -12,7 +12,7 @@ namespace eGTS.Bussiness.AccountService
 {
     public interface IAccountService
     {
-        Task<bool> CreateAccount(AccountCreateViewModel model);
+        Task<Guid> CreateAccount(AccountCreateViewModel model);
         Task<bool> DeleteAccount(Guid id);
         Task<bool> DeleteAccountPERMANENT(Guid id);
         Task<bool> UpdateAccount(Guid id, AccountUpdateViewModel request);
