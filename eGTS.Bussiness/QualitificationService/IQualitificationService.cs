@@ -1,10 +1,5 @@
 ﻿using eGTS_Backend.Data.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.QualitificationService
 {
@@ -12,5 +7,9 @@ namespace eGTS.Bussiness.QualitificationService
     {
         Task<bool> CreateQualitification(QualitificationCreateViewModel request);
         Task<ActionResult<QualitificationViewModel>> GetQualitificationByAccountId(Guid id);
+        Task<bool> DeleteQualitification(Guid id);
+        //Task<bool> ExpertApplyQualitification(Guid id, string url);
+        //Task<bool> RejectQualitification(Guid id);
+        //Task<bool> UpdateQualitification(QualitificationViewModel request);
     }
 }
