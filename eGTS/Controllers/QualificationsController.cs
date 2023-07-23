@@ -43,36 +43,22 @@ namespace eGTS.Controllers
             return result;
         }
 
-        /*// PUT: api/Qualifications/5
+        // PUT: api/Qualifications/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateQualification(Guid id, Qualification qualification)
+        [HttpPut]
+        public async Task<IActionResult> UpdateQualification(QualitificationViewModel qualification)
         {
-            if (id != qualification.ExpertId)
+            if (qualification == null)
             {
-                return BadRequest();
+                return Problem("'Qualifications' is null.");
             }
-
-            _context.Entry(qualification).State = EntityState.Modified;
-
-            try
+            bool result = await _qualitificationService.UpdateQualitification(qualification);
+            if (result)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!QualificationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }*/
+            return StatusCode(500, "Failed to Update Qualitification");
+        }
 
         // POST: api/Qualifications
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

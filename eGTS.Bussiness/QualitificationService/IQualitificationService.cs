@@ -8,8 +8,6 @@ namespace eGTS.Bussiness.QualitificationService
         Task<bool> CreateQualitification(QualitificationCreateViewModel request);
         Task<ActionResult<QualitificationViewModel>> GetQualitificationByAccountId(Guid id);
         Task<bool> DeleteQualitification(Guid id);
-        //Task<bool> ExpertApplyQualitification(Guid id, string url);
-        //Task<bool> RejectQualitification(Guid id);
-        //Task<bool> UpdateQualitification(QualitificationViewModel request);
+        Task<bool> UpdateQualitification(QualitificationViewModel request);
     }
 }
