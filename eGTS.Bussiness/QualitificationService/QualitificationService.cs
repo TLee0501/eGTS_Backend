@@ -40,11 +40,27 @@ namespace eGTS.Bussiness.QualitificationService
             }
         }
 
+        public async Task<bool> DeleteQualitification(Guid id)
+        {
+            try
+            {
+                var qualitification = await _context.Qualifications.FirstOrDefaultAsync(a => a.ExpertId == id && a.IsDelete == false && a.IsCetifide == true);
+                qualitification.IsDelete = true;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError("Fail:" + ex);
+                return false;
+            }
+        }
+
         public async Task<ActionResult<QualitificationViewModel>> GetQualitificationByAccountId(Guid id)
         {
             try
             {
-                var qualitification = await _context.Qualifications.FirstOrDefaultAsync(a => a.ExpertId == id && a.IsDelete == false);
+                var qualitification = await _context.Qualifications.FirstOrDefaultAsync(a => a.ExpertId == id && a.IsDelete == false && a.IsCetifide ==true);
                 if (qualitification == null) return null;
                 var viewModel = new QualitificationViewModel()
                 {
