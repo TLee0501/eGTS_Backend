@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using eGTS_Backend.Data.Models;
-using Google.Apis.Auth.OAuth2;
-using Google.Cloud.Storage.V1;
-using eGTS.Bussiness.FirebaseService;
+using Microsoft.EntityFrameworkCore;
+using eGTS_Backend.Data.ViewModel;
+using eGTS.Bussiness.QualitificationService;
 
 namespace eGTS.Controllers
 {
@@ -10,14 +10,16 @@ namespace eGTS.Controllers
     [ApiController]
     public class QualificationsController : ControllerBase
     {
-        private readonly IFirebaseService _iFrirebaseService;
+        private readonly EGtsContext _context;
+        private readonly IQualitificationService _qualitificationService;
 
-        public QualificationsController(IFirebaseService iFrirebaseService)
+        public QualificationsController(EGtsContext context, IQualitificationService qualitificationService)
         {
-            _iFrirebaseService = iFrirebaseService;
+            _context = context;
+            _qualitificationService = qualitificationService;
         }
 
-        [HttpPost("upload")]
+        /*[HttpPost("upload")]
         public async Task<IActionResult> UploadAvatar(IFormFile imageFile, Guid Id)
         {
             if (imageFile == null || imageFile.Length == 0)
@@ -88,40 +90,34 @@ namespace eGTS.Controllers
                 // Handle the exception and return an appropriate response
                 return StatusCode(500, ex.Message);
             }
-        }
+        }*/
 
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /*// GET: api/Qualifications
+        // GET: api/Qualifications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Qualification>>> GetQualifications()
+        public async Task<ActionResult<IEnumerable<Qualification>>> GetQualificationsForTest()
         {
-          if (_context.Qualifications == null)
-          {
-              return NotFound();
-          }
-            return await _context.Qualifications.ToListAsync();
-        }*/
-
-        /*// GET: api/Qualifications/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Qualification>> GetQualification(Guid id)
-        {
-          if (_context.Qualifications == null)
-          {
-              return NotFound();
-          }
-            var qualification = await _context.Qualifications.FindAsync(id);
-
-            if (qualification == null)
+            if (_context.Qualifications == null)
             {
                 return NotFound();
             }
+            return await _context.Qualifications.ToListAsync();
+        }
 
-            return qualification;
-        }*/
+        // GET: api/Qualifications/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<QualitificationViewModel>> GetQualificationByAccountId(Guid id)
+        {
+            var result = await _qualitificationService.GetQualitificationByAccountId(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return result;
+        }
 
         /*// PUT: api/Qualifications/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -154,36 +150,25 @@ namespace eGTS.Controllers
             return NoContent();
         }*/
 
-        /*// POST: api/Qualifications
+        // POST: api/Qualifications
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Qualification>> CreateQualification(Qualification qualification)
+        public async Task<ActionResult<bool>> CreateQualification(QualitificationCreateViewModel request)
         {
-          if (_context.Qualifications == null)
-          {
-              return Problem("Entity set 'EGtsContext.Qualifications'  is null.");
-          }
-            _context.Qualifications.Add(qualification);
-            try
+            if (request == null)
             {
-                await _context.SaveChangesAsync();
+                return Problem("'Qualifications' is null.");
             }
-            catch (DbUpdateException)
+            bool result;
+            result = await _qualitificationService.CreateQualitification(request);
+            if (result)
             {
-                if (QualificationExists(qualification.ExpertId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Ok();
             }
+            return StatusCode(500, "Failed to Create Qualitification");
+        }
 
-            return CreatedAtAction("GetQualification", new { id = qualification.ExpertId }, qualification);
-        }*/
-
-        // DELETE: api/Qualifications/5
+        /*// DELETE: api/Qualifications/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQualification(Guid id)
         {
@@ -198,23 +183,6 @@ namespace eGTS.Controllers
             }
 
             return Ok();
-        }
-
-        // DELETE: api/Qualifications/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAvatar(Guid id)
-        {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            var qualification = await _iFrirebaseService.DeleleAvatar(id);
-            if (qualification == false)
-            {
-                return BadRequest();
-            }
-
-            return Ok();
-        }
+        }*/
     }
 }

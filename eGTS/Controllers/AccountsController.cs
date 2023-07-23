@@ -386,7 +386,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status201Created)]//CREATED
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<Account>> CreateAccount(AccountCreateViewModel model)
+        public async Task<ActionResult<Guid>> CreateAccount(AccountCreateViewModel model)
         {
             if (model.PhoneNo.Equals("") || model.Password.Equals(""))
                 return BadRequest(new ErrorResponse(400, "PhoneNumer Or password is empty."));
@@ -395,11 +395,11 @@ namespace eGTS.Controllers
             if (PhoneNoExists(model.PhoneNo))
                 return BadRequest(new ErrorResponse(400, "PhoneNumer is in use."));
 
-
-            if (await _accountService.CreateAccount(model))
+            var id = await _accountService.CreateAccount(model);
+            if (id != Guid.Empty)
             {
                 _logger.LogInformation($"Created Account with Phone number: {model.PhoneNo}");
-                return Ok(new SuccessResponse<AccountCreateViewModel>(200, "Create Success.", model));
+                return Ok(id);
             }
             else
                 return BadRequest(new ErrorResponse(400, "Invalid Data"));
