@@ -67,7 +67,8 @@ namespace eGTS.Bussiness.QualitificationService
                     ExpertId = qualitification.ExpertId,
                     Certificate = qualitification.Certificate,
                     Experience = qualitification.Experience,
-                    IsCetifide = qualitification.IsCetifide
+                    IsCetifide = qualitification.IsCetifide,
+                    IsDelete = qualitification.IsDelete,
                 };
                 return viewModel;
             }
@@ -75,6 +76,28 @@ namespace eGTS.Bussiness.QualitificationService
             {
                 _logger.LogError("Invalid data." + ex);
                 return null;
+            }
+        }
+
+        public async Task<bool> UpdateQualitification(QualitificationViewModel request)
+        {
+            try
+            {
+                var db = await _context.Qualifications.FindAsync(request.ExpertId);
+                if (db == null)
+                {
+                    return false;
+                }
+                db.Certificate = request.Certificate;
+                db.Experience = request.Experience;
+                db.IsDelete = request.IsDelete;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Invalid data." + ex);
+                return false;
             }
         }
     }
