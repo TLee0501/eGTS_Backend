@@ -20,11 +20,11 @@ namespace eGTS.Controllers
     public class SessionsController : ControllerBase
     {
         private readonly EGtsContext _context;
-        private readonly ILogger<AccountsController> _logger;
+        private readonly ILogger<SessionsController> _logger;
         private readonly IConfiguration _configuration;
         private readonly ISessionService _sessionService;
 
-        public SessionsController(EGtsContext context, ILogger<AccountsController> logger, IConfiguration configuration, ISessionService accountService)
+        public SessionsController(EGtsContext context, ILogger<SessionsController> logger, IConfiguration configuration, ISessionService accountService)
         {
             _context = context;
             _logger = logger;
@@ -55,7 +55,7 @@ namespace eGTS.Controllers
             if (result == null)
                 return BadRequest(new ErrorResponse(400, "ID Not Match With session in DB"));
             else
-                return result;
+                return Ok(new SuccessResponse<SessionViewModel>(200, "Session found", result));
         }
 
         // PUT: api/Sessions/5
