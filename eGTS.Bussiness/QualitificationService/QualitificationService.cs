@@ -28,7 +28,7 @@ namespace eGTS.Bussiness.QualitificationService
         {
             try
             {
-                Qualification qualitification = new Qualification(request.ExpertId, request.Certificate, request.Experience, true, false);
+                Qualification qualitification = new Qualification(request.ExpertId, request.Certificate, request.Experience, request.Description, true, false);
                 await _context.Qualifications.AddAsync(qualitification);
                 await _context.SaveChangesAsync();
                 return true;
@@ -49,7 +49,7 @@ namespace eGTS.Bussiness.QualitificationService
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError("Fail:" + ex);
                 return false;
@@ -60,13 +60,14 @@ namespace eGTS.Bussiness.QualitificationService
         {
             try
             {
-                var qualitification = await _context.Qualifications.FirstOrDefaultAsync(a => a.ExpertId == id && a.IsDelete == false && a.IsCetifide ==true);
+                var qualitification = await _context.Qualifications.FirstOrDefaultAsync(a => a.ExpertId == id && a.IsDelete == false && a.IsCetifide == true);
                 if (qualitification == null) return null;
                 var viewModel = new QualitificationViewModel()
                 {
                     ExpertId = qualitification.ExpertId,
                     Certificate = qualitification.Certificate,
                     Experience = qualitification.Experience,
+                    Descrition = qualitification.Description,
                     IsCetifide = qualitification.IsCetifide,
                     IsDelete = qualitification.IsDelete,
                 };
