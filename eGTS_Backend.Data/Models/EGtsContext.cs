@@ -105,6 +105,9 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.Bmi).HasColumnName("BMI");
             entity.Property(e => e.CreateDate).HasColumnType("date");
+            entity.Property(e => e.Goal)
+                .HasMaxLength(300)
+                .IsUnicode(false);
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
