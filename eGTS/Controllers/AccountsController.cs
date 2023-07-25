@@ -449,6 +449,14 @@ namespace eGTS.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CheckPhoneNoExist(string phoneNo)
+        {
+            if (!PhoneNoExists(phoneNo))
+                return BadRequest(new ErrorResponse(400, "PhoneNumer is invalid."));
+            else return Ok("PhoneNumer is valid");
+        }
+
         // check if ID in use
         private bool AccountExists(Guid id)
         {

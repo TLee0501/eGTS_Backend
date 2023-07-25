@@ -13,5 +13,13 @@ public partial class SessionResult
 
     public bool IsDelete { get; set; }
 
+    public SessionResult(Guid id, Guid sessionId, string result, bool isDelete)
+    {
+        Id = id;
+        SessionId = sessionId;
+        Result = result;
+        IsDelete = isDelete;
+    }
+
     public virtual Session Session { get; set; } = null!;
 }
