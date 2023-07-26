@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Net;
 using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.AccountService;
+using Microsoft.Identity.Client;
 
 namespace eGTS.Controllers
 {
@@ -437,6 +438,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteAccount(Guid id)
         {
+            if (await _accountService.CheckAccountStatus(id) == true) return BadRequest("Account already Deleted!");
             if (await _accountService.DeleteAccount(id))
             {
                 _logger.LogInformation($"Deleted Account with ID: {id}");
@@ -455,6 +457,16 @@ namespace eGTS.Controllers
             if (!PhoneNoExists(phoneNo))
                 return BadRequest(new ErrorResponse(400, "PhoneNumer is invalid."));
             else return Ok("PhoneNumer is valid");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UnDeleteAccountById(Guid AccountId)
+        {
+            if (AccountId == Guid.Empty) return BadRequest();
+            if (await _accountService.CheckAccountStatus(AccountId) == false) return BadRequest("Account already Undeleted!");
+            var result = await _accountService.UndeleteAccount(AccountId);
+            if (result == true) return Ok();
+            else { return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Undelete Success.", null)); }
         }
 
         // check if ID in use

@@ -14,11 +14,13 @@ namespace eGTS.Bussiness.AccountService
     {
         Task<Guid> CreateAccount(AccountCreateViewModel model);
         Task<bool> DeleteAccount(Guid id);
+        Task<bool> UndeleteAccount(Guid id);
         Task<bool> DeleteAccountPERMANENT(Guid id);
         Task<bool> UpdateAccount(Guid id, AccountUpdateViewModel request);
         Task<List<AccountViewModel>> SearchAccountByName(string Fullname);
         Task<List<AccountViewModel>> SearchAccountByPhoneNo(string PhoneNo);
         Task<AccountViewModel> GetAccountByID(Guid id);
         Task<List<AccountViewModel>> GetAllAccountsOtionalRoleAndIsLock(string? role, bool? isLock);
+        Task<bool> CheckAccountStatus(Guid id);
     }
 }
