@@ -279,47 +279,30 @@ namespace eGTS.Bussiness.AccountService
             return false;
         }
 
-        private async Task<byte[]> getAvatar(Guid id)
+        public async Task<bool> UndeleteAccount(Guid id)
         {
-            string projectId = "egts-2023";
-            string bucketName = "egts-2023.appspot.com";
             var account = await _context.Accounts.FindAsync(id);
-            string imagePath = account.Image;
+            if (account == null)
+                return false;
 
-            var credential = GoogleCredential.FromFile("egts-2023-firebase.json");
-            var storageClient = StorageClient.Create(credential);
+            account.IsDelete = false;
 
-            var imageObject = storageClient.GetObject(bucketName, imagePath);
-            var imageStream = new MemoryStream();
-            await storageClient.DownloadObjectAsync(bucketName, imagePath, imageStream);
-            //await storageClient.DeleteObjectAsync(bucketName, imagePath);
-
-            // Reset the memory stream position
-            imageStream.Position = 0;
-
-            // Return the image stream
-            //var inStream =  new FileStreamResult(imageStream, "image/jpeg"); // or the appropriate content type
-
-            using (MemoryStream memoryStream = new MemoryStream())
+            try
             {
-                imageStream.CopyTo(memoryStream);
-                return memoryStream.ToArray();
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to Undelete");
+                return false;
             }
         }
 
-        private async Task<string> UploadImageToFirebaseStorage(Stream imageStream, string filePath)
+        public async Task<bool> CheckAccountStatus(Guid id)
         {
-            var credential = GoogleCredential.FromFile("egts-2023-firebase.json");
-            var storage = await StorageClient.CreateAsync(credential);
-
-            var bucketName = "egts-2023.appspot.com"; // Replace with your actual bucket name
-
-            using (var stream = imageStream)
-            {
-                var imageObject = await storage.UploadObjectAsync(bucketName, filePath, null, stream);
-                var url = $"https://storage.googleapis.com/{bucketName}/{filePath}";
-                return url;
-            }
+            var account = await _context.Accounts.FindAsync(id);
+            return account.IsDelete;
         }
     }
 }
