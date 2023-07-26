@@ -87,7 +87,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 result.Add(gymerActive);
             }
 
-            return null;
+            return result;
         }
         public async Task<List<GymerPackageActiveViewModel>> GetGymerPackageActiveByPT(Guid PTID)
         {
@@ -104,7 +104,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 result.Add(gymerActive);
             }
 
-            return null;
+            return result;
         }
     }
 }
