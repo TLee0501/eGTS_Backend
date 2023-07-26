@@ -75,9 +75,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.CreateDate).HasColumnType("date");
-            entity.Property(e => e.Fullname)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Fullname).HasMaxLength(50);
             entity.Property(e => e.Gender)
                 .HasMaxLength(10)
                 .IsUnicode(false);
@@ -105,6 +103,9 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.Bmi).HasColumnName("BMI");
             entity.Property(e => e.CreateDate).HasColumnType("date");
+            entity.Property(e => e.Goal)
+                .HasMaxLength(300)
+                .IsUnicode(false);
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
@@ -122,13 +123,9 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.CreateDate).HasColumnType("date");
-            entity.Property(e => e.Description)
-                .HasMaxLength(300)
-                .IsUnicode(false);
+            entity.Property(e => e.Description).HasMaxLength(300);
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Ptid).HasColumnName("PTID");
             entity.Property(e => e.Video).IsUnicode(false);
 
@@ -239,7 +236,6 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.CreateDate).HasColumnType("date");
             entity.Property(e => e.Feedback1)
                 .HasMaxLength(300)
-                .IsUnicode(false)
                 .HasColumnName("Feedback");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
@@ -265,13 +261,9 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.CreateDate).HasColumnType("date");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Neid).HasColumnName("NEID");
-            entity.Property(e => e.UnitOfMesuament)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.UnitOfMesuament).HasMaxLength(50);
 
             entity.HasOne(d => d.Ne).WithMany(p => p.FoodAndSuppliments)
                 .HasForeignKey(d => d.Neid)
@@ -329,9 +321,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Neid).HasColumnName("NEID");
         });
 
@@ -362,7 +352,6 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Message1)
                 .HasMaxLength(300)
-                .IsUnicode(false)
                 .HasColumnName("Message");
             entity.Property(e => e.RecieverId).HasColumnName("RecieverID");
             entity.Property(e => e.SenderId).HasColumnName("SenderID");
@@ -406,9 +395,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.HasNe).HasColumnName("HasNE");
             entity.Property(e => e.HasPt).HasColumnName("HasPT");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Necost).HasColumnName("NECost");
             entity.Property(e => e.NumberOfsession).HasColumnName("NumberOFSession");
             entity.Property(e => e.Ptcost).HasColumnName("PTCost");
@@ -423,9 +410,7 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Neid).HasColumnName("NEID");
             entity.Property(e => e.PackageId).HasColumnName("PackageID");
             entity.Property(e => e.Ptid).HasColumnName("PTID");
@@ -477,9 +462,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ExpertID");
             entity.Property(e => e.Certificate).IsUnicode(false);
-            entity.Property(e => e.Description)
-                .HasMaxLength(300)
-                .IsUnicode(false);
+            entity.Property(e => e.Description).HasMaxLength(300);
             entity.Property(e => e.IsCetifide).HasColumnName("isCetifide");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
@@ -544,9 +527,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Result)
-                .HasMaxLength(300)
-                .IsUnicode(false);
+            entity.Property(e => e.Result).HasMaxLength(300);
             entity.Property(e => e.SessionId).HasColumnName("SessionID");
 
             entity.HasOne(d => d.Session).WithMany(p => p.SessionResults)
@@ -565,9 +546,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.From).HasColumnType("datetime");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.PackageGymerId).HasColumnName("PackageGymerID");
-            entity.Property(e => e.Reson)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.Reson).HasMaxLength(100);
             entity.Property(e => e.To).HasColumnType("datetime");
 
             entity.HasOne(d => d.PackageGymer).WithMany(p => p.Suspends)
