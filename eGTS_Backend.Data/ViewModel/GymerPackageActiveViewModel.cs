@@ -10,6 +10,7 @@ namespace eGTS_Backend.Data.ViewModel
     {
         public Guid GymerId { get; set; }
         public string GymerName { get; set; }
+        public Guid PackageId { get; set; }
         public string PackageName { get; set; }
     }
 }
