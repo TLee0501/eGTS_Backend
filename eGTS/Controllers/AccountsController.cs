@@ -50,222 +50,12 @@ namespace eGTS.Controllers
             var result = await _accountService.GetAllAccountsOtionalRoleAndIsLock(role, IsLock);
             if (result != null)
             {
-                return Ok(new SuccessResponse<List<AccountViewModel>>(200, "List of Accounts found", result));
+                return Ok(new SuccessResponse<List<AccountViewModel>>(200, "Danh sách các Tài Khoản", result));
             }
             else
                 return NoContent();
         }
 
-        /*/// <summary>
-        /// This function is use to get all accounts in DB
-        /// </summary>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllAccounts
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllAccounts()
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-            return await _context.Accounts.ToListAsync();
-        }
-
-        /// <summary>
-        /// This function is use to get all accounts with IsLock Condition appllied in DB
-        /// </summary>
-        /// <param name="IsLock"></param>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllAccountsWithStatus
-        [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllAccountsWithStatus(bool IsLock)
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            if (IsLock)
-                return await _context.Accounts.Where(a => a.IsLock == true).ToListAsync();
-            else
-                return await _context.Accounts.Where(a => a.IsLock == false).ToListAsync();
-
-        }
-
-        /// <summary>
-        /// This function is use to get all staff accounts in DB
-        /// </summary>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllStaffAccounts
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllStaffAccounts()
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            return await _context.Accounts.Where(a => a.Role.Equals("Staff")).ToListAsync();
-        }
-
-        /// <summary>
-        /// This function is use to get all Staff accounts with IsLock Condition appllied in DB
-        /// </summary>
-        /// <param name="IsLock"></param>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllStaffAccountsWithStatus
-        [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllStaffAccountsWithStatus(bool IsLock)
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            if (IsLock)
-                return await _context.Accounts.Where(a => a.IsLock == true && a.Role.Equals("Staff")).ToListAsync();
-            else
-                return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("Staff")).ToListAsync();
-
-        }
-
-        /// <summary>
-        /// This function is use to get all PT accounts in DB
-        /// </summary>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllPTAccounts
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllPTAccounts()
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            return await _context.Accounts.Where(a => a.Role.Equals("PT")).ToListAsync();
-        }
-
-        /// <summary>
-        /// This function is use to get all PT accounts with IsLock Condition appllied in DB
-        /// </summary>
-        /// <param name="IsLock"></param>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllPTAccountsWithIsLock
-        [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllPTAccountsWithIsLock(bool IsLock)
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            if (IsLock)
-                return await _context.Accounts.Where(a => a.IsLock == true && a.Role.Equals("PT")).ToListAsync();
-            else
-                return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("PT")).ToListAsync();
-
-        }
-
-        /// <summary>
-        /// This function is use to get all NE accounts in DB
-        /// </summary>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllPTAccounts
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllNEAccounts()
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            return await _context.Accounts.Where(a => a.Role.Equals("NE")).ToListAsync();
-        }
-
-        /// <summary>
-        /// This function is use to get all NE accounts with IsLock Condition appllied in DB
-        /// </summary>
-        /// <param name="IsLock"></param>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllNEAccountsWithIsLock
-        [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllNEAccountsWithIsLock(bool IsLock)
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            if (IsLock)
-                return await _context.Accounts.Where(a => a.IsLock == true && a.Role.Equals("NE")).ToListAsync();
-            else
-                return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("NE")).ToListAsync();
-
-        }
-
-        /// <summary>
-        /// This function is use to get all Gymer accounts in DB
-        /// </summary>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllPTAccounts
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllGymerAccounts()
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            return await _context.Accounts.Where(a => a.Role.Equals("Gymer")).ToListAsync();
-        }
-
-        /// <summary>
-        /// This function is use to get all NE accounts with IsLock Condition appllied in DB
-        /// </summary>
-        /// /// <param name="IsLock"></param>
-        /// <returns> List<Account> </returns>
-        // GET: api/Accounts/GetAllGymerAccountsWithIsLock
-        [HttpGet("{IsLock}")]
-        [ProducesResponseType(StatusCodes.Status204NotFound)]//NOT FOUND
-        [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<IEnumerable<Account>>> GetAllGymerAccountsWithIsLock(bool IsLock)
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-
-            if (IsLock)
-                return await _context.Accounts.Where(a => a.IsLock == true && a.Role.Equals("Gymer")).ToListAsync();
-            else
-                return await _context.Accounts.Where(a => a.IsLock == false && a.Role.Equals("Gymer")).ToListAsync();
-
-        }*/
-
-        /// <summary>
-        /// This Function is use to get Account by ID
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Account</returns>
-        // GET: api/Accounts/GetAccountByID
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]//NO Content
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
@@ -291,7 +81,7 @@ namespace eGTS.Controllers
         public async Task<ActionResult<IEnumerable<AccountViewModel>>> SearchAccountByPhoneNo(string PhoneNo)
         {
             if (PhoneNo == null)
-                return BadRequest(new ErrorResponse(400, "PhoneNo is empty."));
+                return BadRequest(new ErrorResponse(400, "SDT đang bị bỏ trống."));
 
             var result = await _accountService.SearchAccountByPhoneNo(PhoneNo);
 
@@ -314,7 +104,7 @@ namespace eGTS.Controllers
         public async Task<ActionResult<IEnumerable<AccountViewModel>>> SearchAccountByName(string Fullname)
         {
             if (Fullname == null)
-                return BadRequest(new ErrorResponse(400, "Fullname is empty."));
+                return BadRequest(new ErrorResponse(400, "Họ và tên đang bị bỏ trống."));
 
             var result = await _accountService.SearchAccountByName(Fullname);
 
@@ -343,34 +133,34 @@ namespace eGTS.Controllers
 
             if (!request.PhoneNo.Equals("") && !PhoneNoIsValid(request.PhoneNo))
 
-                return BadRequest(new ErrorResponse(400, "Invalid Phone Numer"));
+                return BadRequest(new ErrorResponse(400, "SDT không đúng cú pháp."));
 
             if (PhoneNoExists(request.PhoneNo))
 
-                return BadRequest(new ErrorResponse(400, "Phone Numer in use"));
+                return BadRequest(new ErrorResponse(400, "SDT đã tồn tại."));
 
             if (request.Gender == null)
 
-                return BadRequest(new ErrorResponse(400, "Invalid Gender"));
+                return BadRequest(new ErrorResponse(400, "Giới tính sai"));
 
 
 
             if (!request.Role.Equals("PT") && !request.Role.Equals("NE") && !request.Role.Equals("Gymer") && !request.Role.Equals("Staff") && !request.Role.Equals("") && !request.PhoneNo.Equals("string"))
-                return BadRequest(new ErrorResponse(400, "Invalid Role"));
+                return BadRequest(new ErrorResponse(400, "Chức vụ sai"));
 
             if (request.IsDelete == null)
             {
-                return BadRequest(new ErrorResponse(400, "Invalid Delete State"));
+                return BadRequest(new ErrorResponse(400, "Trạng thái xóa sai"));
             }
 
             if (await _accountService.UpdateAccount(id, request))
             {
                 _logger.LogInformation($"Update Account with ID: {id}");
-                return Ok(new SuccessResponse<AccountUpdateViewModel>(200, "Update Success.", request));
+                return Ok(new SuccessResponse<AccountUpdateViewModel>(200, "Update thành công.", request));
             }
             else
             {
-                return BadRequest(new ErrorResponse(400, "Unable to update Account"));
+                return BadRequest(new ErrorResponse(400, "Không thể update tài khoản"));
             }
 
 
@@ -390,11 +180,11 @@ namespace eGTS.Controllers
         public async Task<ActionResult<Guid>> CreateAccount(AccountCreateViewModel model)
         {
             if (model.PhoneNo.Equals("") || model.Password.Equals(""))
-                return BadRequest(new ErrorResponse(400, "PhoneNumer Or password is empty."));
+                return BadRequest(new ErrorResponse(400, "SDT Or mật khẩu đang bị bỏ trống."));
             if (!PhoneNoIsValid(model.PhoneNo))
-                return BadRequest(new ErrorResponse(400, "PhoneNumer is invalid."));
+                return BadRequest(new ErrorResponse(400, "SDT sai cú pháp."));
             if (PhoneNoExists(model.PhoneNo))
-                return BadRequest(new ErrorResponse(400, "PhoneNumer is in use."));
+                return BadRequest(new ErrorResponse(400, "SDT đang được sử dụng."));
 
             var id = await _accountService.CreateAccount(model);
             if (id != Guid.Empty)
@@ -403,7 +193,7 @@ namespace eGTS.Controllers
                 return Ok(id);
             }
             else
-                return BadRequest(new ErrorResponse(400, "Invalid Data"));
+                return BadRequest(new ErrorResponse(400, "Dữ liệu bị sai"));
         }
 
         /// <summary>
@@ -418,8 +208,8 @@ namespace eGTS.Controllers
         {
             if (await _accountService.DeleteAccountPERMANENT(id))
             {
-                _logger.LogInformation($"Deleted Account with ID: {id}");
-                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Delete Success.", null));
+                _logger.LogInformation($"REMOVE Account with ID: {id}");
+                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Xóa vĩn viễn thành công.", null));
             }
             else
             {
@@ -438,11 +228,11 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteAccount(Guid id)
         {
-            if (await _accountService.CheckAccountStatus(id) == true) return BadRequest("Account already Deleted!");
+            if (await _accountService.CheckAccountStatus(id) == true) return BadRequest("Tài khoản đã bị xóa rồi");
             if (await _accountService.DeleteAccount(id))
             {
                 _logger.LogInformation($"Deleted Account with ID: {id}");
-                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Delete Success.", null));
+                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Xóa thành công.", null));
             }
             else
             {
@@ -455,18 +245,18 @@ namespace eGTS.Controllers
         public async Task<IActionResult> CheckPhoneNoExist(string phoneNo)
         {
             if (!PhoneNoExists(phoneNo))
-                return BadRequest(new ErrorResponse(400, "PhoneNumer is invalid."));
-            else return Ok("PhoneNumer is valid");
+                return BadRequest(new ErrorResponse(400, "STD đang được sử dụng."));
+            else return Ok("Có thể dùng SDT này");
         }
 
         [HttpPost]
         public async Task<ActionResult> UnDeleteAccountById(Guid AccountId)
         {
             if (AccountId == Guid.Empty) return BadRequest();
-            if (await _accountService.CheckAccountStatus(AccountId) == false) return BadRequest("Account already Undeleted!");
+            if (await _accountService.CheckAccountStatus(AccountId) == false) return BadRequest("Tài khoản đã bỏ xóa rồi!");
             var result = await _accountService.UndeleteAccount(AccountId);
             if (result == true) return Ok();
-            else { return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Undelete Success.", null)); }
+            else { return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Bỏ xóa thành công.", null)); }
         }
 
         // check if ID in use
