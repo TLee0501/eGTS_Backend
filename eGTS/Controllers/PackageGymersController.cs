@@ -131,9 +131,15 @@ namespace eGTS.Controllers
             catch { return BadRequest(); }
         }
 
-        private bool PackageGymerExists(Guid id)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackageActiveByPT(Guid PTID)
         {
-            return (_context.PackageGymers?.Any(e => e.Id == id)).GetValueOrDefault();
+            try
+            {
+                var result = await _packageGymersService.GetGymerPackageActiveByPT(PTID);
+                return Ok(result);
+            }
+            catch { return BadRequest(); }
         }
     }
 }

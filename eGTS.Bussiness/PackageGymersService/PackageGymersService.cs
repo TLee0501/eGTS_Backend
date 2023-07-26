@@ -76,12 +76,30 @@ namespace eGTS.Bussiness.PackageGymersService
         {
             List<GymerPackageActiveViewModel> result = new List<GymerPackageActiveViewModel>();
 
-            var listGymerPackage = await _context.PackageGymers.Where(a => a.Neid == NEID).ToListAsync();
+            var listGymerPackage = await _context.PackageGymers.Where(a => a.Neid == NEID && a.IsDelete == false).ToListAsync();
             foreach (var item in listGymerPackage)
             {
                 var gymerActive = new GymerPackageActiveViewModel();
                 gymerActive.GymerId = item.GymerId;
-                //gymerActive.PackageName = item.Name;
+                gymerActive.PackageName = item.Name;
+                gymerActive.PackageId = (Guid)item.PackageId;
+                gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
+                result.Add(gymerActive);
+            }
+
+            return null;
+        }
+        public async Task<List<GymerPackageActiveViewModel>> GetGymerPackageActiveByPT(Guid PTID)
+        {
+            List<GymerPackageActiveViewModel> result = new List<GymerPackageActiveViewModel>();
+
+            var listGymerPackage = await _context.PackageGymers.Where(a => a.Ptid == PTID && a.IsDelete == false).ToListAsync();
+            foreach (var item in listGymerPackage)
+            {
+                var gymerActive = new GymerPackageActiveViewModel();
+                gymerActive.GymerId = item.GymerId;
+                gymerActive.PackageName = item.Name;
+                gymerActive.PackageId = (Guid)item.PackageId;
                 gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 result.Add(gymerActive);
             }
