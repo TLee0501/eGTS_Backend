@@ -59,7 +59,7 @@ namespace eGTS.Controllers
         }
 
         // GET: api/Sessions/5
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult<ExInSessionWithSessionIDViewModel>> GetAllExcerciseInSessionWithSessionID(Guid SessionID)
         {
             var result = await _sessionService.GetAllExcerciseInSessionWithSessionID(SessionID);
