@@ -39,10 +39,12 @@ namespace eGTS.Bussiness.NutritionScheduleService
             {
                 if (item.Datetime.Date == date.Date)
                 {
-                    /*if (item.me)
-                    {
-                        
-                    }*/
+                    var tmp = new MealViewModel();
+                    tmp.Id = item.Id;
+                    tmp.NutritionScheduleId = ScheduleID;
+                    tmp.Datetime = item.Datetime.Date;
+                    tmp.MealTime = item.MealTime;
+                    //tmp.FoodAndSuppliment = 
                 }
             }
             return null;
