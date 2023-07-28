@@ -1,4 +1,9 @@
-﻿using eGTS_Backend.Data.ViewModel;
+﻿using eGTS.Bussiness.AccountService;
+using eGTS.Bussiness.ExcerciseScheduleService;
+using eGTS.Bussiness.ExcerciseService;
+using eGTS_Backend.Data.Models;
+using eGTS_Backend.Data.ViewModel;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +14,15 @@ namespace eGTS.Bussiness.BodyParameters
 {
     public class BodyParametersService : IBodyParametersService
     {
+
+        private readonly EGtsContext _context;
+        private readonly IBodyParametersService _bodyParametersService;
+        private readonly ILogger<IAccountService> _logger;
+
         public Task<bool> CreateBodyParameters(BodyPerameterCreateViewModel model)
         {
+            /*Guid id = Guid.NewGuid();
+            BodyPerameter BPS = new BodyPerameter(id, );*/
             throw new NotImplementedException();
         }
 

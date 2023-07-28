@@ -9,6 +9,8 @@ public partial class Meal
 
     public Guid NutritionScheduleId { get; set; }
 
+    public int MealTime { get; set; }
+
     public DateTime Datetime { get; set; }
 
     public bool IsDelete { get; set; }
