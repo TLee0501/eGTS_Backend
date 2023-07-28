@@ -42,7 +42,7 @@ namespace eGTS.Controllers
             var result = await _exSCheduleService.DEBUGGetAllExcerciseSchedule(isExpired);
             if (result != null)
             {
-                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "List of Schedule found", result));
+                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Tìm được danh sách các lịch tập", result));
             }
             else
             {
@@ -59,7 +59,7 @@ namespace eGTS.Controllers
             var result = await _exSCheduleService.GetExcerciseScheduleByID(id);
             if (result != null)
             {
-                return Ok(new SuccessResponse<ExScheduleViewModel>(200, "Schedule found", result));
+                return Ok(new SuccessResponse<ExScheduleViewModel>(200, "Tìm được lịch tập", result));
             }
             else
                 return NoContent();
@@ -73,7 +73,7 @@ namespace eGTS.Controllers
             var result = await _exSCheduleService.GetExcerciseSchedulesWithPTID(id, isExpired);
             if (result != null)
             {
-                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Schedule found", result));
+                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Tìm được lịch tập", result));
             }
             else
                 return NoContent();
@@ -87,7 +87,7 @@ namespace eGTS.Controllers
             var result = await _exSCheduleService.GetExcerciseSchedulesWithGymerID(id, isExpired);
             if (result != null)
             {
-                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Schedule found", result));
+                return Ok(new SuccessResponse<List<ExScheduleViewModel>>(200, "Tìm được lịch tập", result));
             }
             else
                 return NoContent();
@@ -108,7 +108,7 @@ namespace eGTS.Controllers
             if (await _exSCheduleService.UpdateExcerciseSchedule(id, request))
             {
                 _logger.LogInformation($"Uodate ExCerciseSchedule with ID: {id}");
-                return Ok(new SuccessResponse<ExScheduleUpdateViewModel>(200, "Update Success.", request));
+                return Ok(new SuccessResponse<ExScheduleUpdateViewModel>(200, "Update thành công.", request));
             }
             else
                 return BadRequest(new ErrorResponse(400, "Invalid Data"));

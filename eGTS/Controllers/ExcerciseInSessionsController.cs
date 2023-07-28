@@ -41,7 +41,7 @@ namespace eGTS.Controllers
             {
                 return NoContent();
             }
-            return Ok(new SuccessResponse<List<ExInSessionViewModel>>(200, "Data Found.", result));
+            return Ok(new SuccessResponse<List<ExInSessionViewModel>>(200, "Tìm thấy dữ liệu!", result));
         }
 
         // GET: api/ExcerciseInSessions/5
@@ -71,9 +71,9 @@ namespace eGTS.Controllers
         public async Task<IActionResult> UpdateExserciseInSession(Guid id, ExInSessionUpdateViewModel request)
         {
             if (await _sessionService.UpdateExcerciseInSession(id, request))
-                return Ok(new SuccessResponse<ExInSessionUpdateViewModel>(200, $"Data with ID: {id} Updated.", request));
+                return Ok(new SuccessResponse<ExInSessionUpdateViewModel>(200, $"Dữ liệu với ID: {id} đã được cập nhập.", request));
             else
-                return BadRequest(new ErrorResponse(400, "Unable to update Data"));
+                return BadRequest(new ErrorResponse(400, "Không thể cập nhập dữ liệu"));
         }
 
         // POST: api/ExcerciseInSessions
@@ -82,19 +82,19 @@ namespace eGTS.Controllers
         {
             if (model.SessionId.Equals("") || model.SessionId == null)
             {
-                return BadRequest(new ErrorResponse(400, "Session ID is empty."));
+                return BadRequest(new ErrorResponse(400, "ID bữa tập đang bị rỗng."));
             }
             if (model.ExerciseId.Equals("") || model.ExerciseId == null)
             {
-                return BadRequest(new ErrorResponse(400, "Excercise ID is empty."));
+                return BadRequest(new ErrorResponse(400, "ID bài tập đang bị rỗng."));
             }
             if (await _sessionService.CreateExcerciseInSession(model))
             {
                 _logger.LogInformation($"Excercise Added to Session with ID:{model.SessionId}");
-                return Ok(new SuccessResponse<ExInSessionCreateViewModel>(200, "Create Success.", model));
+                return Ok(new SuccessResponse<ExInSessionCreateViewModel>(200, "Tạo thành công", model));
             }
             else
-                return BadRequest(new ErrorResponse(400, "Invalid Data"));
+                return BadRequest(new ErrorResponse(400, "Sai dữ liệu"));
         }
 
         // DELETE: api/ExcerciseInSessions/5
@@ -106,7 +106,7 @@ namespace eGTS.Controllers
                 _logger.LogInformation($"Deleted Excercise in Session with ID: {id}");
                 return NoContent();
             }
-            return BadRequest(new ErrorResponse(400, $"Unable to delete Excercise in Session with ID: {id}"));
+            return BadRequest(new ErrorResponse(400, $"Không xóa được bài tập trong bữa tập có ID là: {id}"));
         }
 
         private bool ExserciseInSessionExists(Guid id)

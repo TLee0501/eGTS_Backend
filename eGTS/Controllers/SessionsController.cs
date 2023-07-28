@@ -58,6 +58,17 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<SessionViewModel>(200, "Session found", result));
         }
 
+        // GET: api/Sessions/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ExInSessionWithSessionIDViewModel>> GetAllExcerciseInSessionWithSessionID(Guid SessionID)
+        {
+            var result = await _sessionService.GetAllExcerciseInSessionWithSessionID(SessionID);
+            if (result == null)
+                return BadRequest(new ErrorResponse(400, "ID Not Match With session in DB"));
+            else
+                return Ok(new SuccessResponse<ExInSessionWithSessionIDViewModel>(200, "Session found", result));
+        }
+
         // PUT: api/Sessions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
