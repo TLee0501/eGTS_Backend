@@ -46,6 +46,7 @@ namespace eGTS.Bussiness.PackageGymersService
             {
                 var temp = new PackageGymerViewModel();
                 temp.Id = item.Id;
+                temp.GymerId = item.GymerId;
                 temp.Name = item.Name;
                 temp.Ptid = item.Ptid;
                 temp.Neid = item.Neid;
