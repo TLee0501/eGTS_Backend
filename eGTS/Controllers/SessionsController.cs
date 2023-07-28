@@ -41,7 +41,7 @@ namespace eGTS.Controllers
             var resultList = await _sessionService.DebugGetAllSessionList();
             if (resultList != null)
             {
-                return Ok(new SuccessResponse<List<SessionViewModel>>(200, "List of Sessions found", resultList));
+                return Ok(new SuccessResponse<List<SessionViewModel>>(200, "Danh sách các buổi tập: ", resultList));
             }
             else
                 return NoContent();
@@ -53,9 +53,31 @@ namespace eGTS.Controllers
         {
             var result = await _sessionService.GetSessionByID(id);
             if (result == null)
-                return BadRequest(new ErrorResponse(400, "ID Not Match With session in DB"));
+                return BadRequest(new ErrorResponse(400, "Không có buổi tập cùng ID trong DB"));
             else
-                return Ok(new SuccessResponse<SessionViewModel>(200, "Session found", result));
+                return Ok(new SuccessResponse<SessionViewModel>(200, "Tìm thấy buổi tập", result));
+        }
+
+        // GET: api/Sessions/5
+        [HttpGet]
+        public async Task<ActionResult<ExInSessionWithSessionIDViewModel>> GetAllExcerciseInSessionWithSessionID(Guid SessionID)
+        {
+            var result = await _sessionService.GetAllExcerciseInSessionWithSessionID(SessionID);
+            if (result == null)
+                return BadRequest(new ErrorResponse(400, "Không có buổi tập cùng ID trong DB"));
+            else
+                return Ok(new SuccessResponse<ExInSessionWithSessionIDViewModel>(200, "Danh Sách các bài tập trong buổi tập", result));
+        }
+
+        // GET: api/Sessions/5
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SessionViewModel>>> GetSessionByScheduleID(Guid id)
+        {
+            var result = await _sessionService.GetSessionListWithSceduleID(id);
+            if (result == null)
+                return BadRequest(new ErrorResponse(400, "Không có lịch tập cùng ID trong DB"));
+            else
+                return Ok(new SuccessResponse<IEnumerable<SessionViewModel>>(200, "Danh Sách các buổi tập trong lịch tập", result));
         }
 
         // PUT: api/Sessions/5
@@ -69,10 +91,10 @@ namespace eGTS.Controllers
             if (await _sessionService.UpdateSession(id, request))
             {
                 _logger.LogInformation($"Update Session with ID: {id}");
-                return Ok(new SuccessResponse<SessionUpdateViewModel>(200, "Update Success.", request));
+                return Ok(new SuccessResponse<SessionUpdateViewModel>(200, "Cập nhật thành công.", request));
             }
             else
-                return BadRequest(new ErrorResponse(400, "Unable to update Session"));
+                return BadRequest(new ErrorResponse(400, "Không cập nhật được buổi tập"));
         }
 
         // POST: api/Sessions
@@ -83,21 +105,21 @@ namespace eGTS.Controllers
 
             if (model.ScheduleId == null || model.ScheduleId.Equals(""))
             {
-                return BadRequest(new ErrorResponse(400, "Schedule ID is empty."));
+                return BadRequest(new ErrorResponse(400, "ID đang bị bỏ trống."));
             }
 
             if (model.DateAndTime == null || model.DateAndTime.Equals(""))
             {
-                return BadRequest(new ErrorResponse(400, "Date And Time is empty."));
+                return BadRequest(new ErrorResponse(400, "Ngày và giờ đang bị bỏ trống."));
             }
 
             if (await _sessionService.CreateSession(model))
             {
                 _logger.LogInformation($"Created Session with for schedule with ID: {model.ScheduleId}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Create Success.", model));
+                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Tạo thành công.", model));
             }
             else
-                return BadRequest(new ErrorResponse(400, "Invalid Data"));
+                return BadRequest(new ErrorResponse(400, "Dữ liệu bị sai"));
         }
 
         // DELETE: api/Sessions/5
@@ -107,7 +129,7 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSession(id))
             {
                 _logger.LogInformation($"Deleted Session with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Delete Success.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Xóa thành công.", null));
             }
             else
                 return NoContent();
@@ -120,7 +142,7 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSessionPERMANENT(id))
             {
                 _logger.LogInformation($"REMOVE Session with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "REMOVE Success.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Xóa thành công.", null));
             }
             else
                 return NoContent();

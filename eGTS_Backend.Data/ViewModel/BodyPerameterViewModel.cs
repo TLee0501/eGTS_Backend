@@ -8,6 +8,11 @@ namespace eGTS_Backend.Data.ViewModel
 {
     public class BodyPerameterViewModel
     {
+        public Guid Id { get; set; }
+
+        public Guid GymerId { get; set; }
+
+        public string? Goal { get; set; }
 
         public double? Weight { get; set; }
 
@@ -22,6 +27,8 @@ namespace eGTS_Backend.Data.ViewModel
         public short? Muscle { get; set; }
 
         public DateTime CreateDate { get; set; }
+
+        public bool IsDelete { get; set; }
 
     }
 }
