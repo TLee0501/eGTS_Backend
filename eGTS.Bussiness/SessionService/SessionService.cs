@@ -296,6 +296,8 @@ namespace eGTS.Bussiness.SessionService
             return null;
         }
 
+
+
         public async Task<SessionViewModel> GetSessionByID(Guid id)
         {
             var session = await _context.Sessions.FindAsync(id);
@@ -321,6 +323,7 @@ namespace eGTS.Bussiness.SessionService
                 foreach (var session in sessions)
                 {
                     SessionViewModel model = new SessionViewModel();
+                    model.id = session.Id;
                     model.ScheduleId = session.ScheduleId;
                     model.DateAndTime = session.DateAndTime;
                     model.IsDelete = session.IsDelete;
