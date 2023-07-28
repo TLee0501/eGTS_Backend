@@ -242,7 +242,7 @@ namespace eGTS.Bussiness.SessionService
         public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithSessionID(Guid SessionID)
         {
             var exInSessionList = await _context.ExserciseInSessions.Where(s => s.SessionId == SessionID).ToListAsync();
-            var session = await _context.Sessions.FindAsync(id);
+            var session = await _context.Sessions.FindAsync(SessionID);
             var excerciseList = new List<ExcerciseViewModel>();
             foreach (var exInSession in exInSessionList)
             {
@@ -251,7 +251,7 @@ namespace eGTS.Bussiness.SessionService
             if (excerciseList.Count > 0)
             {
                 var result = new ExInSessionWithSessionIDViewModel();
-                result.SessionID = session.ID;
+                result.SessionID = session.Id;
                 result.SessionDateAndTime = session.DateAndTime;
                 result.ExcercisesInSession = excerciseList;
 
