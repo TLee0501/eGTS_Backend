@@ -1,4 +1,5 @@
 ﻿using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace eGTS.Bussiness.NutritionScheduleService
         //Task<bool> UpdateFoodAndSuppliment(FoodAndSupplimentUpdateViewModel request);
         //Task<bool> CreateNutritionSchedule(FoodAndSupplimentCreateViewModel request);
         //Task<bool> DeleteFoodAndSuppliment(Guid id);
+        Task<ActionResult> GetNutritionScheduleByGymerID(Guid GymerId, DateTime date);
     }
 }

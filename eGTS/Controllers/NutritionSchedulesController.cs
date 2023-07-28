@@ -129,6 +129,23 @@ namespace eGTS.Controllers
             return NoContent();
         }
 
+        [HttpGet("{GymerId}")]
+        public async Task<ActionResult<NutritionSchedule>> GetNutritionScheduleByGymerID(Guid GymerId, DateTime date)
+        {
+            if (_context.NutritionSchedules == null)
+            {
+                return BadRequest("Không tìm thấy thực đơn!");
+            }
+            var nutritionSchedule = await _context.NutritionSchedules.FindAsync(GymerId);
+
+            if (nutritionSchedule == null)
+            {
+                return NotFound();
+            }
+
+            return nutritionSchedule;
+        }
+
         private bool NutritionScheduleExists(Guid id)
         {
             return (_context.NutritionSchedules?.Any(e => e.Id == id)).GetValueOrDefault();
