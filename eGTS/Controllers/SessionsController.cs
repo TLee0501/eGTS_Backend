@@ -80,6 +80,16 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<IEnumerable<SessionViewModel>>(200, "Danh Sách các buổi tập trong lịch tập", result));
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SessionViewModel>>> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime)
+        {
+            var result = await _sessionService.GetAllExcerciseInSessionWithScheduleIDAndDateTime(ScheduleID, dateTime);
+            if (result == null)
+                return BadRequest(new ErrorResponse(400, "Không có buổi tập cùng dữ liệu trong DB"));
+            else
+                return Ok(new SuccessResponse<ExInSessionWithSessionIDViewModel>(200, "Danh Sách các bài tập trong buổi tập", result));
+        }
+
         // PUT: api/Sessions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
