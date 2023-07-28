@@ -9,7 +9,14 @@ namespace eGTS_Backend.Data.ViewModel
     public class MealViewModel
     {
         public Guid Id { get; set; }
-        public DateTime DateTime { get; set; }
+
+        public Guid NutritionScheduleId { get; set; }
+
+        public int MealTime { get; set; }
+
+        public DateTime Datetime { get; set; }
+
+        public bool IsDelete { get; set; }
         public List<FoodAndSupplimentViewModel> FoodAndSuppliment { get; set; }
     }
 }

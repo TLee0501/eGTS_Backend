@@ -72,7 +72,7 @@ namespace eGTS.Bussiness.RequestService
             //Accepct
             if(request.IsAccepted != null)
             {
-                var packagegymer = await _context.PackageGymers.SingleOrDefaultAsync(a => a.GymerId == request.GymerId);
+                var packagegymer = await _context.PackageGymers.FindAsync(request.PackageGymerId);
                 if (request.IsPt == true)
                 {
                     packagegymer.Ptid = request.ReceiverId;
