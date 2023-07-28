@@ -85,7 +85,7 @@ public partial class EGtsContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.PhoneNo)
-                .HasMaxLength(11)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Role)
                 .HasMaxLength(5)
@@ -103,9 +103,7 @@ public partial class EGtsContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.Bmi).HasColumnName("BMI");
             entity.Property(e => e.CreateDate).HasColumnType("date");
-            entity.Property(e => e.Goal)
-                .HasMaxLength(300)
-                .IsUnicode(false);
+            entity.Property(e => e.Goal).HasMaxLength(300);
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
 
@@ -173,9 +171,7 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Ptid).HasColumnName("PTID");
 
             entity.HasOne(d => d.Pt).WithMany(p => p.ExcerciseTypes)

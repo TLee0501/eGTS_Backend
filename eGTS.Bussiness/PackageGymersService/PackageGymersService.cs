@@ -23,7 +23,7 @@ namespace eGTS.Bussiness.PackageGymersService
         {
             Guid id = Guid.NewGuid();
             var packageRequest = await _context.Packages.FindAsync(request.PackageID);
-            PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, "Pause", false);
+            PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, "Paid", false);
             _context.PackageGymers.Add(packageGymer);
             try
             {
@@ -106,6 +106,27 @@ namespace eGTS.Bussiness.PackageGymersService
             }
 
             return result;
+        }
+
+        public async Task<bool> CheckAlreadyPackGymerHasCenter(Guid id)
+        {
+            var gp = await _context.PackageGymers.Where(a => a.GymerId == id && a.IsDelete == false && a.Status != "Done").ToListAsync();
+            foreach (var item in gp)
+            {
+                if (item.Ptid == null && item.Neid == null) return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> CheckAlreadyPackGymerHasNE(Guid id)
+        {
+            var gp = await _context.PackageGymers.Where(a => a.GymerId == id && a.IsDelete == false && a.Status != "Done").ToListAsync();
+            foreach (var item in gp)
+            {
+                if (item.Neid != null) return true;
+            }
+            return false;
+
         }
     }
 }

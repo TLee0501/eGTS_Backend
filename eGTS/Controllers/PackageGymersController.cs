@@ -29,7 +29,7 @@ namespace eGTS.Controllers
 
         // GET: api/PackageGymers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PackageGymer>>> GetPackageGymers()
+        public async Task<ActionResult<IEnumerable<PackageGymer>>> GetPackageGymersForTest()
         {
           if (_context.PackageGymers == null)
           {
@@ -58,7 +58,7 @@ namespace eGTS.Controllers
 
         // PUT: api/PackageGymers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut]
+        /*[HttpPut]
         public async Task<IActionResult> UpdatePackageGymer(PackageGymerViewModel request)
         {
             if (request == null)
@@ -76,11 +76,11 @@ namespace eGTS.Controllers
             }
 
             return Ok();
-        }
+        }*/
 
         // POST: api/PackageGymers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<bool>> CreatePackageGymer(PackageGymerCreateViewModel request)
         {
             if (request == null) return BadRequest();
@@ -90,7 +90,7 @@ namespace eGTS.Controllers
             }
             catch (DbUpdateConcurrencyException) { return BadRequest(); }
             return Ok();
-        }
+        }*/
 
         // DELETE: api/PackageGymers/5
        /* [HttpDelete("{id}")]
