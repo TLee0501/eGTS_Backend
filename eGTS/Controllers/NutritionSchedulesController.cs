@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using eGTS_Backend.Data.Models;
+using eGTS_Backend.Data.ViewModel;
+using eGTS.Bussiness.NutritionScheduleService;
+using coffee_kiosk_solution.Data.Responses;
 
 namespace eGTS.Controllers
 {
@@ -14,10 +17,11 @@ namespace eGTS.Controllers
     public class NutritionSchedulesController : ControllerBase
     {
         private readonly EGtsContext _context;
-
-        public NutritionSchedulesController(EGtsContext context)
+        private readonly INutritionScheduleService _nutritionService;
+        public NutritionSchedulesController(EGtsContext context, INutritionScheduleService nutritionService)
         {
             _context = context;
+            _nutritionService = nutritionService;
         }
 
         // GET: api/NutritionSchedules
@@ -129,9 +133,38 @@ namespace eGTS.Controllers
             return NoContent();
         }*/
 
-        /*private bool NutritionScheduleExists(Guid id)
+        [HttpGet("{GymerId}")]
+        public async Task<ActionResult<IEnumerable<MealViewModel>>> GetNutritionScheduleByGymerIDAndDate(Guid GymerId, DateTime date)
         {
-            return (_context.NutritionSchedules?.Any(e => e.Id == id)).GetValueOrDefault();
-        }*/
+            if (_context.NutritionSchedules == null)
+            {
+                return BadRequest("Không tìm thấy thực đơn!");
+            }
+            var result = await _nutritionService.GetNutritionScheduleByGymerIDAndDate(GymerId, date);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy thực đơn!");
+            }
+
+            return Ok(new SuccessResponse<List<MealViewModel>>(200, "Danh sách thực đơn", result));
+        }
+
+        [HttpGet("{GymerId}")]
+        public async Task<ActionResult<IEnumerable<MealViewModel>>> GetNutritionScheduleByGymerID(Guid GymerId)
+        {
+            if (_context.NutritionSchedules == null)
+            {
+                return BadRequest("Không tìm thấy thực đơn!");
+            }
+            var result = await _nutritionService.GetNutritionScheduleByGymerID(GymerId);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy thực đơn!");
+            }
+
+            return Ok(new SuccessResponse<List<MealViewModel>>(200, "Danh sách thực đơn", result));
+        }
     }
 }

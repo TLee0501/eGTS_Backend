@@ -29,6 +29,7 @@ namespace eGTS.Bussiness.SessionService
         Task<List<SessionViewModel>> DebugGetAllSessionList();
         Task<List<SessionResultViewModel>> DebugGetAllSessionResultList();
         Task<List<ExInSessionViewModel>> DebugGetAllExcerciseInSessionList();
+        Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithSessionID(Guid SessionID);
 
     }
 }

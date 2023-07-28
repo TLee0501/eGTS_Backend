@@ -138,6 +138,7 @@ namespace eGTS.Bussiness.MealService
             }
 
             var meals = await _context.Meals.ToListAsync();
+            if(meals.Count == 0) return true;
             var inDB = new List<DateTime>();
             foreach (var meal in meals)
             {

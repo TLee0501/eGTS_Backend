@@ -30,8 +30,15 @@ namespace eGTS.Controllers
         }
 
         [HttpGet]
-        public async Task<List<ZaloPayResponse>> CreareOrder(Guid GymerId, Guid PackageId)
+        public async Task<ActionResult<IEnumerable<ZaloPayResponse>>> CreareOrder(Guid GymerId, Guid PackageId)
         {
+            //check if gymer already has NE
+            var checkNE = await _packageGymersService.CheckAlreadyPackGymerHasNE(GymerId);
+            if (checkNE == true) return BadRequest("Gymer đã mua gói tập có NE!");
+            //check if gymer already has Center
+            var checkCenter = await _packageGymersService.CheckAlreadyPackGymerHasCenter(GymerId);
+            if (checkCenter == true) return BadRequest("Gymer đã mua gói tập có Center!");
+
             var package = new Package();
             using(var context = new EGtsContext())
             {
@@ -76,12 +83,6 @@ namespace eGTS.Controllers
             };
             dataCreate = tmp;
             return response;
-        }
-
-        [HttpGet]
-        private async Task<PackageGymerCreateViewModel> testVar()
-        {
-            return dataCreate;
         }
 
         [HttpPost]
