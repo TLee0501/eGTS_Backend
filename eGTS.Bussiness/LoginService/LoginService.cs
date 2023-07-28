@@ -26,6 +26,7 @@ namespace eGTS.Bussiness.LoginService
 
             AccountViewModel result = new AccountViewModel
             {
+                Id = account.Id,
                 PhoneNo = account.PhoneNo,
                 Password = account.Password,
                 Fullname = account.Fullname,
