@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using eGTS.Bussiness.AccountService;
 using eGTS.Bussiness.ExcerciseScheduleService;
+using eGTS.Bussiness.ExcerciseService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,15 @@ namespace eGTS.Bussiness.SessionService
 
         private readonly EGtsContext _context;
         private readonly IExcerciseScheduleService _excerciseScheduleService;
+        private readonly IExcerciseService _excerciseService;
         private readonly ILogger<IAccountService> _logger;
 
-        public SessionService(EGtsContext context, IExcerciseScheduleService excerciseScheduleService, ILogger<IAccountService> logger)
+        public SessionService(EGtsContext context, IExcerciseScheduleService excerciseScheduleService,
+            IExcerciseService excerciseService, ILogger<IAccountService> logger)
         {
             _context = context;
             _excerciseScheduleService = excerciseScheduleService;
+            _excerciseService = excerciseService;
             _logger = logger;
         }
 
@@ -233,6 +237,28 @@ namespace eGTS.Bussiness.SessionService
                 return true;
             }
             return false;
+        }
+
+        public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithSessionID(Guid SessionID)
+        {
+            var exInSessionList = await _context.ExserciseInSessions.Where(s => s.SessionId == SessionID).ToListAsync();
+            var session = await _context.Sessions.FindAsync(id);
+            var excerciseList = new List<ExcerciseViewModel>();
+            foreach (var exInSession in exInSessionList)
+            {
+                excerciseList.Add(await _excerciseService.GetExcerciseByID(exInSession.ExerciseId));
+            }
+            if (excerciseList.Count > 0)
+            {
+                var result = new ExInSessionWithSessionIDViewModel();
+                result.SessionID = session.ID;
+                result.SessionDateAndTime = session.DateAndTime;
+                result.ExcercisesInSession = excerciseList;
+
+                return result;
+            }
+            else
+                return null;
         }
 
         public async Task<ExInSessionViewModel> GetExcerciseInSessionByID(Guid id)
