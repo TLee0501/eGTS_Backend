@@ -27,7 +27,7 @@ public partial class BodyPerameter
 
     public bool IsDelete { get; set; }
 
-    public BodyPerameter(Guid id, Guid gymerId, string? goal, double? weight, double? height, double? bmi, short? bone, short? fat, short? muscle, DateTime createDate, bool isDelete, Account gymer)
+    public BodyPerameter(Guid id, Guid gymerId, string? goal, double? weight, double? height, double? bmi, short? bone, short? fat, short? muscle, DateTime createDate, bool isDelete)
     {
         Id = id;
         GymerId = gymerId;
@@ -40,7 +40,6 @@ public partial class BodyPerameter
         Muscle = muscle;
         CreateDate = createDate;
         IsDelete = isDelete;
-        Gymer = gymer;
     }
 
     public virtual Account Gymer { get; set; } = null!;
