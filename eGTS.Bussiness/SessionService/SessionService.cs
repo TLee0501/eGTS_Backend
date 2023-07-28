@@ -55,6 +55,9 @@ namespace eGTS.Bussiness.SessionService
             {
                 if (exSchedule.From <= model.DateAndTime && model.DateAndTime <= exSchedule.To)
                 {
+                    var check = _context.Sessions.Where(s => s.ScheduleId.Equals(model.ScheduleId) && s.DateAndTime.Equals(model.DateAndTime));
+                    if (check.Any())
+                        return false;
                     Guid id = Guid.NewGuid();
                     Session session = new Session(id, model.ScheduleId, model.DateAndTime, false);
 
@@ -239,6 +242,29 @@ namespace eGTS.Bussiness.SessionService
             return false;
         }
 
+        public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime)
+        {
+            Session session = await _context.Sessions.FirstOrDefaultAsync(s => s.ScheduleId.Equals(ScheduleID) && s.DateAndTime.Equals(dateTime));
+            var exInSessionList = await _context.ExserciseInSessions.Where(s => s.SessionId.Equals(session.Id)).ToListAsync();
+            var excerciseList = new List<ExcerciseViewModel>();
+            foreach (var exInSession in exInSessionList)
+            {
+                excerciseList.Add(await _excerciseService.GetExcerciseByID(exInSession.ExerciseId));
+            }
+            if (excerciseList.Count > 0)
+            {
+                var result = new ExInSessionWithSessionIDViewModel();
+                result.SessionID = session.Id;
+                result.SessionDateAndTime = session.DateAndTime;
+                result.ExcercisesInSession = excerciseList;
+
+                return result;
+            }
+            else
+                return null;
+
+        }
+
         public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithSessionID(Guid SessionID)
         {
             var exInSessionList = await _context.ExserciseInSessions.Where(s => s.SessionId == SessionID).ToListAsync();
@@ -295,8 +321,6 @@ namespace eGTS.Bussiness.SessionService
             }
             return null;
         }
-
-
 
         public async Task<SessionViewModel> GetSessionByID(Guid id)
         {
