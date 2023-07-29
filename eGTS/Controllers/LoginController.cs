@@ -73,7 +73,7 @@ namespace eGTS.Controllers
             _logger.LogInformation($"Login by {model.PhoneNo}");
 
             var token = CreateToken(result);
-            return Ok(new LoginResponse<AccountViewModel>(200, "Login Success.", result, token));
+            return Ok(new LoginResponse<AccountViewModel>(200, "Đăng nhập thành công.", result, token));
         }
         /*// GET: api/Login
         /// <summary>

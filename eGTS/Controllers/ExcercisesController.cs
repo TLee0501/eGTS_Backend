@@ -47,7 +47,7 @@ namespace eGTS.Controllers
             {
                 return NoContent();
             }
-            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
+            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Danh sách các bài tập.", result));
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace eGTS.Controllers
             {
                 return NoContent();
             }
-            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
+            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Danh sách các bài tập.", result));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace eGTS.Controllers
             {
                 return NoContent();
             }
-            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
+            return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Danh sách các bài tập.", result));
         }
 
         /// <summary>
@@ -127,11 +127,11 @@ namespace eGTS.Controllers
             var result = await _excerciseService.GetExcerciseByID(id);
             if (result != null)
             {
-                return Ok(new SuccessResponse<ExcerciseViewModel>(200, "Excercise Found.", result));
+                return Ok(new SuccessResponse<ExcerciseViewModel>(200, "Bài tập tìm thấy.", result));
             }
             else
             {
-                return BadRequest(new ErrorResponse(400, "Excercise not found"));
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy bài tập"));
             }
 
         }
@@ -150,9 +150,9 @@ namespace eGTS.Controllers
         {
 
             if (await _excerciseService.UpdateExcercise(id, request))
-                return Ok(new SuccessResponse<ExcerciseUpdateViewModel>(200, $"Excercise with ID: {id} Updated.", request));
+                return Ok(new SuccessResponse<ExcerciseUpdateViewModel>(200, $"Bài tập có ID: {id} cập nhập thành công.", request));
             else
-                return BadRequest(new ErrorResponse(400, "Unable to update Excercise"));
+                return BadRequest(new ErrorResponse(400, "Cập nhập bài tập không thành công"));
         }
 
         /// <summary>
@@ -179,10 +179,10 @@ namespace eGTS.Controllers
             if (await _excerciseService.CreateExcercise(model))
             {
                 _logger.LogInformation($"Excercise Created by PT with ID: {model.Ptid}");
-                return Ok(new SuccessResponse<ExcerciseCreateViewModel>(200, "Create Success.", model));
+                return Ok(new SuccessResponse<ExcerciseCreateViewModel>(200, "Tạo thành công.", model));
             }
             else
-                return BadRequest(new ErrorResponse(400, "Invalid Data"));
+                return BadRequest(new ErrorResponse(400, "Dữ liệu không hợp lệ"));
 
         }
 
@@ -217,7 +217,7 @@ namespace eGTS.Controllers
                 _logger.LogInformation($"Deleted Excercise with ID: {id}");
                 return NoContent();
             }
-            return BadRequest(new ErrorResponse(400, $"Unable to delete Excercise with ID: {id}"));
+            return BadRequest(new ErrorResponse(400, $"Xóa bài tập thất bại ID: {id}"));
 
         }
 
