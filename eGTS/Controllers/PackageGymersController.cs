@@ -80,7 +80,7 @@ namespace eGTS.Controllers
 
         // POST: api/PackageGymers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*[HttpPost]
+        [HttpPost]
         public async Task<ActionResult<bool>> CreatePackageGymer(PackageGymerCreateViewModel request)
         {
             if (request == null) return BadRequest();
@@ -90,27 +90,27 @@ namespace eGTS.Controllers
             }
             catch (DbUpdateConcurrencyException) { return BadRequest(); }
             return Ok();
-        }*/
+        }
 
         // DELETE: api/PackageGymers/5
-       /* [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePackageGymer(Guid id)
-        {
-            if (_context.PackageGymers == null)
-            {
-                return NotFound();
-            }
-            var packageGymer = await _context.PackageGymers.FindAsync(id);
-            if (packageGymer == null)
-            {
-                return NotFound();
-            }
+        /* [HttpDelete("{id}")]
+         public async Task<IActionResult> DeletePackageGymer(Guid id)
+         {
+             if (_context.PackageGymers == null)
+             {
+                 return NotFound();
+             }
+             var packageGymer = await _context.PackageGymers.FindAsync(id);
+             if (packageGymer == null)
+             {
+                 return NotFound();
+             }
 
-            _context.PackageGymers.Remove(packageGymer);
-            await _context.SaveChangesAsync();
+             _context.PackageGymers.Remove(packageGymer);
+             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }*/
+             return NoContent();
+         }*/
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PackageGymerViewModel>>> GetPackageGymerByGymerID(Guid request)
