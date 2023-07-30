@@ -30,11 +30,11 @@ public partial class PackageGymer
 
     public Guid? Neid { get; set; }
 
-    public short NumberOfSession { get; set; }
+    public short? NumberOfSession { get; set; }
 
-    public DateTime From { get; set; }
+    public DateTime? From { get; set; }
 
-    public DateTime To { get; set; }
+    public DateTime? To { get; set; }
 
     public string Status { get; set; } = null!;
 
