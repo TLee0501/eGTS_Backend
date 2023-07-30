@@ -88,8 +88,8 @@ namespace eGTS.Controllers
             {
                 await _packageGymersService.CreatePackageGymer(request);
             }
-            catch (DbUpdateConcurrencyException) { return BadRequest(); }
-            return Ok();
+            catch (DbUpdateConcurrencyException) { return BadRequest("Mua gói tập thất bại!"); }
+            return Ok("Gói tập đã được tạo.");
         }
 
         // DELETE: api/PackageGymers/5
