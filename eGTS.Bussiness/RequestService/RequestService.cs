@@ -20,35 +20,42 @@ namespace eGTS.Bussiness.RequestService
             _context = context;
         }
 
-        public async Task<bool> CreateRequest(RequestCreateViewModel request)
+        public async Task<int> CreateRequest(RequestCreateViewModel request)
         {
             var id = Guid.NewGuid();
             var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, null, false);
-            _context.Requests.Add(requestService);
+            var checkExist = await _context.Requests.SingleOrDefaultAsync(a => a.ReceiverId == request.ReceiverId && a.PackageGymerId == request.PackageGymerId);
+            if (checkExist != null) return 2;
             try
             {
+                _context.Requests.Add(requestService);
                 await _context.SaveChangesAsync();
-                return true;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
-                return false;
+                return 0;
             }
-            return false;
+            return 1;
         }
 
-        public async Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid id, bool isPT)
+        public async Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid id)
         {
-            var requests = await _context.Requests.Where(a => a.ReceiverId == id && a.IsPt == isPT && a.IsAccepted != null).ToListAsync();
+            var requests = await _context.Requests.Where(a => a.ReceiverId == id && a.IsAccepted == null).ToListAsync();
             List<RequestViewModel> result = new List<RequestViewModel>();
             foreach (var item in requests)
             {
+                var account = await _context.Accounts.FindAsync(item.GymerId);
+                var pg = await _context.PackageGymers.FindAsync(item.PackageGymerId);
+
                 var temp = new RequestViewModel();
                 temp.Id = item.Id;
                 temp.ReceiverId = item.ReceiverId;
+                temp.GymerName = account.Fullname;
                 temp.GymerId = item.GymerId;
                 temp.PackageGymerId = item.PackageGymerId;
+                temp.PackageGymerName = pg.Name;
+                temp.NumberOfSession = pg.NumberOfSession;
                 temp.IsPt = item.IsPt;
                 if (item.IsAccepted != null)
                 {

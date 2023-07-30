@@ -10,9 +10,9 @@ namespace eGTS.Bussiness.RequestService
 {
     public interface IRequestService
     {
-        Task<bool> CreateRequest(RequestCreateViewModel request);
+        Task<int> CreateRequest(RequestCreateViewModel request);
         Task<Request> GetRequest(Guid id);
         Task<bool> UpdateRequest(RequestViewModel request);
-        Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid id, bool isPT);
+        Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid ExpertId);
     }
 }

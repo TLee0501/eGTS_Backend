@@ -27,7 +27,7 @@ namespace eGTS.Controllers
 
         // GET: api/Requests
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Request>>> GetRequests()
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForTest()
         {
           if (_context.Requests == null)
           {
@@ -85,21 +85,23 @@ namespace eGTS.Controllers
             try
             {
                 var result = await _requestService.CreateRequest(request);
-                if (result == false) return BadRequest();
+                if (result == 0) return BadRequest("Gửi yêu cầu thất bại!");
+                else if(result == 2) return BadRequest("Bạn đã gửi yêu cầu cho người này!");
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
             }
-            return Ok();
+            return Ok("Gửi yêu cầu thành công.");
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RequestViewModel>>> GetAllRequestForPTNE(Guid id, bool isPT)
+        public async Task<ActionResult<IEnumerable<RequestViewModel>>> GetAllRequestForPTNE(Guid ExpertId)
         {
-            if (id == null || isPT == null) return BadRequest();
+            if (ExpertId == null) return BadRequest("Vui lòng kiểm tra là thông tin yêu cầu!");
 
-            var result = await _requestService.GetAllRequestForPTNE(id, isPT);
+            var result = await _requestService.GetAllRequestForPTNE(ExpertId);
+            if (result == null) return BadRequest("Không tìm thấy yêu cầu!");
             return Ok(result);
         }
 

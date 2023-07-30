@@ -38,7 +38,7 @@ namespace eGTS.Controllers
             var result = await _qualitificationService.GetQualitificationByAccountId(id);
             if (result == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy chứng chỉ!");
             }
             return result;
         }
@@ -55,9 +55,9 @@ namespace eGTS.Controllers
             bool result = await _qualitificationService.UpdateQualitification(qualification);
             if (result)
             {
-                return Ok();
+                return Ok("Cập nhật chứng chỉ thành công!");
             }
-            return StatusCode(500, "Failed to Update Qualitification");
+            return StatusCode(500, "Cập nhật chứng chỉ thất bại!");
         }
 
         // POST: api/Qualifications
@@ -75,7 +75,7 @@ namespace eGTS.Controllers
             {
                 return Ok();
             }
-            return StatusCode(500, "Failed to Create Qualitification");
+            return StatusCode(500, "Tạo chứng chỉ mới thất bại!");
         }
 
         // DELETE: api/Qualifications/5
@@ -91,7 +91,7 @@ namespace eGTS.Controllers
             {
                 return Ok();
             }
-            return StatusCode(500, "Failed to Delete Qualitification");
+            return StatusCode(500, "Xóa chứng chỉ thất bại!");
         }
     }
 }
