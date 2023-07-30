@@ -16,6 +16,7 @@ using eGTS.Bussiness.ExcerciseScheduleService;
 using eGTS.Bussiness.SessionService;
 using eGTS.Bussiness.QualitificationService;
 using eGTS.Bussiness.MealService;
+using eGTS.Bussiness.BodyParameters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IExcerciseScheduleService, ExcerciseScheduleService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IQualitificationService, QualitificationService>();
+builder.Services.AddScoped<IBodyParametersService, BodyParametersService>();
 builder.Services.AddScoped<IMealService, MealService>();
 
 //swagger

@@ -14,8 +14,6 @@ namespace eGTS_Backend.Data.ViewModel
 
         public double? Height { get; set; }
 
-        public double? Bmi { get; set; }
-
         public short? Bone { get; set; }
 
         public short? Fat { get; set; }

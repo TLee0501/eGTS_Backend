@@ -17,26 +17,38 @@ namespace eGTS.Bussiness.BodyParameters
     {
 
         private readonly EGtsContext _context;
-        private readonly IBodyParametersService _bodyParametersService;
-        private readonly ILogger<IAccountService> _logger;
+        private readonly ILogger<IBodyParametersService> _logger;
+
+        public BodyParametersService(EGtsContext context, ILogger<IBodyParametersService> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
 
         public async Task<bool> CreateBodyParameters(BodyPerameterCreateViewModel model)
         {
             Guid id = Guid.NewGuid();
-            BodyPerameter BPS = new BodyPerameter(id, model.GymerId, model.Goal,
-                model.Weight, model.Height, model.Bmi, model.Bone, model.Fat, model.Muscle, DateTime.Now, false);
-            try
-            {
-                await _context.BodyPerameters.AddAsync(BPS);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Invalid data.");
-                return false;
-            }
 
+            var account = _context.Accounts.Find(model.GymerId);
+
+            if (account != null && account.Role.Equals("Gymer") && account.IsDelete == false)
+            {
+                var bmi = BMIcalculator(model.Weight, model.Height);
+                BodyPerameter BPS = new BodyPerameter(id, model.GymerId, model.Goal,
+                    model.Weight, model.Height, bmi, model.Bone, model.Fat, model.Muscle, DateTime.Now, false);
+                try
+                {
+                    await _context.BodyPerameters.AddAsync(BPS);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Invalid data.");
+                    return false;
+                }
+            }
+            return false;
         }
 
         public async Task<List<BodyPerameterViewModel>> DEBUGGetAllBodyParameters()
@@ -49,7 +61,7 @@ namespace eGTS.Bussiness.BodyParameters
                 {
                     BodyPerameterViewModel model = new BodyPerameterViewModel();
                     model.Id = BP.Id;
-                    model.GymerId = BP.Id;
+                    model.GymerId = BP.GymerId;
                     model.Goal = BP.Goal;
                     model.Weight = BP.Weight;
                     model.Height = BP.Height;
@@ -66,9 +78,20 @@ namespace eGTS.Bussiness.BodyParameters
             return null;
         }
 
-        public Task<bool> DeleteBodyParameters(Guid id)
+        public async Task<bool> DeleteBodyParameters(Guid id)
         {
-            throw new NotImplementedException();
+            var BP = _context.BodyPerameters.Find(id);
+            BP.IsDelete = true;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to save changes");
+            }
+            return false;
         }
 
         public async Task<bool> DeleteBodyParametersPERMANENT(Guid id)
@@ -83,19 +106,99 @@ namespace eGTS.Bussiness.BodyParameters
             return false;
         }
 
-        public Task<List<BodyPerameterViewModel>> GetBodyParametersByGymerID(Guid id)
+        public async Task<List<BodyPerameterViewModel>> GetBodyParametersByGymerID(Guid GymerID)
         {
-            throw new NotImplementedException();
+            List<BodyPerameterViewModel> resultList = new List<BodyPerameterViewModel>();
+            var BPs = _context.BodyPerameters.Where(b => b.GymerId.Equals(GymerID));
+
+            if (BPs != null)
+            {
+                foreach (var BP in BPs)
+                {
+                    if (BP.IsDelete == false)
+                    {
+                        BodyPerameterViewModel model = new BodyPerameterViewModel();
+                        model.Id = BP.Id;
+                        model.GymerId = BP.GymerId;
+                        model.Goal = BP.Goal;
+                        model.Weight = BP.Weight;
+                        model.Height = BP.Height;
+                        model.Bmi = BP.Bmi;
+                        model.Bone = BP.Bone;
+                        model.Fat = BP.Fat;
+                        model.Muscle = BP.Muscle;
+                        model.CreateDate = BP.CreateDate;
+                        model.IsDelete = BP.IsDelete;
+                        resultList.Add(model);
+                    }
+                }
+                return resultList;
+            }
+            return null;
         }
 
-        public Task<BodyPerameterViewModel> GetBodyParametersByID(Guid id)
+        public async Task<BodyPerameterViewModel> GetBodyParametersByID(Guid id)
         {
-            throw new NotImplementedException();
+            var BP = await _context.BodyPerameters.FindAsync(id);
+
+            if (BP != null)
+            {
+                BodyPerameterViewModel model = new BodyPerameterViewModel();
+                model.Id = BP.Id;
+                model.GymerId = BP.GymerId;
+                model.Goal = BP.Goal;
+                model.Weight = BP.Weight;
+                model.Height = BP.Height;
+                model.Bmi = BP.Bmi;
+                model.Bone = BP.Bone;
+                model.Fat = BP.Fat;
+                model.Muscle = BP.Muscle;
+                model.CreateDate = BP.CreateDate;
+                model.IsDelete = BP.IsDelete;
+
+                return model;
+            }
+            return null;
+
         }
 
-        public Task<bool> UpdateBodyParameters(Guid id, BodyPerameterUpdateViewModel model)
+        public async Task<bool> UpdateBodyParameters(Guid id, BodyPerameterUpdateViewModel model)
         {
-            throw new NotImplementedException();
+            var BP = await _context.BodyPerameters.FindAsync(id);
+            if (BP == null)
+                return false;
+            if (!(model.Goal.Equals("")))
+                BP.Goal = model.Goal;
+            if (model.Weight > 0)
+                BP.Weight = model.Weight;
+            if (model.Height > 0)
+                BP.Height = model.Height;
+            BP.Bmi = BMIcalculator(BP.Weight, BP.Height);
+            if (model.Bone > 0)
+                BP.Bone = model.Bone;
+            if (model.Fat > 0)
+                BP.Fat = model.Fat;
+            if (model.Muscle > 0)
+                BP.Muscle = model.Muscle;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to save changes");
+            }
+            return false;
+        }
+
+        public double? BMIcalculator(double? weight, double? height)
+        {
+            if (weight == null || height == null || weight <= 0 || height <= 0)
+            {
+                return 0;
+            }
+            return weight / ((height / 100) * (height / 100));// Height is in CM
         }
     }
 }
