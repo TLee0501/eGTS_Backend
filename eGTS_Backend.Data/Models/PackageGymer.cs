@@ -32,6 +32,10 @@ public partial class PackageGymer
 
     public short NumberOfSession { get; set; }
 
+    public DateTime From { get; set; }
+
+    public DateTime To { get; set; }
+
     public string Status { get; set; } = null!;
 
     public bool IsDelete { get; set; }
