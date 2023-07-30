@@ -404,6 +404,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.From).HasColumnType("datetime");
             entity.Property(e => e.GymerId).HasColumnName("GymerID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.Name).HasMaxLength(50);
@@ -413,6 +414,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.To).HasColumnType("datetime");
 
             entity.HasOne(d => d.Gymer).WithMany(p => p.PackageGymerGymers)
                 .HasForeignKey(d => d.GymerId)

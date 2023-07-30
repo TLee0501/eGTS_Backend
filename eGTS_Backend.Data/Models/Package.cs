@@ -46,6 +46,8 @@ public partial class Package
 
     public short NumberOfsession { get; set; }
 
+    public short NumberOfMonth { get; set; }
+
     public double? Ptcost { get; set; }
 
     public double? Necost { get; set; }
