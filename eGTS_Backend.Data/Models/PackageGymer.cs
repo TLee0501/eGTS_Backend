@@ -5,7 +5,7 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class PackageGymer
 {
-    public PackageGymer(Guid id, string? name, Guid gymerId, Guid? packageId, Guid? ptid, Guid? neid, short numberOfSession, string status, bool isDelete)
+    public PackageGymer(Guid id, string? name, Guid gymerId, Guid? packageId, Guid? ptid, Guid? neid, short? numberOfSession, string status, bool isDelete)
     {
         Id = id;
         Name = name;

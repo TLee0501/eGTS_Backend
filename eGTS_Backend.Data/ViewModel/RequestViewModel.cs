@@ -14,7 +14,7 @@ namespace eGTS_Backend.Data.ViewModel
         public Guid ReceiverId { get; set; }
         public Guid PackageGymerId { get; set; }
         public string PackageGymerName { get; set; }
-        public short NumberOfSession { get; set; }
+        public short? NumberOfSession { get; set; }
         public bool IsPt { get; set; }
         public bool? IsAccepted { get; set; }
     }
