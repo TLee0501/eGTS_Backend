@@ -9,6 +9,7 @@ using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using eGTS.Bussiness.RequestService;
 using Microsoft.AspNetCore.Http.HttpResults;
+using coffee_kiosk_solution.Data.Responses;
 
 namespace eGTS.Controllers
 {
@@ -42,13 +43,13 @@ namespace eGTS.Controllers
         {
           if (_context.Requests == null)
           {
-              return NotFound();
-          }
+                return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
+            }
             var request = await _requestService.GetRequest(id);
 
             if (request == null)
             {
-                return NotFound();
+                return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
             }
 
             return request;
@@ -61,7 +62,7 @@ namespace eGTS.Controllers
         {
             if (request == null)
             {
-                return BadRequest();
+                return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
             }
 
             try
@@ -72,8 +73,7 @@ namespace eGTS.Controllers
             {
                 throw new Exception(ex.Message, ex);
             }
-
-            return Ok();
+            return Ok(new SuccessResponse<RequestViewModel>(200, "Thành công!", request));
         }
 
         // POST: api/Requests
@@ -81,28 +81,28 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRequest(RequestCreateViewModel request)
         {
-            if (request == null) return BadRequest();
+            if (request == null) return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
             try
             {
                 var result = await _requestService.CreateRequest(request);
-                if (result == 0) return BadRequest("Gửi yêu cầu thất bại!");
-                else if(result == 2) return BadRequest("Bạn đã gửi yêu cầu cho người này!");
+                if (result == 0) return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
+                else if(result == 2) return BadRequest(new ErrorResponse(400, "Bạn đã gửi yêu cầu cho người này!"));
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
             }
-            return Ok("Gửi yêu cầu thành công.");
+            return Ok(new SuccessResponse<RequestCreateViewModel>(200, "Gửi yêu cầu thành công!", request));
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RequestViewModel>>> GetAllRequestForPTNE(Guid ExpertId)
         {
-            if (ExpertId == null) return BadRequest("Vui lòng kiểm tra là thông tin yêu cầu!");
+            if (ExpertId == null) return BadRequest(new ErrorResponse(400, "Vui lòng kiểm tra là thông tin yêu cầu!"));
 
             var result = await _requestService.GetAllRequestForPTNE(ExpertId);
-            if (result == null) return BadRequest("Không tìm thấy yêu cầu!");
-            return Ok(result);
+            if (result == null) return BadRequest(new ErrorResponse(400, "Không tìm thấy yêu cầu!"));
+            return Ok(new SuccessResponse<List<RequestViewModel>>(200, "Thành công!", result));
         }
 
     }

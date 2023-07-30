@@ -63,6 +63,7 @@ namespace eGTS.Bussiness.RequestService
                 }
                 result.Add(temp);
             }
+            if(result.Count == 0) return null;
             return result;
         }
 
