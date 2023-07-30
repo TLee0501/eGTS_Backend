@@ -13,7 +13,7 @@ namespace eGTS_Backend.Data.ViewModel
         public Guid GymerId { get; set; }
         public Guid? Ptid { get; set; }
         public Guid? Neid { get; set; }
-        public short NumberOfSession { get; set; }
+        public short? NumberOfSession { get; set; }
         public string Status { get; set; } = null!;
         public bool isDelete { get; set; }
     }
