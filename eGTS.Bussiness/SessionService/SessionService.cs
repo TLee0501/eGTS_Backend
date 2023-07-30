@@ -244,12 +244,23 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime)
         {
-            Session session = await _context.Sessions.FirstOrDefaultAsync(s => s.ScheduleId.Equals(ScheduleID) && s.DateAndTime.Equals(dateTime));
-            var exInSessionList = await _context.ExserciseInSessions.Where(s => s.SessionId.Equals(session.Id)).ToListAsync();
+            Session session = _context.Sessions.FirstOrDefault(s => s.ScheduleId.Equals(ScheduleID) && s.DateAndTime.Equals(dateTime));
+            var exInSessionList = _context.ExserciseInSessions.Where(s => s.SessionId.Equals(session.Id)).ToList();
             var excerciseList = new List<ExcerciseViewModel>();
             foreach (var exInSession in exInSessionList)
             {
-                excerciseList.Add(await _excerciseService.GetExcerciseByID(exInSession.ExerciseId));
+
+                var excercise = _context.Excercises.Find(exInSession.ExerciseId);
+                var ExV = new ExcerciseViewModel();
+                ExV.id = excercise.Id;
+                ExV.Ptid = excercise.Ptid;
+                ExV.Name = excercise.Name;
+                ExV.Description = excercise.Description;
+                ExV.Video = excercise.Video;
+                ExV.CreateDate = excercise.CreateDate;
+                ExV.IsDelete = excercise.IsDelete;
+
+                excerciseList.Add(ExV);
             }
             if (excerciseList.Count > 0)
             {
@@ -267,12 +278,22 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithSessionID(Guid SessionID)
         {
-            var exInSessionList = await _context.ExserciseInSessions.Where(s => s.SessionId == SessionID).ToListAsync();
-            var session = await _context.Sessions.FindAsync(SessionID);
+            var exInSessionList = _context.ExserciseInSessions.Where(s => s.SessionId == SessionID).ToList();
+            var session = _context.Sessions.Find(SessionID);
             var excerciseList = new List<ExcerciseViewModel>();
             foreach (var exInSession in exInSessionList)
             {
-                excerciseList.Add(await _excerciseService.GetExcerciseByID(exInSession.ExerciseId));
+                var excercise = _context.Excercises.Find(exInSession.ExerciseId);
+                var ExV = new ExcerciseViewModel();
+                ExV.id = excercise.Id;
+                ExV.Ptid = excercise.Ptid;
+                ExV.Name = excercise.Name;
+                ExV.Description = excercise.Description;
+                ExV.Video = excercise.Video;
+                ExV.CreateDate = excercise.CreateDate;
+                ExV.IsDelete = excercise.IsDelete;
+
+                excerciseList.Add(ExV);
             }
             if (excerciseList.Count > 0)
             {
