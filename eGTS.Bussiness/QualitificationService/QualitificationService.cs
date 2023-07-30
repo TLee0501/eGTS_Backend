@@ -92,6 +92,7 @@ namespace eGTS.Bussiness.QualitificationService
                 db.Certificate = request.Certificate;
                 db.Experience = request.Experience;
                 db.IsDelete = request.IsDelete;
+                db.Description = request.Descrition;
                 await _context.SaveChangesAsync();
                 return true;
             }
