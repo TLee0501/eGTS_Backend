@@ -25,7 +25,7 @@ namespace eGTS.Bussiness.RequestService
             var id = Guid.NewGuid();
             var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, null, false);
             var checkExist = await _context.Requests.SingleOrDefaultAsync(a => a.ReceiverId == request.ReceiverId && a.PackageGymerId == request.PackageGymerId);
-            if (checkExist == null) return 2;
+            if (checkExist != null) return 2;
             try
             {
                 _context.Requests.Add(requestService);
