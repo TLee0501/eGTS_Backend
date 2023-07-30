@@ -20,22 +20,23 @@ namespace eGTS.Bussiness.RequestService
             _context = context;
         }
 
-        public async Task<bool> CreateRequest(RequestCreateViewModel request)
+        public async Task<int> CreateRequest(RequestCreateViewModel request)
         {
             var id = Guid.NewGuid();
             var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, null, false);
-            _context.Requests.Add(requestService);
+            var checkExist = await _context.Requests.SingleOrDefaultAsync(a => a.ReceiverId == request.ReceiverId && a.PackageGymerId == request.PackageGymerId);
+            if (checkExist == null) return 2;
             try
             {
+                _context.Requests.Add(requestService);
                 await _context.SaveChangesAsync();
-                return true;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
-                return false;
+                return 0;
             }
-            return false;
+            return 1;
         }
 
         public async Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid id, bool isPT)
