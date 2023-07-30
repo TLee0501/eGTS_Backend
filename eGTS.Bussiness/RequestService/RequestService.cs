@@ -39,17 +39,23 @@ namespace eGTS.Bussiness.RequestService
             return 1;
         }
 
-        public async Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid id, bool isPT)
+        public async Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid id)
         {
-            var requests = await _context.Requests.Where(a => a.ReceiverId == id && a.IsPt == isPT && a.IsAccepted != null).ToListAsync();
+            var requests = await _context.Requests.Where(a => a.ReceiverId == id && a.IsAccepted == null).ToListAsync();
             List<RequestViewModel> result = new List<RequestViewModel>();
             foreach (var item in requests)
             {
+                var account = await _context.Accounts.FindAsync(item.GymerId);
+                var pg = await _context.PackageGymers.FindAsync(item.PackageGymerId);
+
                 var temp = new RequestViewModel();
                 temp.Id = item.Id;
                 temp.ReceiverId = item.ReceiverId;
+                temp.GymerName = account.Fullname;
                 temp.GymerId = item.GymerId;
                 temp.PackageGymerId = item.PackageGymerId;
+                temp.PackageGymerName = pg.Name;
+                temp.NumberOfSession = pg.NumberOfSession;
                 temp.IsPt = item.IsPt;
                 if (item.IsAccepted != null)
                 {

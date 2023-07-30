@@ -96,11 +96,12 @@ namespace eGTS.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RequestViewModel>>> GetAllRequestForPTNE(Guid id, bool isPT)
+        public async Task<ActionResult<IEnumerable<RequestViewModel>>> GetAllRequestForPTNE(Guid ExpertId)
         {
-            if (id == null || isPT == null) return BadRequest();
+            if (ExpertId == null) return BadRequest("Vui lòng kiểm tra là thông tin yêu cầu!");
 
-            var result = await _requestService.GetAllRequestForPTNE(id, isPT);
+            var result = await _requestService.GetAllRequestForPTNE(ExpertId);
+            if (result == null) return BadRequest("Không tìm thấy yêu cầu!");
             return Ok(result);
         }
 
