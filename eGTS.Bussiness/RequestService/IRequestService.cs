@@ -12,7 +12,7 @@ namespace eGTS.Bussiness.RequestService
     {
         Task<int> CreateRequest(RequestCreateViewModel request);
         Task<Request> GetRequest(Guid id);
-        Task<bool> UpdateRequest(RequestViewModel request);
+        Task<bool> UpdateRequest(RequestUpdateViewModel request);
         Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid ExpertId);
     }
 }
