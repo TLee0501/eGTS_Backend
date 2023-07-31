@@ -445,19 +445,5 @@ namespace eGTS.Bussiness.ExcerciseService
             return false;
 
         }
-
-        public List<Guid> GetListOfActivePackGymerID()
-        {
-            var list = new List<Guid>();
-            var pgList = _context.PackageGymers.Where(p => p.Status.Equals("Đang hoạt động"));
-            if (pgList.Any())
-            {
-                foreach (var pg in pgList)
-                    list.Add(pg.Id);
-                return list;
-            }
-            return null;
-        }
-
     }
 }
