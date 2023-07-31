@@ -14,6 +14,9 @@ namespace eGTS_Backend.Data.ViewModel
         public Guid? Ptid { get; set; }
         public Guid? Neid { get; set; }
         public short? NumberOfSession { get; set; }
+        public short? NumberOfMonth { get; set; }
+        public DateTime? From { get; set; }
+        public DateTime? To { get; set; }
         public string Status { get; set; } = null!;
         public bool isDelete { get; set; }
     }

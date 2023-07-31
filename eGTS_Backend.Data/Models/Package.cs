@@ -9,26 +9,14 @@ public partial class Package
     {
     }
 
-    public Package(Guid id, string name, bool hasPt, bool hasNe, short? numberOfsession, double? ptcost, double? necost, double? centerCost, double price)
+    public Package(Guid id, string name, bool hasPt, bool hasNe, short? numberOfsession, short? numberOfMonth, double? ptcost, double? necost, double? centerCost, double price, bool isDelete)
     {
         Id = id;
         Name = name;
         HasPt = hasPt;
         HasNe = hasNe;
         NumberOfsession = numberOfsession;
-        Ptcost = ptcost;
-        Necost = necost;
-        CenterCost = centerCost;
-        Price = price;
-    }
-
-    public Package(Guid id, string name, bool hasPt, bool hasNe, short? numberOfsession, double? ptcost, double? necost, double? centerCost, double price, bool isDelete)
-    {
-        Id = id;
-        Name = name;
-        HasPt = hasPt;
-        HasNe = hasNe;
-        NumberOfsession = numberOfsession;
+        NumberOfMonth = numberOfMonth;
         Ptcost = ptcost;
         Necost = necost;
         CenterCost = centerCost;
