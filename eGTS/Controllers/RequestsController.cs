@@ -67,7 +67,8 @@ namespace eGTS.Controllers
 
             try
             {
-                await _requestService.UpdateRequest(request);
+                var result = await _requestService.UpdateRequest(request);
+                if(result == false) return BadRequest(new ErrorResponse(400, "Thất bại!"));
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿using eGTS_Backend.Data.Models;
+﻿using eGTS.Bussiness.NutritionScheduleService;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +8,12 @@ namespace eGTS.Bussiness.RequestService
     public class RequestService : IRequestService
     {
         private readonly EGtsContext _context;
+        private readonly INutritionScheduleService _scheduleService;
 
-        public RequestService(EGtsContext context)
+        public RequestService(EGtsContext context, INutritionScheduleService scheduleService)
         {
             _context = context;
+            _scheduleService = scheduleService;
         }
 
         public async Task<int> CreateRequest(RequestCreateViewModel request)
@@ -75,12 +78,17 @@ namespace eGTS.Bussiness.RequestService
             if (request.IsAccepted == true)
             {
                 requestDB.IsAccepted = true;
+                requestDB.IsDelete = true;
                 if (request.IsPt == true) packageGymer.Ptid = requestDB.ReceiverId;
-                else packageGymer.Neid = requestDB.ReceiverId;
+                else
+                {
+                    packageGymer.Neid = requestDB.ReceiverId;
+                }
             }
             else
             {
                 requestDB.IsAccepted = false;
+                requestDB.IsDelete = true;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -104,11 +112,12 @@ namespace eGTS.Bussiness.RequestService
             try
             {
                 await _context.SaveChangesAsync();
+                var schedule = await _scheduleService.CreateNutritionSchedule((Guid)packageGymer.Id);
+                if (schedule == false) return false;
                 return true;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
                 return false;
             }
         }
