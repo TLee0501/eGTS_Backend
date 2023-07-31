@@ -1,12 +1,6 @@
 ﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.PackageGymersService
 {
@@ -121,7 +115,7 @@ namespace eGTS.Bussiness.PackageGymersService
 
         public async Task<bool> CheckAlreadyPackGymerHasCenter(Guid id)
         {
-            var gp = await _context.PackageGymers.Where(a => a.GymerId == id && a.IsDelete == false && a.Status != "Done").ToListAsync();
+            var gp = await _context.PackageGymers.Where(a => a.GymerId == id && a.IsDelete == false && a.Status != "Đã hoàn thành").ToListAsync();
             foreach (var item in gp)
             {
                 if (item.Ptid == null && item.Neid == null) return true;
@@ -131,7 +125,7 @@ namespace eGTS.Bussiness.PackageGymersService
 
         public async Task<bool> CheckAlreadyPackGymerHasNE(Guid id)
         {
-            var gp = await _context.PackageGymers.Where(a => a.GymerId == id && a.IsDelete == false && a.Status != "Done").ToListAsync();
+            var gp = await _context.PackageGymers.Where(a => a.GymerId == id && a.IsDelete == false && a.Status != "Đã hoàn thành").ToListAsync();
             foreach (var item in gp)
             {
                 if (item.Neid != null) return true;
