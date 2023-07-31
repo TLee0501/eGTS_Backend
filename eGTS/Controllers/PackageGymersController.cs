@@ -11,6 +11,7 @@ using eGTS.Bussiness.PackageGymersService;
 using coffee_kiosk_solution.Data.Responses;
 using System.Net;
 using Microsoft.AspNetCore.Http.HttpResults;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace eGTS.Controllers
 {
@@ -89,7 +90,7 @@ namespace eGTS.Controllers
                 await _packageGymersService.CreatePackageGymer(request);
             }
             catch (DbUpdateConcurrencyException) { return BadRequest("Mua gói tập thất bại!"); }
-            return Ok("Gói tập đã được tạo.");
+            return Ok(new SuccessResponse<PackageGymerCreateViewModel>(200, "Gói tập đã được tạo", request));
         }
 
         [HttpGet]
@@ -97,7 +98,7 @@ namespace eGTS.Controllers
         {
             var data = await _packageGymersService.GetPackageGymerByGymerID(request);
             if (data == null) return NoContent();
-            return Ok(new SuccessResponse<List<PackageGymerViewModel>>(200, "List of PackageGymer found", data)); ;
+            return Ok(new SuccessResponse<List<PackageGymerViewModel>>(200, "List of PackageGymer found", data));
         }
 
         [HttpGet]
