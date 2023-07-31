@@ -8,7 +8,7 @@ namespace eGTS_Backend.Data.ViewModel
 {
     public class MealCreateViewModel
     {
-        public Guid NutritionScheduleId { get; set; }
+        public Guid PackageGymerID { get; set; }
         public List<Guid>? MonAnSang { get; set; }
         public List<Guid>? MonAnTrua { get; set; }
         public List<Guid>? MonAnToi { get; set; }
