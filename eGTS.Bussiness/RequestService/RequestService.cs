@@ -73,37 +73,41 @@ namespace eGTS.Bussiness.RequestService
             return result;
         }
 
-        public async Task<bool> UpdateRequest(RequestViewModel request)
+        public async Task<bool> UpdateRequest(RequestUpdateViewModel request)
         {
-            Request newRequest = new Request(request.Id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, request.IsAccepted, false);
+            var requestDB = await _context.Requests.FindAsync(request.Id);
 
-            //Accepct
-            if(request.IsAccepted != null)
+            var packageGymer = await _context.PackageGymers.FindAsync(requestDB.PackageGymerId);
+
+            if (request.IsAccepted == true)
             {
-                var packagegymer = await _context.PackageGymers.FindAsync(request.PackageGymerId);
-                if (request.IsPt == true)
-                {
-                    packagegymer.Ptid = request.ReceiverId;
-                }
-                else packagegymer.Neid = request.ReceiverId;
+                requestDB.IsAccepted = true;
+                if (request.IsPt == true) packageGymer.Ptid = requestDB.ReceiverId;
+                else packageGymer.Neid = requestDB.ReceiverId;
+            }
+            else
+            {
+                requestDB.IsAccepted = false;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            
+            var packageType = await _context.Packages.FindAsync(packageGymer.PackageId);
 
-                //Update status PackageGymer
-                if(packagegymer.Ptid != null && packagegymer.Neid != null)
-                {
-                    packagegymer.Status = "Active";
-                }
-                var packageType = await _context.Packages.FindAsync(packagegymer.PackageId);
-                if(packageType.HasPt == false && packagegymer.Neid != null)
-                {
-                    packagegymer.Status = "Active";
-                }
-                if (packageType.HasNe == false && packagegymer.Ptid != null)
-                {
-                    packagegymer.Status = "Active";
-                }
+            //Update status PackageGymer
+            if (packageGymer.Ptid != null && packageGymer.Neid != null)
+            {
+                packageGymer.Status = "Đang hoạt động";
+            }
+            else if (packageType.HasPt == false && packageGymer.Neid != null)
+            {
+                packageGymer.Status = "Đang hoạt động";
+            }
+            else if (packageType.HasNe == false && packageGymer.Ptid != null)
+            {
+                packageGymer.Status = "Đang hoạt động";
             }
 
-            _context.Entry(newRequest).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();

@@ -58,7 +58,7 @@ namespace eGTS.Controllers
         // PUT: api/Requests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public async Task<IActionResult> UpdateRequest(RequestViewModel request)
+        public async Task<IActionResult> UpdateRequest(RequestUpdateViewModel request)
         {
             if (request == null)
             {
@@ -73,7 +73,7 @@ namespace eGTS.Controllers
             {
                 throw new Exception(ex.Message, ex);
             }
-            return Ok(new SuccessResponse<RequestViewModel>(200, "Thành công!", request));
+            return Ok(new SuccessResponse<RequestViewModel>(200, "Thành công!", null));
         }
 
         // POST: api/Requests
