@@ -411,9 +411,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Neid).HasColumnName("NEID");
             entity.Property(e => e.PackageId).HasColumnName("PackageID");
             entity.Property(e => e.Ptid).HasColumnName("PTID");
-            entity.Property(e => e.Status)
-                .HasMaxLength(10)
-                .IsUnicode(false);
+            entity.Property(e => e.Status).HasMaxLength(50);
             entity.Property(e => e.To).HasColumnType("datetime");
 
             entity.HasOne(d => d.Gymer).WithMany(p => p.PackageGymerGymers)
