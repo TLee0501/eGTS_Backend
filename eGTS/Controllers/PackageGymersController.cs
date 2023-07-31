@@ -84,7 +84,7 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<bool>> CreatePackageGymer(PackageGymerCreateViewModel request)
         {
-            if (request == null) return BadRequest();
+            if (request == null) return BadRequest("Mua gói tập thất bại!");
             try
             {
                 await _packageGymersService.CreatePackageGymer(request);
