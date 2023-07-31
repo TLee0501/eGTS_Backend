@@ -83,6 +83,9 @@ namespace eGTS.Bussiness.RequestService
                 else
                 {
                     packageGymer.Neid = requestDB.ReceiverId;
+                    await _context.SaveChangesAsync();
+                    var schedule = await _scheduleService.CreateNutritionSchedule((Guid)packageGymer.Id);
+                    if (schedule == false) return false;
                 }
             }
             else
@@ -112,8 +115,6 @@ namespace eGTS.Bussiness.RequestService
             try
             {
                 await _context.SaveChangesAsync();
-                var schedule = await _scheduleService.CreateNutritionSchedule((Guid)packageGymer.Id);
-                if (schedule == false) return false;
                 return true;
             }
             catch (Exception ex)
