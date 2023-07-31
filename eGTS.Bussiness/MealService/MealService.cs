@@ -25,6 +25,7 @@ namespace eGTS.Bussiness.MealService
 
             try
             {
+                var nuSchedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
                 for (var dt = request.FromDatetime; dt <= request.ToDatetime; dt = dt.AddDays(1))
                 {
                     dates.Add(dt);
@@ -36,7 +37,7 @@ namespace eGTS.Bussiness.MealService
                         var meal = new Meal();
                         var mealId = Guid.NewGuid();
                         meal.Id = mealId;
-                        meal.NutritionScheduleId = request.NutritionScheduleId;
+                        meal.NutritionScheduleId = nuSchedule.Id;
                         meal.MealTime = 1;
                         meal.Datetime = item.Date;
                         meal.IsDelete = false;
@@ -58,7 +59,7 @@ namespace eGTS.Bussiness.MealService
                         var meal = new Meal();
                         var mealId = Guid.NewGuid();
                         meal.Id = mealId;
-                        meal.NutritionScheduleId = request.NutritionScheduleId;
+                        meal.NutritionScheduleId = nuSchedule.Id;
                         meal.MealTime = 2;
                         meal.Datetime = item.Date;
                         meal.IsDelete = false;
@@ -80,7 +81,7 @@ namespace eGTS.Bussiness.MealService
                         var meal = new Meal();
                         var mealId = Guid.NewGuid();
                         meal.Id = mealId;
-                        meal.NutritionScheduleId = request.NutritionScheduleId;
+                        meal.NutritionScheduleId = nuSchedule.Id;
                         meal.MealTime = 3;
                         meal.Datetime = item.Date;
                         meal.IsDelete = false;
@@ -102,7 +103,7 @@ namespace eGTS.Bussiness.MealService
                         var meal = new Meal();
                         var mealId = Guid.NewGuid();
                         meal.Id = mealId;
-                        meal.NutritionScheduleId = request.NutritionScheduleId;
+                        meal.NutritionScheduleId = nuSchedule.Id;
                         meal.MealTime = 4;
                         meal.Datetime = item.Date;
                         meal.IsDelete = false;
