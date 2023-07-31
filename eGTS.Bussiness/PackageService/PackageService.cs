@@ -24,7 +24,7 @@ namespace eGTS.Bussiness.PackageService
         public async Task<bool> CreatePackage(PackageCreateViewModel request)
         {
             Guid id = Guid.NewGuid();
-            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.Ptcost, request.Necost, request.CenterCost, request.Price);
+            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, false);
             _context.Packages.Add(package);
             try
             {
@@ -65,7 +65,8 @@ namespace eGTS.Bussiness.PackageService
                 result.Price = package.Price;
                 result.HasPt = package.HasPt;
                 result.HasNe = package.HasNe;
-                result.NumberOfsession = package.NumberOfsession;
+                if (package.NumberOfsession != null) result.NumberOfsession = (short)package.NumberOfsession;
+                if (package.NumberOfMonth != null) result.NumberOfMonth = (short)package.NumberOfMonth;
                 result.Name = package.Name;
                 result.Ptcost = package.Ptcost;
                 result.Necost = package.Necost;
@@ -90,6 +91,7 @@ namespace eGTS.Bussiness.PackageService
                     viewModel.HasPt = package.HasPt;
                     viewModel.HasNe = package.HasNe;
                     viewModel.NumberOfsession = package.NumberOfsession;
+                    viewModel.NumberOfMonth = package.NumberOfMonth;
                     viewModel.Ptcost = package.Ptcost;
                     viewModel.Necost = package.Necost;
                     viewModel.CenterCost = package.CenterCost;
@@ -104,7 +106,7 @@ namespace eGTS.Bussiness.PackageService
 
         public async Task<bool> UpdatePackage(PackageViewModel request)
         {
-            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.IsDelete);
+            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.IsDelete);
             _context.Entry(package).State = EntityState.Modified;
             try
             {
