@@ -9,7 +9,7 @@ public partial class Package
     {
     }
 
-    public Package(Guid id, string name, bool hasPt, bool hasNe, short numberOfsession, double? ptcost, double? necost, double? centerCost, double price)
+    public Package(Guid id, string name, bool hasPt, bool hasNe, short? numberOfsession, double? ptcost, double? necost, double? centerCost, double price)
     {
         Id = id;
         Name = name;
@@ -22,7 +22,7 @@ public partial class Package
         Price = price;
     }
 
-    public Package(Guid id, string name, bool hasPt, bool hasNe, short numberOfsession, double? ptcost, double? necost, double? centerCost, double price, bool isDelete)
+    public Package(Guid id, string name, bool hasPt, bool hasNe, short? numberOfsession, double? ptcost, double? necost, double? centerCost, double price, bool isDelete)
     {
         Id = id;
         Name = name;
@@ -44,9 +44,9 @@ public partial class Package
 
     public bool HasNe { get; set; }
 
-    public short NumberOfsession { get; set; }
+    public short? NumberOfsession { get; set; }
 
-    public short NumberOfMonth { get; set; }
+    public short? NumberOfMonth { get; set; }
 
     public double? Ptcost { get; set; }
 
