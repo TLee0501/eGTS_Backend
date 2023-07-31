@@ -17,24 +17,6 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
-            /*//Check exist name NE create
-            Guid accountRequest = GetNEID();
-            if (accountRequest == Guid.Empty)
-            {
-                return false;
-            }
-            var foodAndSupplimentsOfNE = await _context.FoodAndSuppliments.SingleOrDefaultAsync(a => a.Name.Equals(request.Name) && a.Neid.Equals(accountRequest));
-            if (foodAndSupplimentsOfNE == null)
-            {
-                return false;
-            }
-            //Check exist name Staff create
-            Guid staffID = GetStaffID();
-            var foodAndSupplimentsOfStaff = await _context.FoodAndSuppliments.SingleOrDefaultAsync(a => a.Name.Equals(request.Name) && a.Neid.Equals(staffID));
-            if (foodAndSupplimentsOfStaff == null)
-            {
-                return false;
-            }*/
 
             Guid id = Guid.NewGuid();
             var createdate = DateTime.Now;
@@ -47,7 +29,6 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
                 return false;
             }
         }
@@ -58,7 +39,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
             if (foodAndSuppliment == null) return false;
             else
             {
-                _context.FoodAndSuppliments.Remove(foodAndSuppliment);
+                foodAndSuppliment.IsDelete = true;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -146,7 +127,6 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
                 return false;
             }
         }
@@ -156,12 +136,6 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
             Guid result = Guid.Empty;
             if (_httpContextAccessor.HttpContext is not null)
             {
-                /*var roleClaim = User?.FindAll(ClaimTypes.Name);
-                var phoneNo = roleClaim?.Select(c => c.Value).SingleOrDefault().ToString();
-                var id = _context.Accounts.SingleOrDefault(x => x.PhoneNo.Equals(phoneNo))?.Id.ToString();*/
-
-                
-                //var nePhoneClaimRequest = _httpContextAccessor.HttpContext.User.Identity.Name;
                 var nePhoneClaimRequest = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 if (nePhoneClaimRequest != null)
                 {

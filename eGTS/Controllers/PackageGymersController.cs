@@ -92,26 +92,6 @@ namespace eGTS.Controllers
             return Ok("Gói tập đã được tạo.");
         }
 
-        // DELETE: api/PackageGymers/5
-        /* [HttpDelete("{id}")]
-         public async Task<IActionResult> DeletePackageGymer(Guid id)
-         {
-             if (_context.PackageGymers == null)
-             {
-                 return NotFound();
-             }
-             var packageGymer = await _context.PackageGymers.FindAsync(id);
-             if (packageGymer == null)
-             {
-                 return NotFound();
-             }
-
-             _context.PackageGymers.Remove(packageGymer);
-             await _context.SaveChangesAsync();
-
-             return NoContent();
-         }*/
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PackageGymerViewModel>>> GetPackageGymerByGymerID(Guid request)
         {
@@ -126,9 +106,9 @@ namespace eGTS.Controllers
             try
             {
                 var result = await _packageGymersService.GetGymerPackageActiveByNE(NEID);
-                return Ok(result);
+                return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Danh sách các gói", result));
             }
-            catch { return BadRequest(); }
+            catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
         }
 
         [HttpGet]
@@ -137,9 +117,9 @@ namespace eGTS.Controllers
             try
             {
                 var result = await _packageGymersService.GetGymerPackageActiveByPT(PTID);
-                return Ok(result);
+                return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Danh sách các gói", result));
             }
-            catch { return BadRequest(); }
+            catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
         }
     }
 }

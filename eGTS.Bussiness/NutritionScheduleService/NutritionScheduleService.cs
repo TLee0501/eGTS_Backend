@@ -107,5 +107,17 @@ namespace eGTS.Bussiness.NutritionScheduleService
             }
             return result;
         }
+
+        public async Task<bool> CreateNutritionSchedule(Guid PackageGymerID)
+        {
+            var pg = await _context.PackageGymers.FindAsync(PackageGymerID);
+            if (pg == null) return false;
+
+            var id = Guid.NewGuid();
+            var schedule = new NutritionSchedule(id, pg.GymerId, (Guid)pg.Neid, PackageGymerID, false);
+            await _context.NutritionSchedules.AddAsync(schedule);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

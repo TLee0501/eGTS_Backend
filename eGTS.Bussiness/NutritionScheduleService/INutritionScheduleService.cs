@@ -17,5 +17,6 @@ namespace eGTS.Bussiness.NutritionScheduleService
         //Task<bool> DeleteFoodAndSuppliment(Guid id);
         Task<List<MealViewModel>> GetNutritionScheduleByGymerIDAndDate(Guid GymerId, DateTime date);
         Task<List<MealViewModel>> GetNutritionScheduleByGymerID(Guid GymerId);
+        Task<bool> CreateNutritionSchedule(Guid PackageGymerID);
     }
 }

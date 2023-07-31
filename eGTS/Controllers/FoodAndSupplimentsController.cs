@@ -32,10 +32,10 @@ namespace eGTS.Controllers
             var result = await _foodAndSupplimentService.GetFoodAndSuppliments();
             if (result != null)
             {
-                return Ok(new SuccessResponse<List<FoodAndSupplimentViewModel>>(200, "List of FoodAndSuppliment found", result));
+                return Ok(new SuccessResponse<List<FoodAndSupplimentViewModel>>(200, "Danh sách thực phẩm", result));
             }
             else
-                return NotFound(new ErrorResponse(204, "No FoodAndSuppliment Found"));
+                return NotFound(new ErrorResponse(404, "Không tìm thấy thực phẩm!"));
         }
 
         // GET: api/FoodAndSupplimentsByNE
@@ -67,18 +67,17 @@ namespace eGTS.Controllers
         // PUT: api/FoodAndSuppliments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public async Task<IActionResult> PutFoodAndSuppliment(FoodAndSupplimentUpdateViewModel foodAndSuppliment)
+        public async Task<IActionResult> UpdateFoodAndSuppliment(FoodAndSupplimentUpdateViewModel foodAndSuppliment)
         {
-            if (foodAndSuppliment == null) return BadRequest();
+            if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Cập nhật thất bại!"));
             try
             {
                 var result = await _foodAndSupplimentService.UpdateFoodAndSuppliment(foodAndSuppliment);
-                return StatusCode(200);
+                return Ok(new SuccessResponse<FoodAndSupplimentUpdateViewModel>(200, "Cập nhật thành công!", foodAndSuppliment));
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
-                return StatusCode(400);
+                return BadRequest(new ErrorResponse(400, "Cập nhật thất bại!"));
             }
         }
 
@@ -87,16 +86,15 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<FoodAndSuppliment>> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel foodAndSuppliment)
         {
-            if (foodAndSuppliment == null) return BadRequest();
+            if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Tạo mới thất bại!"));
             try
             {
                 var result = await _foodAndSupplimentService.CreateFoodAndSuppliment(foodAndSuppliment);
-                return StatusCode(200);
+                return Ok(new SuccessResponse<FoodAndSupplimentCreateViewModel>(200, "Tạo mới thành công!", foodAndSuppliment));
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
-                return BadRequest(new ErrorResponse(400, "Unsuccessfully"));
+                return BadRequest(new ErrorResponse(400, "Tạo mới thất bại!"));
             }
         }
 
@@ -105,12 +103,12 @@ namespace eGTS.Controllers
         public async Task<IActionResult> DeleteFoodAndSuppliment(Guid id)
         {
 
-            if (id == null) return BadRequest();
+            if (id == null) return BadRequest(new ErrorResponse(400, "Xóa thất bại!"));
             var result = await _foodAndSupplimentService.DeleteFoodAndSuppliment(id);
-            if (result == true) return StatusCode(200);
+            if (result == true) return Ok(new SuccessResponse<FoodAndSupplimentCreateViewModel>(200, "Xóa thành công!", null));
             else
             {
-                return StatusCode(400);
+                return BadRequest(new ErrorResponse(400, "Xóa thất bại!"));
             }
         }
 

@@ -5,6 +5,15 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class NutritionSchedule
 {
+    public NutritionSchedule(Guid id, Guid gymerId, Guid neid, Guid packageGymerId, bool isDelete)
+    {
+        Id = id;
+        GymerId = gymerId;
+        Neid = neid;
+        PackageGymerId = packageGymerId;
+        IsDelete = isDelete;
+    }
+
     public Guid Id { get; set; }
 
     public Guid GymerId { get; set; }
