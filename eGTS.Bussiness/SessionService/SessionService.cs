@@ -490,5 +490,67 @@ namespace eGTS.Bussiness.SessionService
             return false;
         }
 
+        public List<Guid> GetListOfActivePackGymerIDByGymerID(Guid GymerID)
+        {
+            var result = new List<Guid>();
+            var pgList = _context.PackageGymers.Where(p => p.Status.Equals("Đang hoạt động") && p.GymerId.Equals(GymerID)).ToList();
+            if (pgList.Count > 0)
+            {
+                foreach (var pg in pgList)
+                    result.Add(pg.Id);
+                return result;
+            }
+            return null;
+        }
+
+        public async Task<List<ActiveSessionsViewModel>> GetListOfActiveSessionByGymerID(Guid GymerID)
+        {
+            var listPGID = GetListOfActivePackGymerIDByGymerID(GymerID);
+            var result = new List<ActiveSessionsViewModel>();
+            if (listPGID != null)
+            {
+
+                foreach (Guid PGID in listPGID)
+                {
+
+                    var scheduleList = _context.ExcerciseSchedules.Where(s => s.PackageGymerId.Equals(PGID)).ToList();
+
+                    if (scheduleList.Count > 0)
+                    {
+                        foreach (var schedule in scheduleList)
+                        {
+                            List<SessionViewModel> sessionList = new List<SessionViewModel>();
+                            var sessions = _context.Sessions.Where(s => s.ScheduleId == schedule.Id).ToList();
+                            if (sessions.Count > 0)
+                            {
+                                foreach (var session in sessions)
+                                {
+                                    SessionViewModel modelSession = new SessionViewModel();
+                                    modelSession.id = session.Id;
+                                    modelSession.ScheduleId = session.ScheduleId;
+                                    modelSession.DateAndTime = session.DateAndTime;
+                                    modelSession.IsDelete = session.IsDelete;
+
+                                    sessionList.Add(modelSession);
+                                }
+
+                            }
+                            ActiveSessionsViewModel modelActive = new ActiveSessionsViewModel();
+                            modelActive.ScheduleID = PGID;
+                            modelActive.SessionList = sessionList;
+                            result.Add(modelActive);
+                        }
+                    }
+
+                }
+                if (result.Count > 0)
+                {
+                    return result;
+                }
+                return null;
+            }
+            return null;
+        }
+
     }
 }
