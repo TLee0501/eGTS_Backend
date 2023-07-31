@@ -81,13 +81,23 @@ namespace eGTS.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SessionViewModel>>> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime)
+        public async Task<ActionResult<IEnumerable<ExInSessionWithSessionIDViewModel>>> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime)
         {
             var result = await _sessionService.GetAllExcerciseInSessionWithScheduleIDAndDateTime(ScheduleID, dateTime);
             if (result == null)
                 return BadRequest(new ErrorResponse(400, "Không có buổi tập cùng dữ liệu trong DB"));
             else
                 return Ok(new SuccessResponse<ExInSessionWithSessionIDViewModel>(200, "Danh Sách các bài tập trong buổi tập", result));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ActiveSessionsViewModel>>> GetListOfActiveSessionByGymerID(Guid GymerID)
+        {
+            var result = await _sessionService.GetListOfActiveSessionByGymerID(GymerID);
+            if (result == null)
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy buổi tập nào đang hoạt động trong DB"));
+            else
+                return Ok(new SuccessResponse<List<ActiveSessionsViewModel>>(200, "Danh Sách các buổi tập", result));
         }
 
         // PUT: api/Sessions/5
