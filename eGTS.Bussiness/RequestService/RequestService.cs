@@ -78,7 +78,13 @@ namespace eGTS.Bussiness.RequestService
             if (request.IsAccepted == true)
             {
                 requestDB.IsAccepted = true;
-                requestDB.IsDelete = true;
+                //Xóa request còn lại
+                var requestNeedDelete = await _context.Requests.Where(a => a.PackageGymerId == requestDB.PackageGymerId && a.ReceiverId == requestDB.ReceiverId).ToListAsync();
+                foreach (var item in requestNeedDelete)
+                {
+                    item.IsDelete = true;
+                }
+
                 if (request.IsPt == true) packageGymer.Ptid = requestDB.ReceiverId;
                 else
                 {
