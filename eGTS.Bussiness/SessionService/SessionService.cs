@@ -503,6 +503,81 @@ namespace eGTS.Bussiness.SessionService
             return null;
         }
 
+        public List<Guid> GetListOfScheduleIDByListPackageGymerID(List<Guid> ListPGID)
+        {
+            var result = new List<Guid>();
+
+            if (ListPGID != null)
+            {
+                foreach (Guid PGID in ListPGID)
+                {
+                    var scheduleList = _context.ExcerciseSchedules.Where(s => s.PackageGymerId.Equals(PGID)).ToList();
+
+                    if (!scheduleList.Any())
+                    {
+                        foreach (var schedule in scheduleList)
+                        {
+                            result.Add(schedule.Id);
+                        }
+                    }
+                }
+            }
+            else
+                result = null;
+
+            return result;
+        }
+
+        public List<ExInSessionWithSessionIDViewModel> GetListOfSessionAndExInSessionByListScheduleID(List<Guid> ListScheduleID)
+        {
+            var resultList = new List<ExInSessionWithSessionIDViewModel>();
+
+            if (ListScheduleID != null)
+            {
+                foreach (var scheduleID in ListScheduleID)
+                {
+                    var sessionList = _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID));
+                    if (!sessionList.Any())
+                    {
+                        foreach (var session in sessionList)
+                        {
+                            var exInSessionList = _context.ExserciseInSessions.Where(ex => ex.SessionId.Equals(session.Id)).ToList();
+                            if (exInSessionList.Any())
+                            {
+                                var excerciseList = new List<ExcerciseViewModel>();
+                                foreach (var exInSession in exInSessionList)
+                                {
+                                    var excercise = _context.Excercises.Find(exInSession.ExerciseId);
+                                    var ExV = new ExcerciseViewModel();
+                                    ExV.id = excercise.Id;
+                                    ExV.Ptid = excercise.Ptid;
+                                    ExV.Name = excercise.Name;
+                                    ExV.Description = excercise.Description;
+                                    ExV.Video = excercise.Video;
+                                    ExV.CreateDate = excercise.CreateDate;
+                                    ExV.IsDelete = excercise.IsDelete;
+
+                                    excerciseList.Add(ExV);
+                                }
+
+                                var result = new ExInSessionWithSessionIDViewModel();
+                                result.SessionID = session.Id;
+                                result.SessionDateAndTime = session.DateAndTime;
+                                result.ExcercisesInSession = excerciseList;
+
+                                resultList.Add(result);
+                            }
+                        }
+
+                    }
+                }
+            }
+            else
+                resultList = null;
+
+            return resultList;
+        }
+
         public async Task<List<ActiveSessionsViewModel>> GetListOfActiveSessionByGymerID(Guid GymerID)
         {
             var listPGID = GetListOfActivePackGymerIDByGymerID(GymerID);
