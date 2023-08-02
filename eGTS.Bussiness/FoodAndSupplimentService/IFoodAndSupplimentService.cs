@@ -15,5 +15,6 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         Task<bool> UpdateFoodAndSuppliment(FoodAndSupplimentUpdateViewModel request);
         Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request);
         Task<bool> DeleteFoodAndSuppliment(Guid id);
+        Task<List<FoodAndSupplimentViewModel>> SearchFoodAndSupplimentsByNameAndNE(Guid NEID, string FoodName);
     }
 }

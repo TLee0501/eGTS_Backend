@@ -112,9 +112,16 @@ namespace eGTS.Controllers
             }
         }
 
-        private bool FoodAndSupplimentExists(Guid id)
+        [HttpGet("{NEID}")]
+        public async Task<ActionResult<IEnumerable<FoodAndSuppliment>>> SearchFoodAndSupplimentsByNameAndNE(Guid NEID, string FoodName)
         {
-            return (_context.FoodAndSuppliments?.Any(e => e.Id == id)).GetValueOrDefault();
+            var result = await _foodAndSupplimentService.SearchFoodAndSupplimentsByNameAndNE(NEID, FoodName);
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<FoodAndSupplimentViewModel>>(200, "Danh sách thực phẩm:", result));
+            }
+            else
+                return NotFound(new ErrorResponse(204, "Không tìm thấy thực phẩm!"));
         }
     }
 }
