@@ -17,6 +17,8 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
+            var checkValid = await _context.FoodAndSuppliments.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.Ammount == request.Ammount && a.IsDelete == false);
+            if (checkValid != null) return false;
 
             Guid id = Guid.NewGuid();
             var createdate = DateTime.Now;
@@ -61,6 +63,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                 result.Name = foodAndSuppliment.Name;
                 result.Ammount = foodAndSuppliment.Ammount;
                 result.Calories = foodAndSuppliment.Calories;
+                result.UnitOfMesuament = foodAndSuppliment.UnitOfMesuament;
                 result.CreateDate = foodAndSuppliment.CreateDate;
                 result.IsDelete = foodAndSuppliment.IsDelete;
                 return result;
@@ -81,6 +84,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                     viewModel.Neid = foodAndSuppliment.Neid;
                     viewModel.Name = foodAndSuppliment.Name;
                     viewModel.Ammount = foodAndSuppliment.Ammount;
+                    viewModel.UnitOfMesuament = foodAndSuppliment.UnitOfMesuament;
                     viewModel.Calories = foodAndSuppliment.Calories;
                     viewModel.CreateDate = foodAndSuppliment.CreateDate;
                     viewModel.IsDelete = foodAndSuppliment.IsDelete;
@@ -105,6 +109,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                     viewModel.Neid = foodAndSuppliment.Neid;
                     viewModel.Name = foodAndSuppliment.Name;
                     viewModel.Ammount = foodAndSuppliment.Ammount;
+                    viewModel.UnitOfMesuament = foodAndSuppliment.UnitOfMesuament;
                     viewModel.Calories = foodAndSuppliment.Calories;
                     viewModel.CreateDate = foodAndSuppliment.CreateDate;
                     result.Add(viewModel);
@@ -144,6 +149,30 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                 }
             }
             return result;
+        }
+
+        public async Task<List<FoodAndSupplimentViewModel>> SearchFoodAndSupplimentsByNameAndNE(Guid NEID, string FoodName)
+        {
+            var foodAndSuppliments = await _context.FoodAndSuppliments.Where(a => a.Neid.Equals(NEID) && a.Name.Contains(FoodName) && a.IsDelete == false).ToListAsync();
+
+            if (foodAndSuppliments.Count > 0)
+            {
+                List<FoodAndSupplimentViewModel> result = new List<FoodAndSupplimentViewModel>();
+                foreach (var foodAndSuppliment in foodAndSuppliments)
+                {
+                    var viewModel = new FoodAndSupplimentViewModel();
+                    viewModel.Id = foodAndSuppliment.Id;
+                    viewModel.Neid = foodAndSuppliment.Neid;
+                    viewModel.Name = foodAndSuppliment.Name;
+                    viewModel.Ammount = foodAndSuppliment.Ammount;
+                    viewModel.UnitOfMesuament = foodAndSuppliment.UnitOfMesuament;
+                    viewModel.Calories = foodAndSuppliment.Calories;
+                    viewModel.CreateDate = foodAndSuppliment.CreateDate;
+                    result.Add(viewModel);
+                }
+                return result;
+            }
+            return null;
         }
 
         private Guid GetStaffID()
