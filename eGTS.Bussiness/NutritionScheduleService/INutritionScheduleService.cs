@@ -13,7 +13,7 @@ namespace eGTS.Bussiness.NutritionScheduleService
         //Task<List<FoodAndSupplimentViewModel>> GetFoodAndSupplimentsBYNE(Guid id);
         //Task<FoodAndSupplimentViewModel> GetFoodAndSuppliment(Guid id);
         //Task<bool> UpdateFoodAndSuppliment(FoodAndSupplimentUpdateViewModel request);
-        //Task<bool> CreateNutritionSchedule(FoodAndSupplimentCreateViewModel request);
+        Task<List<MealViewModel>> GetMealByGymerIDAndDateAndMealTime(Guid GymerId, DateTime date, int MealTime);
         //Task<bool> DeleteFoodAndSuppliment(Guid id);
         Task<List<MealViewModel>> GetNutritionScheduleByGymerIDAndDate(Guid GymerId, DateTime date);
         Task<List<MealViewModel>> GetNutritionScheduleByGymerID(Guid GymerId);
