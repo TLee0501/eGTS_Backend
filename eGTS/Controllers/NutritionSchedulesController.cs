@@ -166,5 +166,22 @@ namespace eGTS.Controllers
 
             return Ok(new SuccessResponse<List<MealViewModel>>(200, "Danh sách thực đơn", result));
         }
+
+        [HttpGet("{GymerId}")]
+        public async Task<ActionResult<IEnumerable<MealViewModel>>> GetMealByGymerIDAndDateAndMealTime(Guid GymerId, DateTime date, int MealTime)
+        {
+            if (_context.NutritionSchedules == null)
+            {
+                return BadRequest("Không tìm thấy bữa ăn!");
+            }
+            var result = await _nutritionService.GetMealByGymerIDAndDateAndMealTime(GymerId, date, MealTime);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy bữa ăn!");
+            }
+
+            return Ok(new SuccessResponse<List<MealViewModel>>(200, "Danh sách thực đơn trong bữa ăn", result));
+        }
     }
 }
