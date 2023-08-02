@@ -88,7 +88,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 var gymerActive = new GymerPackageActiveViewModel();
                 gymerActive.GymerId = item.GymerId;
                 gymerActive.PackageName = item.Name;
-                gymerActive.PackageId = (Guid)item.PackageId;
+                gymerActive.PackageGymerId = item.Id;
                 gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 result.Add(gymerActive);
             }
@@ -105,7 +105,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 var gymerActive = new GymerPackageActiveViewModel();
                 gymerActive.GymerId = item.GymerId;
                 gymerActive.PackageName = item.Name;
-                gymerActive.PackageId = (Guid)item.PackageId;
+                gymerActive.PackageGymerId = item.Id;
                 gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 result.Add(gymerActive);
             }
