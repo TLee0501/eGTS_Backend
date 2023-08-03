@@ -21,10 +21,20 @@ namespace eGTS.Bussiness.RequestService
 
         public async Task<int> CreateRequest(RequestCreateViewModel request)
         {
-            var id = Guid.NewGuid();
-            var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, null, false);
+            //check sent Request before
             var checkExist = await _context.Requests.SingleOrDefaultAsync(a => a.ReceiverId == request.ReceiverId && a.PackageGymerId == request.PackageGymerId);
             if (checkExist != null) return 2;
+
+            //check Type PackageGymer
+            var checkpackageGymer = await _context.PackageGymers.FindAsync(request.PackageGymerId);
+            var checkPackage = await _context.Packages.FindAsync(checkpackageGymer.PackageId);
+            var checkExpert = await _context.Accounts.FindAsync(request.ReceiverId);
+            if (checkPackage.HasPt == false && checkExpert.Role == "PT") return 3;
+            if (checkPackage.HasNe == false && checkExpert.Role == "NE") return 3;
+
+            var id = Guid.NewGuid();
+            var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, null, false);
+            
             try
             {
                 _context.Requests.Add(requestService);
@@ -82,13 +92,13 @@ namespace eGTS.Bussiness.RequestService
             {
                 requestDB.IsAccepted = true;
                 //Xóa request còn lại
-                var requestNeedDelete = await _context.Requests.Where(a => a.PackageGymerId == requestDB.PackageGymerId && a.IsPt == request.IsPt).ToListAsync();
+                var requestNeedDelete = await _context.Requests.Where(a => a.PackageGymerId == requestDB.PackageGymerId && a.IsPt == requestDB.IsPt).ToListAsync();
                 foreach (var item in requestNeedDelete)
                 {
                     item.IsDelete = true;
                 }
 
-                if (request.IsPt == true)
+                if (requestDB.IsPt == true)
                 {
                     packageGymer.Ptid = requestDB.ReceiverId; 
                     await _context.SaveChangesAsync();
