@@ -10,6 +10,5 @@ namespace eGTS_Backend.Data.ViewModel
     {
         public Guid Id { get; set; }
         public bool? IsAccepted { get; set; }
-        public bool IsPt { get; set; }
     }
 }
