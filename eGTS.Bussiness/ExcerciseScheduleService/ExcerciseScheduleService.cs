@@ -320,5 +320,17 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             return false;
         }
+
+        public async Task<bool> CreateExcerciseScheduleV2(Guid packageGymerID)
+        {
+            var pg = await _context.PackageGymers.FindAsync(packageGymerID);
+            if (pg == null) return false;
+
+            var id = Guid.NewGuid();
+            var schedule = new ExcerciseSchedule(id, pg.GymerId, (Guid)pg.Ptid, packageGymerID, DateTime.Now, DateTime.Now.AddMonths(1), false);
+            await _context.ExcerciseSchedules.AddAsync(schedule);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

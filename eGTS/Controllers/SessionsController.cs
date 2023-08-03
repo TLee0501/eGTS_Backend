@@ -168,12 +168,27 @@ namespace eGTS.Controllers
                 return NoContent();
         }
 
-        private bool SessionExists(Guid id)
+        [HttpPost]
+        public async Task<ActionResult<Session>> CreateSessionV2(SessionCreateViewModelV2 model)
         {
-            return (_context.Sessions?.Any(e => e.Id == id)).GetValueOrDefault();
+
+            if (model.PackageGymerID == null || model.PackageGymerID.Equals(""))
+            {
+                return BadRequest(new ErrorResponse(400, "PackageGymerID đang bị bỏ trống."));
+            }
+
+            if (model.DateAndTime == null || model.DateAndTime.Equals(""))
+            {
+                return BadRequest(new ErrorResponse(400, "Ngày và giờ đang bị bỏ trống."));
+            }
+
+            if (await _sessionService.CreateSessionV2(model))
+            {
+                _logger.LogInformation($"Created Session with for schedule with PackageGymerID: {model.PackageGymerID}");
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Tạo thành công.", model));
+            }
+            else
+                return BadRequest(new ErrorResponse(400, "Dữ liệu bị sai"));
         }
-
-
-
     }
 }

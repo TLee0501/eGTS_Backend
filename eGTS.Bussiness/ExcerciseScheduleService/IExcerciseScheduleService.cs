@@ -17,6 +17,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         Task<List<ExScheduleViewModel>> DEBUGGetAllExcerciseSchedule(bool? isExpired);
         Task<List<ExScheduleViewModel>> GetExcerciseSchedulesWithPTID(Guid PTID, bool? isExpired);
         Task<List<ExScheduleViewModel>> GetExcerciseSchedulesWithGymerID(Guid GymerID, bool? isExpired);
+        Task<bool> CreateExcerciseScheduleV2(Guid packageGymerID);
 
 
     }

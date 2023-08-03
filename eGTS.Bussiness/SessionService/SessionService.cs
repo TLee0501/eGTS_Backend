@@ -6,6 +6,7 @@ using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -552,5 +553,37 @@ namespace eGTS.Bussiness.SessionService
             return null;
         }
 
+        public async Task<bool> CreateSessionV2(SessionCreateViewModelV2 model)
+        {
+            var pg = await _context.PackageGymers.FindAsync(model.PackageGymerID);
+            if (pg == null) return false;
+
+            if (pg.From > model.DateAndTime) return false;
+
+            var exSchedule = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == model.PackageGymerID && a.IsDelete == false);
+            if (exSchedule == null) return false;
+
+            try
+            {
+                var id = Guid.NewGuid();
+                var session = new Session(id, exSchedule.Id, model.DateAndTime, false);
+                await _context.Sessions.AddAsync(session);
+
+                foreach (var item in model.ListExcerciseID)
+                {
+                    var EInSID = Guid.NewGuid();
+                    var EinS = new ExserciseInSession(EInSID, id, item);
+                    await _context.ExserciseInSessions.AddAsync(EinS);
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Invalid Data");
+                return false;
+            }
+        }
     }
 }

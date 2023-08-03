@@ -32,6 +32,7 @@ namespace eGTS.Bussiness.SessionService
         Task<List<ActiveSessionsViewModel>> GetListOfActiveSessionByGymerID(Guid GymerID);
         Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithSessionID(Guid SessionID);
         Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime);
+        Task<bool> CreateSessionV2(SessionCreateViewModelV2 model);
 
     }
 }
