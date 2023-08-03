@@ -1,4 +1,5 @@
-﻿using eGTS.Bussiness.NutritionScheduleService;
+﻿using eGTS.Bussiness.ExcerciseScheduleService;
+using eGTS.Bussiness.NutritionScheduleService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +10,13 @@ namespace eGTS.Bussiness.RequestService
     {
         private readonly EGtsContext _context;
         private readonly INutritionScheduleService _scheduleService;
+        private readonly IExcerciseScheduleService _excerciseScheduleService;
 
-        public RequestService(EGtsContext context, INutritionScheduleService scheduleService)
+        public RequestService(EGtsContext context, INutritionScheduleService scheduleService, IExcerciseScheduleService excerciseScheduleService)
         {
             _context = context;
             _scheduleService = scheduleService;
+            _excerciseScheduleService = excerciseScheduleService;
         }
 
         public async Task<int> CreateRequest(RequestCreateViewModel request)
@@ -37,7 +40,7 @@ namespace eGTS.Bussiness.RequestService
 
         public async Task<List<RequestViewModel>> GetAllRequestForPTNE(Guid id)
         {
-            var requests = await _context.Requests.Where(a => a.ReceiverId == id && a.IsAccepted == null).ToListAsync();
+            var requests = await _context.Requests.Where(a => a.ReceiverId == id && a.IsDelete == false).ToListAsync();
             List<RequestViewModel> result = new List<RequestViewModel>();
             foreach (var item in requests)
             {
@@ -79,18 +82,24 @@ namespace eGTS.Bussiness.RequestService
             {
                 requestDB.IsAccepted = true;
                 //Xóa request còn lại
-                var requestNeedDelete = await _context.Requests.Where(a => a.PackageGymerId == requestDB.PackageGymerId && a.ReceiverId == requestDB.ReceiverId).ToListAsync();
+                var requestNeedDelete = await _context.Requests.Where(a => a.PackageGymerId == requestDB.PackageGymerId && a.IsPt == request.IsPt).ToListAsync();
                 foreach (var item in requestNeedDelete)
                 {
                     item.IsDelete = true;
                 }
 
-                if (request.IsPt == true) packageGymer.Ptid = requestDB.ReceiverId;
+                if (request.IsPt == true)
+                {
+                    packageGymer.Ptid = requestDB.ReceiverId; 
+                    await _context.SaveChangesAsync();
+                    var schedule = await _excerciseScheduleService.CreateExcerciseScheduleV2(packageGymer.Id);
+                    if (schedule == false) return false;
+                }
                 else
                 {
                     packageGymer.Neid = requestDB.ReceiverId;
                     await _context.SaveChangesAsync();
-                    var schedule = await _scheduleService.CreateNutritionSchedule((Guid)packageGymer.Id);
+                    var schedule = await _scheduleService.CreateNutritionSchedule(packageGymer.Id);
                     if (schedule == false) return false;
                 }
             }
@@ -108,14 +117,17 @@ namespace eGTS.Bussiness.RequestService
             if (packageGymer.Ptid != null && packageGymer.Neid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
+                packageGymer.From = DateTime.Now;
             }
             else if (packageType.HasPt == false && packageGymer.Neid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
+                packageGymer.From = DateTime.Now;
             }
             else if (packageType.HasNe == false && packageGymer.Ptid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
+                packageGymer.From = DateTime.Now;
             }
 
             try
