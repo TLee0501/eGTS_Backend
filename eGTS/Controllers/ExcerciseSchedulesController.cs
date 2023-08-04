@@ -174,11 +174,23 @@ namespace eGTS.Controllers
             }
         }
 
-
         [HttpGet("{GymerId}")]
         public async Task<ActionResult<IEnumerable<SessionDetailViewModel>>> GetExcerciseScheduleByGymerIDAndDate(Guid GymerId, DateTime date)
         {
             var result = await _exSCheduleService.GetExcerciseScheduleByGymerIDAndDate(GymerId, date);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy lịch tập!");
+            }
+
+            return Ok(new SuccessResponse<List<SessionDetailViewModel>>(200, "Danh sách lịch tập!", result));
+        }
+
+        [HttpGet("{GymerId}")]
+        public async Task<ActionResult<IEnumerable<SessionDetailViewModel>>> GetExcerciseScheduleByGymerIDV2(Guid GymerId)
+        {
+            var result = await _exSCheduleService.GetExcerciseScheduleByGymerIDV2(GymerId);
 
             if (result == null)
             {

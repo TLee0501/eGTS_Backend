@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace eGTS.Bussiness.ExcerciseScheduleService
 {
@@ -403,6 +404,54 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     viewModel.CreateDate = excercise.CreateDate;
                     result.Add(viewModel);
                 }
+            }
+            return result;
+        }
+
+        public async Task<List<SessionDetailViewModel>> GetExcerciseScheduleByGymerIDV2(Guid GymerId)
+        {
+            //Tim GymerPackageID
+            var packageGymers = await _context.PackageGymers.Where(a => a.GymerId == GymerId && a.Status != "Done").ToListAsync();
+            if (packageGymers.Count == 0) return null;
+
+            //Tim ScheduleID
+            var scheduleIDs = new List<Guid>();
+            foreach (var item in packageGymers)
+            {
+                var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
+                if (schedules.Count > 0)
+                {
+                    foreach (var item1 in schedules)
+                    {
+                        scheduleIDs.Add(item1.Id);
+                    }
+                }
+            }
+
+            //Tim sessions
+            var sessions = new List<Session>();
+            foreach (var item in scheduleIDs)
+            {
+                var tmp = await _context.Sessions.Where(a => a.ScheduleId == item).ToListAsync();
+                if (tmp != null)
+                {
+                    foreach (var item1 in tmp)
+                    {
+                        sessions.Add(item1);
+                    }
+                }
+            }
+
+            //Thêm bài tập vào buổi tập
+            var result = new List<SessionDetailViewModel>();
+            foreach (var item in sessions)
+            {
+                var tmp = new SessionDetailViewModel();
+                tmp.id = item.Id;
+                tmp.ScheduleId = item.ScheduleId;
+                tmp.DateAndTime = item.DateAndTime;
+                tmp.Excercises = GetExcercises(item.Id);
+                result.Add(tmp);
             }
             return result;
         }
