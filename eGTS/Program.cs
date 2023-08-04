@@ -17,6 +17,7 @@ using eGTS.Bussiness.SessionService;
 using eGTS.Bussiness.QualitificationService;
 using eGTS.Bussiness.MealService;
 using eGTS.Bussiness.BodyParameters;
+using eGTS.Bussiness.ReportService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,7 @@ builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IQualitificationService, QualitificationService>();
 builder.Services.AddScoped<IBodyParametersService, BodyParametersService>();
 builder.Services.AddScoped<IMealService, MealService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();
