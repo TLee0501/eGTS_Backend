@@ -199,5 +199,31 @@ namespace eGTS.Controllers
 
             return Ok(new SuccessResponse<List<SessionDetailViewModel>>(200, "Danh sách lịch tập!", result));
         }
+
+        [HttpGet("{PTId}")]
+        public async Task<ActionResult<IEnumerable<SessionOfPTViewModel>>> GetWorkingScheduleByPTIDAndDate(Guid PTId, DateTime date)
+        {
+            var result = await _exSCheduleService.GetWorkingScheduleByPTIDAndDate(PTId, date);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy lịch tập!");
+            }
+
+            return Ok(new SuccessResponse<List<SessionOfPTViewModel>>(200, "Danh sách lịch tập!", result));
+        }
+
+        [HttpGet("{PTId}")]
+        public async Task<ActionResult<IEnumerable<SessionOfPTViewModel>>> GetWorkingScheduleByPTID(Guid PTId)
+        {
+            var result = await _exSCheduleService.GetWorkingScheduleByPTID(PTId);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy lịch tập!");
+            }
+
+            return Ok(new SuccessResponse<List<SessionOfPTViewModel>>(200, "Danh sách lịch tập!", result));
+        }
     }
 }

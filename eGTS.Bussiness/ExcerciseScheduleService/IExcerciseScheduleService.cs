@@ -21,6 +21,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
         Task<List<SessionDetailViewModel>> GetExcerciseScheduleByGymerIDAndDate(Guid GymerId, DateTime date);
         Task<List<SessionDetailViewModel>> GetExcerciseScheduleByGymerIDV2(Guid GymerId);
+        Task<List<SessionOfPTViewModel>> GetWorkingScheduleByPTIDAndDate(Guid PTID, DateTime date);
+        Task<List<SessionOfPTViewModel>> GetWorkingScheduleByPTID(Guid PTID);
 
     }
 }
