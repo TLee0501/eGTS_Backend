@@ -455,5 +455,105 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             return result;
         }
+
+        public async Task<List<SessionOfPTViewModel>> GetWorkingScheduleByPTIDAndDate(Guid PTId, DateTime date)
+        {
+            //Tim GymerPackageID
+            var packageGymers = await _context.PackageGymers.Where(a => a.Ptid == PTId && a.Status != "Done").ToListAsync();
+            if (packageGymers.Count == 0) return null;
+
+            //Tim ScheduleID
+            var scheduleIDs = new List<Guid>();
+            foreach (var item in packageGymers)
+            {
+                var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
+                if (schedules.Count > 0)
+                {
+                    foreach (var item1 in schedules)
+                    {
+                        scheduleIDs.Add(item1.Id);
+                    }
+                }
+            }
+
+            //Tim sessions
+            var sessions = new List<Session>();
+            foreach (var item in scheduleIDs)
+            {
+                var tmp = await _context.Sessions.Where(a => a.ScheduleId == item && a.DateAndTime.Date == date.Date).ToListAsync();
+                if (tmp != null)
+                {
+                    foreach (var item1 in tmp)
+                    {
+                        sessions.Add(item1);
+                    }
+                }
+            }
+
+            //Thêm bài tập vào buổi tập
+            var result = new List<SessionOfPTViewModel>();
+            foreach (var item in sessions)
+            {
+                var GymerID = _context.ExcerciseSchedules.FindAsync(item.ScheduleId).Result.GymerId;
+                var tmp = new SessionOfPTViewModel();
+                tmp.id = item.Id;
+                tmp.GymerID = GymerID;
+                tmp.GymerName = _context.Accounts.FindAsync(GymerID).Result.Fullname;
+                tmp.DateAndTime = item.DateAndTime;
+                tmp.Excercises = GetExcercises(item.Id);
+                result.Add(tmp);
+            }
+            return result;
+        }
+
+        public async Task<List<SessionOfPTViewModel>> GetWorkingScheduleByPTID(Guid PTId)
+        {
+            //Tim GymerPackageID
+            var packageGymers = await _context.PackageGymers.Where(a => a.Ptid == PTId && a.Status != "Done").ToListAsync();
+            if (packageGymers.Count == 0) return null;
+
+            //Tim ScheduleID
+            var scheduleIDs = new List<Guid>();
+            foreach (var item in packageGymers)
+            {
+                var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
+                if (schedules.Count > 0)
+                {
+                    foreach (var item1 in schedules)
+                    {
+                        scheduleIDs.Add(item1.Id);
+                    }
+                }
+            }
+
+            //Tim sessions
+            var sessions = new List<Session>();
+            foreach (var item in scheduleIDs)
+            {
+                var tmp = await _context.Sessions.Where(a => a.ScheduleId == item).ToListAsync();
+                if (tmp != null)
+                {
+                    foreach (var item1 in tmp)
+                    {
+                        sessions.Add(item1);
+                    }
+                }
+            }
+
+            //Thêm bài tập vào buổi tập
+            var result = new List<SessionOfPTViewModel>();
+            foreach (var item in sessions)
+            {
+                var GymerID = _context.ExcerciseSchedules.FindAsync(item.ScheduleId).Result.GymerId;
+                var tmp = new SessionOfPTViewModel();
+                tmp.id = item.Id;
+                tmp.GymerID = GymerID;
+                tmp.GymerName = _context.Accounts.FindAsync(GymerID).Result.Fullname;
+                tmp.DateAndTime = item.DateAndTime;
+                tmp.Excercises = GetExcercises(item.Id);
+                result.Add(tmp);
+            }
+            return result;
+        }
     }
 }
