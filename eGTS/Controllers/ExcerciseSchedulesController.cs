@@ -174,9 +174,18 @@ namespace eGTS.Controllers
             }
         }
 
-        private bool ExcerciseScheduleExists(Guid id)
+
+        [HttpGet("{GymerId}")]
+        public async Task<ActionResult<IEnumerable<SessionDetailViewModel>>> GetExcerciseScheduleByGymerIDAndDate(Guid GymerId, DateTime date)
         {
-            return (_context.ExcerciseSchedules?.Any(e => e.Id == id)).GetValueOrDefault();
+            var result = await _exSCheduleService.GetExcerciseScheduleByGymerIDAndDate(GymerId, date);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy lịch tập!");
+            }
+
+            return Ok(new SuccessResponse<List<SessionDetailViewModel>>(200, "Danh sách lịch tập!", result));
         }
     }
 }
