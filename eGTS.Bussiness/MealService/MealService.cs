@@ -138,7 +138,8 @@ namespace eGTS.Bussiness.MealService
                 dates.Add(dt);
             }
 
-            var meals = await _context.Meals.ToListAsync();
+            var nuSchedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
+            var meals = await _context.Meals.Where(a => a.NutritionScheduleId == nuSchedule.Id).ToListAsync();
             if(meals.Count == 0) return true;
             var inDB = new List<DateTime>();
             foreach (var meal in meals)
@@ -150,7 +151,7 @@ namespace eGTS.Bussiness.MealService
             {
                 foreach (var db in inDB)
                 {
-                    if (date.Date == db) return false;
+                    if (date.Date == db.Date) return false;
                 }
             }
 
