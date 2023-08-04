@@ -88,7 +88,7 @@ namespace eGTS.Bussiness.NutritionScheduleService
             var result = new List<FoodAndSupplimentViewModel>();
 
             var foodIDs = _context.FoodAndSupplimentInMeals.Where(a => a.MealId == id).ToList();
-            if (foodIDs == null) return null;
+            if (foodIDs.Count == 0) return null;
 
             foreach (var item in foodIDs)
             {

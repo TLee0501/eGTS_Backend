@@ -2,6 +2,7 @@
 using eGTS.Bussiness.AccountService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Google.Api.Gax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -331,6 +332,79 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             await _context.ExcerciseSchedules.AddAsync(schedule);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<SessionDetailViewModel>> GetExcerciseScheduleByGymerIDAndDate(Guid GymerId, DateTime date)
+        {
+            //Tim GymerPackageID
+            var packageGymers = await _context.PackageGymers.Where(a => a.GymerId == GymerId && a.Status != "Done").ToListAsync();
+            if (packageGymers.Count == 0) return null;
+
+            //Tim ScheduleID
+            var scheduleIDs = new List<Guid>();
+            foreach (var item in packageGymers)
+            {
+                var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
+                if (schedules.Count > 0)
+                {
+                    foreach (var item1 in schedules)
+                    {
+                        scheduleIDs.Add(item1.Id);
+                    }
+                }       
+            }
+
+            //Tim sessions
+            var sessions = new List<Session>();
+            foreach (var item in scheduleIDs)
+            {
+                var tmp = await _context.Sessions.Where(a => a.ScheduleId == item && a.DateAndTime.Date == date.Date).ToListAsync();
+                if (tmp != null)
+                {
+                    foreach (var item1 in tmp)
+                    {
+                        sessions.Add(item1);
+                    }
+                }
+            }
+
+            //Thêm bài tập vào buổi tập
+            var result = new List<SessionDetailViewModel>();
+            foreach (var item in sessions)
+            {
+                var tmp = new SessionDetailViewModel();
+                tmp.id = item.Id;
+                tmp.ScheduleId = item.ScheduleId;
+                tmp.DateAndTime = item.DateAndTime;
+                tmp.Excercises = GetExcercises(item.Id);
+                result.Add(tmp);
+            }
+            return result;
+        }
+
+        private List<ExcerciseViewModel> GetExcercises(Guid id)
+        {
+            var result = new List<ExcerciseViewModel>();
+
+            var Exs = _context.ExserciseInSessions.Where(a => a.SessionId == id).ToList();
+            if (Exs.Count == 0) return null;
+
+            foreach (var item in Exs)
+            {
+                var excercise = _context.Excercises.SingleOrDefault(a => a.Id == item.ExerciseId && a.IsDelete == false);
+                if(excercise != null)
+                {
+                    var viewModel = new ExcerciseViewModel();
+                    viewModel.id = excercise.Id;
+                    viewModel.Ptid = excercise.Ptid;
+                    viewModel.Name = excercise.Name;
+                    if (excercise.Description != null) viewModel.Description = excercise.Description;
+                    if (excercise.Video != null) viewModel.Video = excercise.Video;
+                    viewModel.CreateDate = excercise.CreateDate;
+                    result.Add(viewModel);
+                }
+            }
+            return result;
         }
     }
 }
