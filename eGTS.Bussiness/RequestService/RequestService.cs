@@ -21,6 +21,10 @@ namespace eGTS.Bussiness.RequestService
 
         public async Task<int> CreateRequest(RequestCreateViewModel request)
         {
+            var account = await _context.Accounts.FindAsync(request.ReceiverId);
+            var boolPT = false;
+            if(account.Role.Equals("PT")) boolPT = true;
+
             //check sent Request before
             var checkExist = await _context.Requests.SingleOrDefaultAsync(a => a.ReceiverId == request.ReceiverId && a.PackageGymerId == request.PackageGymerId);
             if (checkExist != null) return 2;
@@ -33,7 +37,7 @@ namespace eGTS.Bussiness.RequestService
             if (checkPackage.HasNe == false && checkExpert.Role == "NE") return 3;
 
             var id = Guid.NewGuid();
-            var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, request.IsPt, null, false);
+            var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, boolPT, null, false);
             
             try
             {
