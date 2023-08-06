@@ -24,7 +24,8 @@ namespace eGTS.Bussiness.PackageService
         public async Task<bool> CreatePackage(PackageCreateViewModel request)
         {
             Guid id = Guid.NewGuid();
-            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.Discount, false);
+            var createDate = DateTime.Now;
+            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfMonth, request.NumberOfsession, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.Discount, createDate, false);
             _context.Packages.Add(package);
             try
             {
@@ -72,6 +73,7 @@ namespace eGTS.Bussiness.PackageService
                 result.CenterCost = package.CenterCost;
                 result.IsDelete = package.IsDelete;
                 result.Discount = package.Discount;
+                result.CreateDate = package.CreateDate;
                 return result;
             }
         }
@@ -97,6 +99,8 @@ namespace eGTS.Bussiness.PackageService
                     viewModel.CenterCost = package.CenterCost;
                     viewModel.Price = package.Price;
                     viewModel.IsDelete = package.IsDelete;
+                    viewModel.Discount = package.Discount;
+                    viewModel.CreateDate = package.CreateDate;
                     viewModel.IsDelete = package.IsDelete;
                     result.Add(viewModel);
                 }
@@ -107,7 +111,7 @@ namespace eGTS.Bussiness.PackageService
 
         public async Task<bool> UpdatePackage(PackageViewModel request)
         {
-            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.Discount, request.IsDelete);
+            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.Discount, request.CreateDate, request.IsDelete);
             _context.Entry(package).State = EntityState.Modified;
             try
             {
