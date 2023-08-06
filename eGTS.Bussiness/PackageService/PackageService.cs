@@ -24,7 +24,7 @@ namespace eGTS.Bussiness.PackageService
         public async Task<bool> CreatePackage(PackageCreateViewModel request)
         {
             Guid id = Guid.NewGuid();
-            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, false);
+            Package package = new Package(id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.Discount, false);
             _context.Packages.Add(package);
             try
             {
@@ -33,7 +33,6 @@ namespace eGTS.Bussiness.PackageService
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
                 return false;
             }
         }
@@ -44,7 +43,7 @@ namespace eGTS.Bussiness.PackageService
             if (package == null) return false;
             else
             {
-                _context.Packages.Remove(package);
+                package.IsDelete = true;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -72,6 +71,7 @@ namespace eGTS.Bussiness.PackageService
                 result.Necost = package.Necost;
                 result.CenterCost = package.CenterCost;
                 result.IsDelete = package.IsDelete;
+                result.Discount = package.Discount;
                 return result;
             }
         }
@@ -97,6 +97,7 @@ namespace eGTS.Bussiness.PackageService
                     viewModel.CenterCost = package.CenterCost;
                     viewModel.Price = package.Price;
                     viewModel.IsDelete = package.IsDelete;
+                    viewModel.IsDelete = package.IsDelete;
                     result.Add(viewModel);
                 }
                 return result;
@@ -106,7 +107,7 @@ namespace eGTS.Bussiness.PackageService
 
         public async Task<bool> UpdatePackage(PackageViewModel request)
         {
-            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.IsDelete);
+            Package package = new Package(request.Id, request.Name, request.HasPt, request.HasNe, request.NumberOfsession, request.NumberOfMonth, request.Ptcost, request.Necost, request.CenterCost, request.Price, request.Discount, request.IsDelete);
             _context.Entry(package).State = EntityState.Modified;
             try
             {
@@ -115,7 +116,6 @@ namespace eGTS.Bussiness.PackageService
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
                 return false;
             }
         }
