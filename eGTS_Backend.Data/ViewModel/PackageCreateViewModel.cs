@@ -16,6 +16,7 @@ namespace eGTS_Backend.Data.ViewModel
         public double? Ptcost { get; set; }
         public double? Necost { get; set; }
         public double? CenterCost { get; set; }
+        public double? Discount { get; set; }
         public double Price { get; set; }
     }
 }
