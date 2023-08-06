@@ -26,7 +26,7 @@ namespace eGTS.Bussiness.PackageGymersService
             }
             else
             {
-                PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, null, null, "Đang chờ", false);
+                PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, DateTime.Now.Date, null, "Đang chờ", false);
                 _context.PackageGymers.Add(packageGymer);
             }
             try
@@ -36,7 +36,6 @@ namespace eGTS.Bussiness.PackageGymersService
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
                 return false;
             }
         }
