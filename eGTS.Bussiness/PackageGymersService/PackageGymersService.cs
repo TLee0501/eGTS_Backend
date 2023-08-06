@@ -21,12 +21,12 @@ namespace eGTS.Bussiness.PackageGymersService
             if(packageRequest.NumberOfMonth != null)
             {
                 var month = (int)packageRequest.NumberOfMonth;
-                PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, null, DateTime.Now.Date, DateTime.Now.AddMonths(month).Date, "Đang hoạt động", false);
+                PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, null, DateTime.Now, DateTime.Now.AddMonths(month), "Đang hoạt động", false);
                 _context.PackageGymers.Add(packageGymer);
             }
             else
             {
-                PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, DateTime.Now.Date, null, "Đang chờ", false);
+                PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, DateTime.Now, null, "Đang chờ", false);
                 _context.PackageGymers.Add(packageGymer);
             }
             try

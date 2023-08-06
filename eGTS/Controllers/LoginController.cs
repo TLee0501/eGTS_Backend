@@ -58,16 +58,16 @@ namespace eGTS.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (model.PhoneNo == "")
-                return BadRequest(new ErrorResponse(400, "Phone Number Is Empty"));
+                return BadRequest(new ErrorResponse(400, "Vui lòng kiểm tả lại số điện thoại!"));
             if (model.Password == "")
-                return BadRequest(new ErrorResponse(400, "Password Is Empty"));
+                return BadRequest(new ErrorResponse(400, "Vui lòng kiểm tả lại mật khẩu!"));
 
             var result = await _loginService.Login(model);
 
             if (result == null)
-                return NotFound(new ErrorResponse(204, "Phone numer/Password is incorrect"));
+                return NotFound(new ErrorResponse(204, "Vui lòng kiểm tả lại số điện thoại/mật khẩu!"));
             else if (result.IsDelete == true)
-                return Unauthorized(new ErrorResponse(401, "Account Is Lock"));
+                return Unauthorized(new ErrorResponse(401, "Tài khaonr đã bị khóa!"));
 
 
             _logger.LogInformation($"Login by {model.PhoneNo}");
