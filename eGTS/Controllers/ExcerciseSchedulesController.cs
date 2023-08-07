@@ -141,9 +141,8 @@ namespace eGTS.Controllers
             }
             else
                 return BadRequest(new ErrorResponse(400, "Invalid Data"));
-
-
         }
+
         // DELETE: api/ExcerciseSchedules/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExcerciseSchedulePERMANENT(Guid id)
@@ -224,6 +223,33 @@ namespace eGTS.Controllers
             }
 
             return Ok(new SuccessResponse<List<SessionOfPTViewModel>>(200, "Danh sách lịch tập!", result));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ExcerciseSchedule>> CreateExcerciseScheduleV3(ExcerciseScheduleCreateViewModelV3 request)
+        {
+            if (request.PackageGymerID.Equals("") || request.PackageGymerID == null)
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy PackageGymerID!"));
+            if (request.From.Equals("") || request.From == null)
+                return BadRequest(new ErrorResponse(400, "Ptid empty."));
+            if (request.From.Equals("") || request.From == null)
+                return BadRequest(new ErrorResponse(400, "Không có ngày bắt đầu!"));
+            if (request.To.Equals("") || request.To == null)
+                return BadRequest(new ErrorResponse(400, "Không có ngày kết thúc!"));
+            if (request.From < DateTime.Now)
+                return BadRequest(new ErrorResponse(400, "Sai ngày bắt đầu!"));
+            if (request.From > request.To)
+                return BadRequest(new ErrorResponse(400, "Ngày bắt đầu lớn hơn ngày kết thúc!"));
+
+            if (await _exSCheduleService.CreateExcerciseScheduleV3(request))
+            {
+                _logger.LogInformation($"Created ExCerciseSchedule for Gymer with ID: {request.PackageGymerID}");
+                return Ok(new SuccessResponse<ExcerciseScheduleCreateViewModelV3>(200, "Tạo thành công!", request));
+            }
+            else
+                return BadRequest(new ErrorResponse(400, "Không thành công!"));
+
+
         }
     }
 }

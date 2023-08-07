@@ -1,17 +1,9 @@
-﻿using Azure.Core;
-using eGTS.Bussiness.AccountService;
+﻿using eGTS.Bussiness.AccountService;
 using eGTS.Bussiness.ExcerciseScheduleService;
-using eGTS.Bussiness.ExcerciseService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.SessionService
 {
@@ -20,15 +12,12 @@ namespace eGTS.Bussiness.SessionService
 
         private readonly EGtsContext _context;
         private readonly IExcerciseScheduleService _excerciseScheduleService;
-        private readonly IExcerciseService _excerciseService;
         private readonly ILogger<IAccountService> _logger;
 
-        public SessionService(EGtsContext context, IExcerciseScheduleService excerciseScheduleService,
-            IExcerciseService excerciseService, ILogger<IAccountService> logger)
+        public SessionService(EGtsContext context, IExcerciseScheduleService excerciseScheduleService, ILogger<IAccountService> logger)
         {
             _context = context;
             _excerciseScheduleService = excerciseScheduleService;
-            _excerciseService = excerciseService;
             _logger = logger;
         }
 
@@ -49,18 +38,18 @@ namespace eGTS.Bussiness.SessionService
             }
         }
 
-        public async Task<bool> CreateSession(SessionCreateViewModel model)
+        public async Task<bool> CreateSession(Guid scheduleID, DateTime startTime, double during)
         {
-            var exSchedule = await _excerciseScheduleService.GetExcerciseScheduleByID(model.ScheduleId);
+            var exSchedule = await _excerciseScheduleService.GetExcerciseScheduleByID(scheduleID);
             if (exSchedule != null)
             {
-                if (exSchedule.From <= model.DateAndTime && model.DateAndTime <= exSchedule.To)
+                if (exSchedule.From <= startTime && startTime <= exSchedule.To)
                 {
-                    var check = _context.Sessions.Where(s => s.ScheduleId.Equals(model.ScheduleId) && s.DateAndTime.Equals(model.DateAndTime));
+                    var check = _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID) && s.From.Equals(startTime));
                     if (check.Any())
                         return false;
                     Guid id = Guid.NewGuid();
-                    Session session = new Session(id, model.ScheduleId, model.DateAndTime, false);
+                    Session session = new Session(id, scheduleID, startTime, startTime.AddHours(during), false);
 
                     try
                     {
@@ -76,11 +65,9 @@ namespace eGTS.Bussiness.SessionService
                 }
                 else
                     return false;
-
             }
             else
                 return false;
-
         }
 
         public async Task<bool> CreateSessionResult(SessionResultCreateViewModel model)
@@ -138,7 +125,8 @@ namespace eGTS.Bussiness.SessionService
                     SessionViewModel model = new SessionViewModel();
                     model.id = session.Id;
                     model.ScheduleId = session.ScheduleId;
-                    model.DateAndTime = session.DateAndTime;
+                    model.From = session.From;
+                    model.To = session.To; 
                     model.IsDelete = session.IsDelete;
 
                     resultList.Add(model);
@@ -245,7 +233,7 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime)
         {
-            Session session = _context.Sessions.FirstOrDefault(s => s.ScheduleId.Equals(ScheduleID) && s.DateAndTime.Equals(dateTime));
+            Session session = _context.Sessions.FirstOrDefault(s => s.ScheduleId.Equals(ScheduleID) && s.From.Equals(dateTime));
             var exInSessionList = _context.ExserciseInSessions.Where(s => s.SessionId.Equals(session.Id)).ToList();
             var excerciseList = new List<ExcerciseViewModel>();
             foreach (var exInSession in exInSessionList)
@@ -267,7 +255,8 @@ namespace eGTS.Bussiness.SessionService
             {
                 var result = new ExInSessionWithSessionIDViewModel();
                 result.SessionID = session.Id;
-                result.SessionDateAndTime = session.DateAndTime;
+                result.From = session.From;
+                result.To = session.To;
                 result.ExcercisesInSession = excerciseList;
 
                 return result;
@@ -300,7 +289,8 @@ namespace eGTS.Bussiness.SessionService
             {
                 var result = new ExInSessionWithSessionIDViewModel();
                 result.SessionID = session.Id;
-                result.SessionDateAndTime = session.DateAndTime;
+                result.From = session.From;
+                result.To = session.To;
                 result.ExcercisesInSession = excerciseList;
 
                 return result;
@@ -352,7 +342,8 @@ namespace eGTS.Bussiness.SessionService
                 SessionViewModel result = new SessionViewModel();
                 result.id = session.Id;
                 result.ScheduleId = session.ScheduleId;
-                result.DateAndTime = session.DateAndTime;
+                result.From = session.From;
+                result.To = session.To;
                 result.IsDelete = session.IsDelete;
                 return result;
             }
@@ -371,7 +362,8 @@ namespace eGTS.Bussiness.SessionService
                     SessionViewModel model = new SessionViewModel();
                     model.id = session.Id;
                     model.ScheduleId = session.ScheduleId;
-                    model.DateAndTime = session.DateAndTime;
+                    model.From = session.From;
+                    model.To = session.To;
                     model.IsDelete = session.IsDelete;
 
                     resultList.Add(model);
@@ -455,7 +447,7 @@ namespace eGTS.Bussiness.SessionService
                 var exSchedule = await _excerciseScheduleService.GetExcerciseScheduleByID(session.ScheduleId);
                 if (exSchedule.From <= request.DateAndTime && request.DateAndTime <= exSchedule.To)
                 {
-                    session.DateAndTime = request.DateAndTime;
+                    session.From = request.DateAndTime;
                     try
                     {
                         await _context.SaveChangesAsync();
@@ -529,7 +521,8 @@ namespace eGTS.Bussiness.SessionService
                                     SessionViewModel modelSession = new SessionViewModel();
                                     modelSession.id = session.Id;
                                     modelSession.ScheduleId = session.ScheduleId;
-                                    modelSession.DateAndTime = session.DateAndTime;
+                                    modelSession.From = session.From;
+                                    modelSession.To = session.To;
                                     modelSession.IsDelete = session.IsDelete;
 
                                     sessionList.Add(modelSession);
@@ -566,7 +559,7 @@ namespace eGTS.Bussiness.SessionService
             try
             {
                 var id = Guid.NewGuid();
-                var session = new Session(id, exSchedule.Id, model.DateAndTime, false);
+                var session = new Session(id, exSchedule.Id, model.DateAndTime, model.DateAndTime.AddHours(2), false);
                 await _context.Sessions.AddAsync(session);
 
                 foreach (var item in model.ListExcerciseID)

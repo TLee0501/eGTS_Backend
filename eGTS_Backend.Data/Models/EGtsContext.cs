@@ -64,7 +64,7 @@ public partial class EGtsContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("server =egts.database.windows.net; database = eGTS;uid=egts;pwd=Passdoan2023@;Trusted_Connection=True;Encrypt=False;Integrated Security=False");
-
+        
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -388,6 +388,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.HasNe).HasColumnName("HasNE");
             entity.Property(e => e.HasPt).HasColumnName("HasPT");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
@@ -505,9 +506,10 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.DateAndTime).HasColumnType("datetime");
+            entity.Property(e => e.From).HasColumnType("datetime");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
+            entity.Property(e => e.To).HasColumnType("datetime");
 
             entity.HasOne(d => d.Schedule).WithMany(p => p.Sessions)
                 .HasForeignKey(d => d.ScheduleId)
