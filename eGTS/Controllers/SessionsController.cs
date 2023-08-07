@@ -119,7 +119,7 @@ namespace eGTS.Controllers
 
         // POST: api/Sessions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<Session>> CreatNewSession(SessionCreateViewModel model)
         {
 
@@ -140,7 +140,7 @@ namespace eGTS.Controllers
             }
             else
                 return BadRequest(new ErrorResponse(400, "Dữ liệu bị sai"));
-        }
+        }*/
 
         // DELETE: api/Sessions/5
         [HttpDelete("{id}")]
@@ -149,7 +149,7 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSession(id))
             {
                 _logger.LogInformation($"Deleted Session with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Xóa thành công.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Xóa thành công.", null));
             }
             else
                 return NoContent();
@@ -162,7 +162,7 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSessionPERMANENT(id))
             {
                 _logger.LogInformation($"REMOVE Session with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Xóa thành công.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Xóa thành công.", null));
             }
             else
                 return NoContent();

@@ -388,6 +388,7 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.HasNe).HasColumnName("HasNE");
             entity.Property(e => e.HasPt).HasColumnName("HasPT");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
@@ -505,9 +506,10 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.DateAndTime).HasColumnType("datetime");
+            entity.Property(e => e.From).HasColumnType("datetime");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
+            entity.Property(e => e.To).HasColumnType("datetime");
 
             entity.HasOne(d => d.Schedule).WithMany(p => p.Sessions)
                 .HasForeignKey(d => d.ScheduleId)

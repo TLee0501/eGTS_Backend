@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace eGTS_Backend.Data.ViewModel
 {
-    public class SessionViewModel
+    public class ExcerciseScheduleCreateViewModelV3
     {
-        public Guid id { get; set; }
-        public Guid ScheduleId { get; set; }
+        public Guid PackageGymerID { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
-        public bool IsDelete { get; set; }
+        public List<DateTime> listSession { get; set; }
+        public double during { get; set; }
     }
 }

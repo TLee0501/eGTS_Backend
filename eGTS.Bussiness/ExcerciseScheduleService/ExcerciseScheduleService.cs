@@ -1,8 +1,10 @@
 ﻿using Azure.Core;
 using eGTS.Bussiness.AccountService;
+using eGTS.Bussiness.SessionService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Google.Api.Gax;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,14 +18,15 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 {
     public class ExcerciseScheduleService : IExcerciseScheduleService
     {
-
         private readonly EGtsContext _context;
         private readonly ILogger<IAccountService> _logger;
+        private readonly ISessionService _sessionService;
 
-        public ExcerciseScheduleService(EGtsContext context, ILogger<IAccountService> logger)
+        public ExcerciseScheduleService(EGtsContext context, ILogger<IAccountService> logger, ISessionService sessionService)
         {
             _context = context;
             _logger = logger;
+            _sessionService = sessionService;
         }
 
         public async Task<bool> CreateExcerciseSchedule(ExScheduleCreateViewModel model)
@@ -359,7 +362,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var sessions = new List<Session>();
             foreach (var item in scheduleIDs)
             {
-                var tmp = await _context.Sessions.Where(a => a.ScheduleId == item && a.DateAndTime.Date == date.Date).ToListAsync();
+                var tmp = await _context.Sessions.Where(a => a.ScheduleId == item && a.From.Date == date.Date).ToListAsync();
                 if (tmp != null)
                 {
                     foreach (var item1 in tmp)
@@ -376,7 +379,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 var tmp = new SessionDetailViewModel();
                 tmp.id = item.Id;
                 tmp.ScheduleId = item.ScheduleId;
-                tmp.DateAndTime = item.DateAndTime;
+                tmp.From = item.From;
+                tmp.To = item.To;
                 tmp.Excercises = GetExcercises(item.Id);
                 result.Add(tmp);
             }
@@ -449,7 +453,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 var tmp = new SessionDetailViewModel();
                 tmp.id = item.Id;
                 tmp.ScheduleId = item.ScheduleId;
-                tmp.DateAndTime = item.DateAndTime;
+                tmp.From = item.From;
+                tmp.To = item.To;
                 tmp.Excercises = GetExcercises(item.Id);
                 result.Add(tmp);
             }
@@ -480,7 +485,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var sessions = new List<Session>();
             foreach (var item in scheduleIDs)
             {
-                var tmp = await _context.Sessions.Where(a => a.ScheduleId == item && a.DateAndTime.Date == date.Date).ToListAsync();
+                var tmp = await _context.Sessions.Where(a => a.ScheduleId == item && a.From.Date == date.Date).ToListAsync();
                 if (tmp != null)
                 {
                     foreach (var item1 in tmp)
@@ -499,7 +504,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 tmp.id = item.Id;
                 tmp.GymerID = GymerID;
                 tmp.GymerName = _context.Accounts.FindAsync(GymerID).Result.Fullname;
-                tmp.DateAndTime = item.DateAndTime;
+                tmp.From = item.From;
+                tmp.To = item.To;
                 tmp.Excercises = GetExcercises(item.Id);
                 result.Add(tmp);
             }
@@ -549,11 +555,31 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 tmp.id = item.Id;
                 tmp.GymerID = GymerID;
                 tmp.GymerName = _context.Accounts.FindAsync(GymerID).Result.Fullname;
-                tmp.DateAndTime = item.DateAndTime;
+                tmp.From = item.From;
+                tmp.To = item.To;
                 tmp.Excercises = GetExcercises(item.Id);
                 result.Add(tmp);
             }
             return result;
+        }
+
+        public async Task<bool> CreateExcerciseScheduleV3(ExcerciseScheduleCreateViewModelV3 request)
+        {
+            var pg = await _context.PackageGymers.FindAsync(request.PackageGymerID);
+            if (pg == null) return false;
+
+            var id = Guid.NewGuid();
+            var schedule = new ExcerciseSchedule(id, pg.GymerId, (Guid)pg.Ptid, request.PackageGymerID, request.From, request.To, false);
+            await _context.ExcerciseSchedules.AddAsync(schedule);
+            await _context.SaveChangesAsync();
+
+            //Tao session
+            foreach (var item in request.listSession)
+            {
+                var sessionResult = await _sessionService.CreateSession(id, request.From, request.during);
+                if (sessionResult == false) return false;
+            }
+            return true;
         }
     }
 }

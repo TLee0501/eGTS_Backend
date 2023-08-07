@@ -9,14 +9,10 @@ namespace eGTS.Bussiness.RequestService
     public class RequestService : IRequestService
     {
         private readonly EGtsContext _context;
-        private readonly INutritionScheduleService _scheduleService;
-        private readonly IExcerciseScheduleService _excerciseScheduleService;
 
-        public RequestService(EGtsContext context, INutritionScheduleService scheduleService, IExcerciseScheduleService excerciseScheduleService)
+        public RequestService(EGtsContext context)
         {
             _context = context;
-            _scheduleService = scheduleService;
-            _excerciseScheduleService = excerciseScheduleService;
         }
 
         public async Task<int> CreateRequest(RequestCreateViewModel request)
@@ -105,16 +101,16 @@ namespace eGTS.Bussiness.RequestService
                 if (requestDB.IsPt == true)
                 {
                     packageGymer.Ptid = requestDB.ReceiverId; 
-                    await _context.SaveChangesAsync();
+                    /*await _context.SaveChangesAsync();
                     var schedule = await _excerciseScheduleService.CreateExcerciseScheduleV2(packageGymer.Id);
-                    if (schedule == false) return false;
+                    if (schedule == false) return false;*/
                 }
                 else
                 {
                     packageGymer.Neid = requestDB.ReceiverId;
-                    await _context.SaveChangesAsync();
+                    /*await _context.SaveChangesAsync();
                     var schedule = await _scheduleService.CreateNutritionSchedule(packageGymer.Id);
-                    if (schedule == false) return false;
+                    if (schedule == false) return false;*/
                 }
             }
             else
@@ -131,17 +127,17 @@ namespace eGTS.Bussiness.RequestService
             if (packageGymer.Ptid != null && packageGymer.Neid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
-                packageGymer.From = DateTime.Now;
+                //packageGymer.From = DateTime.Now;
             }
             else if (packageType.HasPt == false && packageGymer.Neid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
-                packageGymer.From = DateTime.Now;
+                //packageGymer.From = DateTime.Now;
             }
             else if (packageType.HasNe == false && packageGymer.Ptid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
-                packageGymer.From = DateTime.Now;
+                //packageGymer.From = DateTime.Now;
             }
 
             try

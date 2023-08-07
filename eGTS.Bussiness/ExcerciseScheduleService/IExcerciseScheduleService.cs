@@ -24,5 +24,6 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         Task<List<SessionOfPTViewModel>> GetWorkingScheduleByPTIDAndDate(Guid PTID, DateTime date);
         Task<List<SessionOfPTViewModel>> GetWorkingScheduleByPTID(Guid PTID);
 
+        Task<bool> CreateExcerciseScheduleV3(ExcerciseScheduleCreateViewModelV3 request);
     }
 }

@@ -107,7 +107,7 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSessionResult(id))
             {
                 _logger.LogInformation($"Deleted Session Result with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Delete Success.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Delete Success.", null));
             }
             else
                 return NoContent();
@@ -119,7 +119,7 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSessionResultPERMANENT(id))
             {
                 _logger.LogInformation($"Deleted Session Result with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Delete Success.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Delete Success.", null));
             }
             else
                 return NoContent();
