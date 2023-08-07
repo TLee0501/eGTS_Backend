@@ -12,6 +12,5 @@ namespace eGTS_Backend.Data.ViewModel
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public List<DateTime> listSession { get; set; }
-        public double during { get; set; }
     }
 }

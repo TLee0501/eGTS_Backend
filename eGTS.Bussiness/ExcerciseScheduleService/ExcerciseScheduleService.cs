@@ -339,7 +339,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         public async Task<List<SessionDetailViewModel>> GetExcerciseScheduleByGymerIDAndDate(Guid GymerId, DateTime date)
         {
             //Tim GymerPackageID
-            var packageGymers = await _context.PackageGymers.Where(a => a.GymerId == GymerId && a.Status != "Done").ToListAsync();
+            var packageGymers = await _context.PackageGymers.Where(a => a.GymerId == GymerId && a.Status != "Đã hoàn thành").ToListAsync();
             if (packageGymers.Count == 0) return null;
 
             //Tim ScheduleID
@@ -413,7 +413,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         public async Task<List<SessionDetailViewModel>> GetExcerciseScheduleByGymerIDV2(Guid GymerId)
         {
             //Tim GymerPackageID
-            var packageGymers = await _context.PackageGymers.Where(a => a.GymerId == GymerId && a.Status != "Done").ToListAsync();
+            var packageGymers = await _context.PackageGymers.Where(a => a.GymerId == GymerId && a.Status != "Đã hoàn thành").ToListAsync();
             if (packageGymers.Count == 0) return null;
 
             //Tim ScheduleID
@@ -462,7 +462,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         public async Task<List<SessionOfPTViewModel>> GetWorkingScheduleByPTIDAndDate(Guid PTId, DateTime date)
         {
             //Tim GymerPackageID
-            var packageGymers = await _context.PackageGymers.Where(a => a.Ptid == PTId && a.Status != "Done").ToListAsync();
+            var packageGymers = await _context.PackageGymers.Where(a => a.Ptid == PTId && a.Status != "Đã hoàn thành").ToListAsync();
             if (packageGymers.Count == 0) return null;
 
             //Tim ScheduleID
@@ -513,15 +513,15 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         public async Task<List<SessionOfPTViewModel>> GetWorkingScheduleByPTID(Guid PTId)
         {
             //Tim GymerPackageID
-            var packageGymers = await _context.PackageGymers.Where(a => a.Ptid == PTId && a.Status != "Done").ToListAsync();
-            if (packageGymers.Count == 0) return null;
+            var packageGymers = await _context.PackageGymers.Where(a => a.Ptid == PTId && a.Status != "Đã hoàn thành").ToListAsync();
+            if (packageGymers == null) return null;
 
             //Tim ScheduleID
             var scheduleIDs = new List<Guid>();
             foreach (var item in packageGymers)
             {
                 var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
-                if (schedules.Count > 0)
+                if (schedules == null)
                 {
                     foreach (var item1 in schedules)
                     {
@@ -574,18 +574,18 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             //Tao session
             foreach (var item in request.listSession)
             {
-                var sessionResult = createSession(id, item, request.during);
+                var sessionResult = createSession(id, item);
                 if (sessionResult == false) return false;
             }
             return true;
         }
 
-        private bool createSession(Guid scheduleID, DateTime from, double during)
+        private bool createSession(Guid scheduleID, DateTime from)
         {
             var check = _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID) && s.From.Equals(from));
             if (check.Any()) return false;
             Guid id = Guid.NewGuid();
-            Session session = new Session(id, scheduleID, from, from.AddHours(during), false);
+            Session session = new Session(id, scheduleID, from.AddHours(9), from.AddHours(10), false);
 
             try
             {

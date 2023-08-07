@@ -102,15 +102,15 @@ namespace eGTS.Controllers
 
         // PUT: api/Sessions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{sessionId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<IActionResult> UpdateSession(Guid id, SessionUpdateViewModel request)
+        public async Task<IActionResult> UpdateSession(Guid sessionId, SessionUpdateViewModel request)
         {
-            if (await _sessionService.UpdateSession(id, request))
+            if (await _sessionService.UpdateSessionV3(sessionId, request))
             {
-                _logger.LogInformation($"Update Session with ID: {id}");
+                _logger.LogInformation($"Update Session with ID: {sessionId}");
                 return Ok(new SuccessResponse<SessionUpdateViewModel>(200, "Cập nhật thành công.", request));
             }
             else
