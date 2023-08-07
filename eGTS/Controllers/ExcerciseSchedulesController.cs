@@ -244,10 +244,10 @@ namespace eGTS.Controllers
             if (await _exSCheduleService.CreateExcerciseScheduleV3(request))
             {
                 _logger.LogInformation($"Created ExCerciseSchedule for Gymer with ID: {request.PackageGymerID}");
-                return Ok(new SuccessResponse<ExcerciseScheduleCreateViewModelV3>(200, "Create Success.", request));
+                return Ok(new SuccessResponse<ExcerciseScheduleCreateViewModelV3>(200, "Tạo thành công!", request));
             }
             else
-                return BadRequest(new ErrorResponse(400, "Invalid Data"));
+                return BadRequest(new ErrorResponse(400, "Không thành công!"));
 
 
         }

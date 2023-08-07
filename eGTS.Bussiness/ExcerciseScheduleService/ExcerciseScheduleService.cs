@@ -20,13 +20,11 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
     {
         private readonly EGtsContext _context;
         private readonly ILogger<IAccountService> _logger;
-        private readonly ISessionService _sessionService;
 
-        public ExcerciseScheduleService(EGtsContext context, ILogger<IAccountService> logger, ISessionService sessionService)
+        public ExcerciseScheduleService(EGtsContext context, ILogger<IAccountService> logger)
         {
             _context = context;
             _logger = logger;
-            _sessionService = sessionService;
         }
 
         public async Task<bool> CreateExcerciseSchedule(ExScheduleCreateViewModel model)
@@ -576,10 +574,30 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             //Tao session
             foreach (var item in request.listSession)
             {
-                var sessionResult = await _sessionService.CreateSession(id, request.From, request.during);
+                var sessionResult = createSession(id, item, request.during);
                 if (sessionResult == false) return false;
             }
             return true;
+        }
+
+        private bool createSession(Guid scheduleID, DateTime from, double during)
+        {
+            var check = _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID) && s.From.Equals(from));
+            if (check.Any()) return false;
+            Guid id = Guid.NewGuid();
+            Session session = new Session(id, scheduleID, from, from.AddHours(during), false);
+
+            try
+            {
+                _context.Sessions.AddAsync(session);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Invalid Data");
+                return false;
+            }
         }
     }
 }
