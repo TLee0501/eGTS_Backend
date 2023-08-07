@@ -352,7 +352,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     {
                         scheduleIDs.Add(item1.Id);
                     }
-                }       
+                }
             }
 
             //Tim sessions
@@ -376,7 +376,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 var tmp = new SessionDetailViewModel();
                 tmp.id = item.Id;
                 tmp.ScheduleId = item.ScheduleId;
-                tmp.DateAndTime = item.DateAndTime;
+                tmp.From = item.From;
+                tmp.To = item.To;
                 tmp.Excercises = GetExcercises(item.Id);
                 result.Add(tmp);
             }
@@ -393,7 +394,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             foreach (var item in Exs)
             {
                 var excercise = _context.Excercises.SingleOrDefault(a => a.Id == item.ExerciseId && a.IsDelete == false);
-                if(excercise != null)
+                if (excercise != null)
                 {
                     var viewModel = new ExcerciseViewModel();
                     viewModel.id = excercise.Id;

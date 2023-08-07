@@ -5,21 +5,24 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class Session
 {
-    public Session(Guid id, Guid scheduleId, DateTime dateAndTime, bool isDelete)
-    {
-        Id = id;
-        ScheduleId = scheduleId;
-        DateAndTime = dateAndTime;
-        IsDelete = isDelete;
-    }
-
     public Guid Id { get; set; }
 
     public Guid ScheduleId { get; set; }
 
-    public DateTime DateAndTime { get; set; }
+    public DateTime From { get; set; }
+
+    public DateTime To { get; set; }
 
     public bool IsDelete { get; set; }
+
+    public Session(Guid id, Guid scheduleId, DateTime from, DateTime to, bool isDelete)
+    {
+        Id = id;
+        ScheduleId = scheduleId;
+        From = from;
+        To = to;
+        IsDelete = isDelete;
+    }
 
     public virtual ICollection<ExserciseInSession> ExserciseInSessions { get; set; } = new List<ExserciseInSession>();
 
