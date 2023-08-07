@@ -433,7 +433,7 @@ namespace eGTS.Bussiness.SessionService
             return false;
         }
 
-        public async Task<bool> UpdateSession(Guid id, SessionUpdateViewModel request)
+        /*public async Task<bool> UpdateSession(Guid id, SessionUpdateViewModel request)
         {
 
             var session = await _context.Sessions.FindAsync(id);
@@ -460,7 +460,7 @@ namespace eGTS.Bussiness.SessionService
                 }
             }
             return false;
-        }
+        }*/
 
         public async Task<bool> UpdateSessionResult(Guid id, SessionResultUpdateViewModel request)
         {
@@ -578,5 +578,60 @@ namespace eGTS.Bussiness.SessionService
                 return false;
             }
         }
+
+        public async Task<bool> UpdateSessionV3(Guid id, SessionUpdateViewModel request)
+        {
+
+            var session = await _context.Sessions.FindAsync(id);
+            if (session == null)
+                return false;
+
+            var exSchedule = await _context.ExcerciseSchedules.FindAsync(session.ScheduleId);
+            if (exSchedule.From <= request.From && request.To <= exSchedule.To)
+            {
+                session.From = request.From;
+                session.To = request.To;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Unable to Update Session");
+                    return false;
+                }
+            }
+            else return false;
+        }
+
+        /*private async Task<bool> UpdateExcerciseListinSession(Guid SessionID, List<Guid> ExcerciseList)
+        {
+            var inDB = await _context.ExserciseInSessions.Where(a => a.SessionId == SessionID).ToListAsync();
+
+            foreach (var item in inDB)
+            {
+                var existInRequest = false;
+                foreach (var item1 in ExcerciseList)
+                {
+                    if (item.ExerciseId == item1) existInRequest = true; break;
+                }
+                if (existInRequest == false) {
+                    var tmp = await _context.ExserciseInSessions.SingleOrDefaultAsync(a => a.SessionId == SessionID && a.ExerciseId == item.ExerciseId);
+                    await _context.ExserciseInSessions.Remove(tmp);
+                }  
+            }
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to UpdateExcerciseListinSession");
+                return false;
+            }
+        }*/
     }
 }
