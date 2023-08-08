@@ -10,5 +10,6 @@ namespace eGTS_Backend.Data.ViewModel
     {
         public DateTime From { get; set; }
         public DateTime To { get; set; }
+        public List<Guid>? ListExcercise { get; set; }
     }
 }

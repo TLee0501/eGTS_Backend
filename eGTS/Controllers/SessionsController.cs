@@ -108,6 +108,8 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<IActionResult> UpdateSession(Guid sessionId, SessionUpdateViewModel request)
         {
+            if (request.From.Date < DateTime.Now.Date) 
+                return BadRequest(new ErrorResponse(400, "Sai ngày bắt đầu!"));
             if (await _sessionService.UpdateSessionV3(sessionId, request))
             {
                 _logger.LogInformation($"Update Session with ID: {sessionId}");
