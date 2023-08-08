@@ -262,5 +262,18 @@ namespace eGTS.Controllers
 
             return Ok(new SuccessResponse<List<SessionDetailViewModel>>(200, "Danh sách lịch tập!", result));
         }
+
+        [HttpGet("{packageGymerID}")]
+        public async Task<ActionResult<IEnumerable<SessionDateViewModel>>> GetExcerciseScheduleByPackageGymerID(Guid packageGymerID)
+        {
+            var result = await _exSCheduleService.GetExcerciseScheduleByPackageGymerID(packageGymerID);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy lịch tập!");
+            }
+
+            return Ok(new SuccessResponse<List<SessionDateViewModel>>(200, "Danh sách lịch tập!", result));
+        }
     }
 }
