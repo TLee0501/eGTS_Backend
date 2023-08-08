@@ -21,7 +21,7 @@ namespace eGTS.Bussiness.ReportService
         public async Task<List<GymerPackageActiveViewModel>> GetActivePackages()
         {
             var result = new List<GymerPackageActiveViewModel>();
-            var listPG = await _context.PackageGymers.Where(a => a.Status == "Đang hoạt động" && a.IsDelete ==  false).ToListAsync();
+            var listPG = await _context.PackageGymers.Where(a => a.Status == "Đang hoạt động" && a.IsDelete ==  false && a.From.Value.Month == DateTime.Now.Month && a.From.Value.Year == DateTime.Now.Year).ToListAsync();
             foreach (var item in listPG)
             {
                 var tmp = new GymerPackageActiveViewModel();
@@ -34,7 +34,7 @@ namespace eGTS.Bussiness.ReportService
             return result;
         }
 
-        public Task<List<GymerPackageActiveViewModel>> GetActivePackagesByTime(int month, int year)
+        public Task<ReportBasicViewModel> getBasicReportInDay()
         {
             throw new NotImplementedException();
         }
@@ -42,23 +42,7 @@ namespace eGTS.Bussiness.ReportService
         public async Task<List<GymerPackageActiveViewModel>> GetDonePackages()
         {
             var result = new List<GymerPackageActiveViewModel>();
-            var listPG = await _context.PackageGymers.Where(a => a.Status == "Đã hoàn thành" && a.IsDelete == false).ToListAsync();
-            foreach (var item in listPG)
-            {
-                var tmp = new GymerPackageActiveViewModel();
-                tmp.GymerId = item.GymerId;
-                tmp.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
-                tmp.PackageGymerId = item.Id;
-                tmp.PackageName = item.Name;
-                result.Add(tmp);
-            }
-            return result;
-        }
-
-        public async Task<List<GymerPackageActiveViewModel>> GetDonePackagesByTime(int month, int year)
-        {
-            var result = new List<GymerPackageActiveViewModel>();
-            var listPG = await _context.PackageGymers.Where(a => a.Status == "Đã hoàn thành" && a.IsDelete == false).ToListAsync();
+            var listPG = await _context.PackageGymers.Where(a => a.Status == "Đã hoàn thành" && a.IsDelete == false && a.To.Value.Month == DateTime.Now.Month && a.To.Value.Year == DateTime.Now.Year).ToListAsync();
             foreach (var item in listPG)
             {
                 var tmp = new GymerPackageActiveViewModel();
@@ -85,11 +69,6 @@ namespace eGTS.Bussiness.ReportService
                 result.Add(tmp);
             }
             return result;
-        }
-
-        public Task<List<GymerPackageActiveViewModel>> GetPausePackagesByTime(int month, int year)
-        {
-            throw new NotImplementedException();
         }
     }
 }

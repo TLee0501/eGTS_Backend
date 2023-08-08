@@ -13,8 +13,6 @@ namespace eGTS.Bussiness.ReportService
         Task<List<GymerPackageActiveViewModel>> GetDonePackages();
         Task<List<GymerPackageActiveViewModel>> GetPausePackages();
 
-        Task<List<GymerPackageActiveViewModel>> GetActivePackagesByTime(int month, int year);
-        Task<List<GymerPackageActiveViewModel>> GetDonePackagesByTime(int month, int year);
-        Task<List<GymerPackageActiveViewModel>> GetPausePackagesByTime(int month, int year);
+        Task<ReportBasicViewModel> getBasicReportInDay();       //Chua lam
     }
 }
