@@ -574,23 +574,23 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             //Tao session
             foreach (var item in request.listSession)
             {
-                var sessionResult = createSession(id, item);
+                var sessionResult = await createSession(id, item);
                 if (sessionResult == false) return false;
             }
             return true;
         }
 
-        private bool createSession(Guid scheduleID, DateTime from)
+        private async Task<bool> createSession(Guid scheduleID, DateTime from)
         {
-            var check = _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID) && s.From.Equals(from));
-            if (check.Any()) return false;
+            var check = _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID) && s.From.Equals(from)).ToListAsync();
+            if (check != null) return false;
             Guid id = Guid.NewGuid();
             Session session = new Session(id, scheduleID, from.AddHours(9), from.AddHours(10), false);
 
             try
             {
-                _context.Sessions.AddAsync(session);
-                _context.SaveChanges();
+                await _context.Sessions.AddAsync(session);
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -605,16 +605,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var schedule = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
 
             //Tim sessions
-            var sessions = new List<Session>();
-            var tmp = await _context.Sessions.Where(a => a.ScheduleId == schedule.Id && a.From.Date == date.Date).ToListAsync();
-            if (tmp != null)
-            {
-                foreach (var item1 in tmp)
-                {
-                    sessions.Add(item1);
-                }
-            }
-            else return null;
+            var sessions = await _context.Sessions.Where(a => a.ScheduleId == schedule.Id && a.From.Date == date.Date).ToListAsync();
+            if (sessions == null) return null;
 
             //Thêm bài tập vào buổi tập
             var result = new List<SessionDetailViewModel>();
@@ -626,6 +618,27 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 viewModel.From = item.From;
                 viewModel.To = item.To;
                 viewModel.Excercises = GetExcercises(item.Id);
+                result.Add(viewModel);
+            }
+            return result;
+        }
+
+        public async Task<List<SessionDateViewModel>> GetExcerciseScheduleByPackageGymerID(Guid packageGymerID)
+        {
+            var schedule = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
+
+            //Tim sessions
+            var sessions = await _context.Sessions.Where(a => a.ScheduleId == schedule.Id).ToListAsync();
+            if (sessions == null) return null;
+            
+            //Thêm bài tập vào buổi tập
+            var result = new List<SessionDateViewModel>();
+            foreach (var item in sessions)
+            {
+                var viewModel = new SessionDateViewModel();
+                viewModel.id = item.Id;
+                viewModel.ScheduleId = item.ScheduleId;
+                viewModel.Date = item.From.Date;
                 result.Add(viewModel);
             }
             return result;
