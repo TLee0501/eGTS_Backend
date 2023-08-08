@@ -89,6 +89,13 @@ namespace eGTS.Bussiness.PackageGymersService
                 gymerActive.PackageName = item.Name;
                 gymerActive.PackageGymerId = item.Id;
                 gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
+                gymerActive.From = (DateTime)item.From;
+                gymerActive.Status = item.Status;
+                gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
+                var s = _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == item.PackageId);
+                var isUpdate = true;
+                if (s == null) isUpdate = false;
+                gymerActive.isUpdate = isUpdate;
                 result.Add(gymerActive);
             }
 
@@ -106,6 +113,13 @@ namespace eGTS.Bussiness.PackageGymersService
                 gymerActive.PackageName = item.Name;
                 gymerActive.PackageGymerId = item.Id;
                 gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
+                gymerActive.From = (DateTime)item.From;
+                gymerActive.Status = item.Status;
+                gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
+                var s = _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == item.PackageId);
+                var isUpdate = true;
+                if (s == null) isUpdate = false;
+                gymerActive.isUpdate = isUpdate;
                 result.Add(gymerActive);
             }
 

@@ -12,5 +12,9 @@ namespace eGTS_Backend.Data.ViewModel
         public string GymerName { get; set; }
         public Guid PackageGymerId { get; set; }
         public string PackageName { get; set; }
+        public DateTime From { get; set; }
+        public string Status { get; set; }
+        public short? NumberOfSession { get; set; }
+        public bool isUpdate { get; set; }
     }
 }
