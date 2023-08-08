@@ -106,7 +106,7 @@ namespace eGTS.Controllers
         {
             try
             {
-                var result = await _packageGymersService.GetGymerPackageActiveByNE(NEID);
+                var result = _packageGymersService.GetGymerPackageActiveByNE(NEID);
                 return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Danh sách các gói", result));
             }
             catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
@@ -117,7 +117,7 @@ namespace eGTS.Controllers
         {
             try
             {
-                var result = await _packageGymersService.GetGymerPackageActiveByPT(PTID);
+                var result = _packageGymersService.GetGymerPackageActiveByPT(PTID);
                 return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Danh sách các gói", result));
             }
             catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
