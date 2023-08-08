@@ -587,10 +587,19 @@ namespace eGTS.Bussiness.SessionService
                 return false;
 
             var exSchedule = await _context.ExcerciseSchedules.FindAsync(session.ScheduleId);
-            if (exSchedule.From <= request.From && request.To <= exSchedule.To)
+            if (exSchedule.From <= request.From)
             {
                 session.From = request.From;
                 session.To = request.To;
+
+                if (request.ListExcercise.Count > 0)
+                {
+                    foreach (var item in request.ListExcercise)
+                    {
+                        var tmp = new ExserciseInSession(Guid.NewGuid(), session.Id, item);
+                        await _context.ExserciseInSessions.AddAsync(tmp);
+                    }
+                }
 
                 try
                 {
