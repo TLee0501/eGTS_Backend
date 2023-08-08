@@ -566,17 +566,33 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var pg = await _context.PackageGymers.FindAsync(request.PackageGymerID);
             if (pg == null) return false;
 
+            var checkSchedule = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
+            if (checkSchedule != null) return false;
+
             var id = Guid.NewGuid();
             var schedule = new ExcerciseSchedule(id, pg.GymerId, (Guid)pg.Ptid, request.PackageGymerID, request.From, request.To, false);
             await _context.ExcerciseSchedules.AddAsync(schedule);
-            await _context.SaveChangesAsync();
 
             //Tao session
             foreach (var item in request.listSession)
             {
-                var sessionResult = await createSession(id, item);
-                if (sessionResult == false) return false;
+                var check = await _context.Sessions.Where(s => s.ScheduleId.Equals(id) && s.From.Equals(item)).ToListAsync();
+                if (check.Count > 0) return false;
+                Guid Sid = Guid.NewGuid();
+                Session session = new Session(Sid, id, item, item.AddHours(1), false);
+
+                try
+                {
+                    await _context.Sessions.AddAsync(session);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Invalid Data");
+                    return false;
+                }
             }
+            await _context.SaveChangesAsync();
             return true;
         }
 
