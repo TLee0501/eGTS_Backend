@@ -248,8 +248,19 @@ namespace eGTS.Controllers
             }
             else
                 return BadRequest(new ErrorResponse(400, "Không thành công!"));
+        }
 
+        [HttpGet("{packageGymerID}")]
+        public async Task<ActionResult<IEnumerable<SessionDetailViewModel>>> GetExcerciseScheduleByPackageGymerIDAndDate(Guid packageGymerID, DateTime date)
+        {
+            var result = await _exSCheduleService.GetExcerciseScheduleByPackageGymerIDAndDate(packageGymerID, date);
 
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy lịch tập!");
+            }
+
+            return Ok(new SuccessResponse<List<SessionDetailViewModel>>(200, "Danh sách lịch tập!", result));
         }
     }
 }
