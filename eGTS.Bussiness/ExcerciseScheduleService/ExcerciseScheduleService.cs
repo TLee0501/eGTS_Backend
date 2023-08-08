@@ -566,8 +566,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var pg = await _context.PackageGymers.FindAsync(request.PackageGymerID);
             if (pg == null) return false;
 
-            var checkSchedule = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
-            if (checkSchedule != null) return false;
+            var checkS = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
+            if (checkS != null) return false;
 
             var id = Guid.NewGuid();
             var schedule = new ExcerciseSchedule(id, pg.GymerId, (Guid)pg.Ptid, request.PackageGymerID, request.From, request.To, false);
@@ -584,7 +584,6 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 try
                 {
                     await _context.Sessions.AddAsync(session);
-                    await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -598,7 +597,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
         private async Task<bool> createSession(Guid scheduleID, DateTime from)
         {
-            var check = _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID) && s.From.Equals(from)).ToListAsync();
+            var check = await _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID) && s.From.Equals(from)).ToListAsync();
             if (check != null) return false;
             Guid id = Guid.NewGuid();
             Session session = new Session(id, scheduleID, from.AddHours(9), from.AddHours(10), false);
