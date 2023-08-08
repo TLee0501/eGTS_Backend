@@ -236,9 +236,9 @@ namespace eGTS.Controllers
                 return BadRequest(new ErrorResponse(400, "Không có ngày bắt đầu!"));
             if (request.To.Equals("") || request.To == null)
                 return BadRequest(new ErrorResponse(400, "Không có ngày kết thúc!"));
-            if (request.From < DateTime.Now)
+            if (request.From.Date < DateTime.Now.Date)
                 return BadRequest(new ErrorResponse(400, "Sai ngày bắt đầu!"));
-            if (request.From > request.To)
+            if (request.From.Date > request.To.Date)
                 return BadRequest(new ErrorResponse(400, "Ngày bắt đầu lớn hơn ngày kết thúc!"));
 
             if (await _exSCheduleService.CreateExcerciseScheduleV3(request))
