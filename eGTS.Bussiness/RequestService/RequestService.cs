@@ -101,16 +101,14 @@ namespace eGTS.Bussiness.RequestService
                 if (requestDB.IsPt == true)
                 {
                     packageGymer.Ptid = requestDB.ReceiverId; 
-                    /*await _context.SaveChangesAsync();
-                    var schedule = await _excerciseScheduleService.CreateExcerciseScheduleV2(packageGymer.Id);
-                    if (schedule == false) return false;*/
                 }
                 else
                 {
                     packageGymer.Neid = requestDB.ReceiverId;
-                    /*await _context.SaveChangesAsync();
-                    var schedule = await _scheduleService.CreateNutritionSchedule(packageGymer.Id);
-                    if (schedule == false) return false;*/
+
+                    var id = Guid.NewGuid();
+                    var schedule = new NutritionSchedule(id, packageGymer.GymerId, (Guid)packageGymer.Neid, packageGymer.Id, false);
+                    await _context.NutritionSchedules.AddAsync(schedule);
                 }
             }
             else
