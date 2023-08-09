@@ -56,6 +56,9 @@ namespace eGTS.Bussiness.PackageGymersService
                 temp.From = item.From;
                 temp.To = item.To;
                 temp.Status = item.Status;
+                var checkPM = await _context.BodyPerameters.Where(a => a.GymerId == item.GymerId).ToListAsync();
+                if (checkPM.Any()) temp.hasBodyParameter = true;
+                else temp.hasBodyParameter = false;
                 result.Add(temp);
             }
             return result;
@@ -73,7 +76,6 @@ namespace eGTS.Bussiness.PackageGymersService
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
                 return false;
             }
         }
