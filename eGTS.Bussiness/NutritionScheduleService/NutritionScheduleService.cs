@@ -21,7 +21,7 @@ namespace eGTS.Bussiness.NutritionScheduleService
         public async Task<List<MealViewModel>> GetNutritionScheduleByGymerIDAndDate(Guid GymerId, DateTime date)
         {
             //Tim GymerPackageID
-            var package = await _context.PackageGymers.SingleOrDefaultAsync(a => a.GymerId == GymerId && a.Status != "Đã hoàn thành");
+            var package = await _context.PackageGymers.SingleOrDefaultAsync(a => a.GymerId == GymerId && a.Status != "Đã hoàn thành" && a.IsDelete == false && a.Neid != null);
             if (package == null) return null;
             var GymerPackageId = package.Id;
 
@@ -55,7 +55,7 @@ namespace eGTS.Bussiness.NutritionScheduleService
         public async Task<List<MealViewModel>> GetNutritionScheduleByGymerID(Guid GymerId)
         {
             //Tim GymerPackageID
-            var package = await _context.PackageGymers.SingleOrDefaultAsync(a => a.GymerId == GymerId && a.Status == "Đang hoạt động");
+            var package = await _context.PackageGymers.SingleOrDefaultAsync(a => a.GymerId == GymerId && a.Status == "Đang hoạt động" && a.IsDelete == false && a.Neid != null);
             if (package == null) return null;
             var GymerPackageId = package.Id;
 
@@ -124,7 +124,7 @@ namespace eGTS.Bussiness.NutritionScheduleService
         public async Task<List<MealViewModel>> GetMealByGymerIDAndDateAndMealTime(Guid GymerId, DateTime date, int MealTime)
         {
             //Tim GymerPackageID
-            var package = await _context.PackageGymers.SingleOrDefaultAsync(a => a.GymerId == GymerId && a.Status != "Đã hoàn thành");
+            var package = await _context.PackageGymers.SingleOrDefaultAsync(a => a.GymerId == GymerId && a.Status != "Đã hoàn thành" && a.IsDelete == false && a.Neid != null);
             if (package == null) return null;
             var GymerPackageId = package.Id;
 
