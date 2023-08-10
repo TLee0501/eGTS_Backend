@@ -29,6 +29,9 @@ namespace eGTS.Bussiness.ReportService
                 tmp.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 tmp.PackageGymerId = item.Id;
                 tmp.PackageName = item.Name;
+                tmp.From = (DateTime)item.From;
+                tmp.Status = item.Status;
+                tmp.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
                 result.Add(tmp);
             }
             return result;
@@ -50,6 +53,9 @@ namespace eGTS.Bussiness.ReportService
                 tmp.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 tmp.PackageGymerId = item.Id;
                 tmp.PackageName = item.Name;
+                tmp.From = (DateTime)item.From;
+                tmp.Status = item.Status;
+                tmp.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
                 result.Add(tmp);
             }
             return result;
@@ -66,6 +72,9 @@ namespace eGTS.Bussiness.ReportService
                 tmp.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 tmp.PackageGymerId = item.Id;
                 tmp.PackageName = item.Name;
+                tmp.From = (DateTime)item.From;
+                tmp.Status = item.Status;
+                tmp.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
                 result.Add(tmp);
             }
             return result;
