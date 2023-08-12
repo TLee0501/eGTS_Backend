@@ -27,7 +27,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             _logger = logger;
         }
 
-        public async Task<bool> CreateExcerciseSchedule(ExScheduleCreateViewModel model)
+        /*public async Task<bool> CreateExcerciseSchedule(ExScheduleCreateViewModel model)
         {
             Guid id = Guid.NewGuid();
             ExcerciseSchedule exSchedule = new ExcerciseSchedule(id, model.GymerId, model.Ptid, model.PackageGymerId, model.From, model.To, false);
@@ -44,7 +44,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 return false;
             }
 
-        }
+        }*/
 
         public async Task<List<ExScheduleViewModel>> DEBUGGetAllExcerciseSchedule(bool? isExpired)
         {
@@ -324,17 +324,24 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             return false;
         }
 
-        public async Task<bool> CreateExcerciseScheduleV2(Guid packageGymerID)
+        /*public async Task<bool> CreateExcerciseScheduleV2(Guid packageGymerID)
         {
             var pg = await _context.PackageGymers.FindAsync(packageGymerID);
             if (pg == null) return false;
 
             var id = Guid.NewGuid();
             var schedule = new ExcerciseSchedule(id, pg.GymerId, (Guid)pg.Ptid, packageGymerID, DateTime.Now, DateTime.Now.AddMonths(1), false);
+            var schedule = new ExcerciseSchedule
+            {
+                Id = Guid.NewGuid(),
+                GymerId = pg.GymerId,
+                PackageGymerId = packageGymerID,
+
+            }
             await _context.ExcerciseSchedules.AddAsync(schedule);
             await _context.SaveChangesAsync();
             return true;
-        }
+        }*/
 
         public async Task<List<SessionDetailViewModel>> GetExcerciseScheduleByGymerIDAndDate(Guid GymerId, DateTime date)
         {
@@ -404,6 +411,9 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     if (excercise.Description != null) viewModel.Description = excercise.Description;
                     if (excercise.Video != null) viewModel.Video = excercise.Video;
                     viewModel.CreateDate = excercise.CreateDate;
+                    viewModel.CalorieCumsumption = excercise.CalorieCumsumption;
+                    viewModel.RepTime = excercise.RepTime;
+                    viewModel.UnitOfMeasurement = excercise.UnitOfMeasurement;
                     result.Add(viewModel);
                 }
             }
@@ -570,7 +580,16 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             if (checkS != null) return false;
 
             var id = Guid.NewGuid();
-            var schedule = new ExcerciseSchedule(id, pg.GymerId, (Guid)pg.Ptid, request.PackageGymerID, request.From, request.To, false);
+            var schedule = new ExcerciseSchedule
+            {
+                Id = id,
+                GymerId = pg.GymerId,
+                Ptid = (Guid)pg.Ptid,
+                PackageGymerId = request.PackageGymerID,
+                From = request.From,
+                To = request.To,
+                IsDelete = false
+            };
             await _context.ExcerciseSchedules.AddAsync(schedule);
 
             //Tao session

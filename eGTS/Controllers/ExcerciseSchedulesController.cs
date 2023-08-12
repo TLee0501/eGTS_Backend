@@ -117,7 +117,7 @@ namespace eGTS.Controllers
 
         // POST: api/ExcerciseSchedules
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        /*[HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status201Created)]//CREATED
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
@@ -141,7 +141,7 @@ namespace eGTS.Controllers
             }
             else
                 return BadRequest(new ErrorResponse(400, "Invalid Data"));
-        }
+        }*/
 
         // DELETE: api/ExcerciseSchedules/5
         [HttpDelete("{id}")]

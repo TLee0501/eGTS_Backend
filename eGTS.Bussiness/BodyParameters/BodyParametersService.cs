@@ -34,8 +34,20 @@ namespace eGTS.Bussiness.BodyParameters
             if (account != null && account.Role.Equals("Gymer") && account.IsDelete == false)
             {
                 var bmi = BMIcalculator(model.Weight, model.Height);
-                BodyPerameter BPS = new BodyPerameter(id, model.GymerId, model.Goal,
-                    model.Weight, model.Height, bmi, model.Bone, model.Fat, model.Muscle, DateTime.Now, false);
+                var BPS = new BodyPerameter
+                {
+                    Id = Guid.NewGuid(),
+                    GymerId = model.GymerId,
+                    Goal = model.Goal,
+                    Weight = model.Weight,
+                    Height = model.Height,
+                    Bmi = bmi,
+                    Bone = model.Bone,
+                    Fat = model.Fat,
+                    Muscle = model.Muscle,
+                    CreateDate = DateTime.Now,
+                    IsDelete = false
+                };
                 try
                 {
                     await _context.BodyPerameters.AddAsync(BPS);

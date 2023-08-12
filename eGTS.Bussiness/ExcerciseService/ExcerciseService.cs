@@ -25,9 +25,20 @@ namespace eGTS.Bussiness.ExcerciseService
 
         public async Task<bool> CreateExcercise(ExcerciseCreateViewModel model)
         {
-            Guid id = Guid.NewGuid();
             DateTime createDate = DateTime.Now;
-            Excercise excercise = new Excercise(id, model.Ptid, model.Name, model.Description, model.Video, createDate, false);
+            Excercise excercise = new Excercise
+            {
+                Id = Guid.NewGuid(),
+                Ptid = model.Ptid,
+                Name = model.Name,
+                Description = model.Description,
+                Video = model.Video,
+                CreateDate = createDate,
+                IsDelete = false,
+                RepTime = model.RepTime,
+                UnitOfMeasurement = model.UnitOfMeasurement,
+                CalorieCumsumption = model.CalorieCumsumption
+            };
             try
             {
                 await _context.Excercises.AddAsync(excercise);
@@ -44,8 +55,12 @@ namespace eGTS.Bussiness.ExcerciseService
 
         public async Task<bool> CreateExcerciseInType(ExcerciseInTypeCreateViewModel model)
         {
-            Guid id = Guid.NewGuid();
-            ExerciseInExerciseType EIT = new ExerciseInExerciseType(id, model.ExerciseTypeId, model.ExerciseId);
+            ExerciseInExerciseType EIT = new ExerciseInExerciseType
+            {
+                Id = Guid.NewGuid(),
+                ExerciseTypeId = model.ExerciseTypeId,
+                ExerciseId = model.ExerciseId
+            };
             try
             {
                 await _context.ExerciseInExerciseTypes.AddAsync(EIT);
@@ -61,9 +76,14 @@ namespace eGTS.Bussiness.ExcerciseService
 
         public async Task<bool> CreateExcerciseType(ExcerciseTypeCreateViewModel model)
         {
-            Guid id = Guid.NewGuid();
             DateTime createDate = DateTime.Now;
-            ExcerciseType excerciseType = new ExcerciseType(id, model.Name, model.Ptid, false);
+            ExcerciseType excerciseType = new ExcerciseType
+            {
+                Id = Guid.NewGuid(),
+                Name = model.Name,
+                Ptid = model.Ptid,
+                IsDelete = false
+            };
             try
             {
                 await _context.ExcerciseTypes.AddAsync(excerciseType);
@@ -174,6 +194,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Video = e.Video;
                 result.CreateDate = e.CreateDate;
                 result.IsDelete = e.IsDelete;
+                result.CalorieCumsumption = e.CalorieCumsumption;
+                result.RepTime = e.RepTime;
+                result.UnitOfMeasurement = e.UnitOfMeasurement;
                 resultList.Add(result);
             }
 
@@ -213,11 +236,13 @@ namespace eGTS.Bussiness.ExcerciseService
 
             foreach (ExcerciseType e in excerciseType)
             {
-                ExcerciseTypeViewModel result = new ExcerciseTypeViewModel();
-                result.Id = e.Id;
-                result.Ptid = e.Ptid;
-                result.Name = e.Name;
-                result.IsDelete = e.IsDelete;
+                ExcerciseTypeViewModel result = new ExcerciseTypeViewModel
+                {
+                    Id = e.Id,
+                    Ptid = e.Ptid,
+                    Name = e.Name,
+                    IsDelete = e.IsDelete,
+                };
                 resultList.Add(result);
             }
 
@@ -243,6 +268,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Video = excercise.Video;
                 result.CreateDate = excercise.CreateDate;
                 result.IsDelete = excercise.IsDelete;
+                result.CalorieCumsumption = excercise.CalorieCumsumption;
+                result.RepTime = excercise.RepTime;
+                result.UnitOfMeasurement = excercise.UnitOfMeasurement;
 
                 return result;
             }
@@ -263,6 +291,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Video = e.Video;
                 result.CreateDate = e.CreateDate;
                 result.IsDelete = e.IsDelete;
+                result.CalorieCumsumption = e.CalorieCumsumption;
+                result.RepTime = e.RepTime;
+                result.UnitOfMeasurement = e.UnitOfMeasurement;
                 resultList.Add(result);
             }
 
@@ -286,6 +317,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Video = e.Video;
                 result.CreateDate = e.CreateDate;
                 result.IsDelete = e.IsDelete;
+                result.CalorieCumsumption = e.CalorieCumsumption;
+                result.RepTime = e.RepTime;
+                result.UnitOfMeasurement = e.UnitOfMeasurement;
                 resultList.Add(result);
             }
 
@@ -310,6 +344,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 result.Video = excercise.Video;
                 result.CreateDate = excercise.CreateDate;
                 result.IsDelete = excercise.IsDelete;
+                result.CalorieCumsumption = excercise.CalorieCumsumption;
+                result.RepTime = excercise.RepTime;
+                result.UnitOfMeasurement = excercise.UnitOfMeasurement;
                 resultList.Add(result);
             }
             if (resultList.Count > 0)

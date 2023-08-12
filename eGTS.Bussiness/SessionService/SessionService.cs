@@ -23,8 +23,12 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<bool> CreateExcerciseInSession(ExInSessionCreateViewModel model)
         {
-            Guid id = Guid.NewGuid();
-            ExserciseInSession EIS = new ExserciseInSession(id, model.SessionId, model.ExerciseId);
+            ExserciseInSession EIS = new ExserciseInSession
+            {
+                Id = Guid.NewGuid(),
+                SessionId = model.SessionId,
+                ExerciseId = model.ExerciseId
+        };
             try
             {
                 await _context.ExserciseInSessions.AddAsync(EIS);
@@ -248,6 +252,9 @@ namespace eGTS.Bussiness.SessionService
                 ExV.Video = excercise.Video;
                 ExV.CreateDate = excercise.CreateDate;
                 ExV.IsDelete = excercise.IsDelete;
+                ExV.CalorieCumsumption = excercise.CalorieCumsumption;
+                ExV.RepTime = excercise.RepTime;
+                ExV.UnitOfMeasurement = excercise.UnitOfMeasurement;
 
                 excerciseList.Add(ExV);
             }
@@ -282,6 +289,9 @@ namespace eGTS.Bussiness.SessionService
                 ExV.Video = excercise.Video;
                 ExV.CreateDate = excercise.CreateDate;
                 ExV.IsDelete = excercise.IsDelete;
+                ExV.CalorieCumsumption = excercise.CalorieCumsumption;
+                ExV.RepTime = excercise.RepTime;
+                ExV.UnitOfMeasurement = excercise.UnitOfMeasurement;
 
                 excerciseList.Add(ExV);
             }
@@ -565,7 +575,12 @@ namespace eGTS.Bussiness.SessionService
                 foreach (var item in model.ListExcerciseID)
                 {
                     var EInSID = Guid.NewGuid();
-                    var EinS = new ExserciseInSession(EInSID, id, item);
+                    var EinS = new ExserciseInSession
+                    {
+                        Id = Guid.NewGuid(),
+                        SessionId = id,
+                        ExerciseId = item
+                    };
                     await _context.ExserciseInSessions.AddAsync(EinS);
                 }
 
@@ -596,7 +611,12 @@ namespace eGTS.Bussiness.SessionService
                 {
                     foreach (var item in request.ListExcercise)
                     {
-                        var tmp = new ExserciseInSession(Guid.NewGuid(), session.Id, item);
+                        var tmp = new ExserciseInSession
+                        {
+                            Id = Guid.NewGuid(),
+                            SessionId = session.Id,
+                            ExerciseId = item
+                        };
                         await _context.ExserciseInSessions.AddAsync(tmp);
                     }
                 }
