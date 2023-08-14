@@ -108,8 +108,10 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<IActionResult> UpdateSession(Guid sessionId, SessionUpdateViewModel request)
         {
-            if (request.From.Date < DateTime.Now.Date) 
+            if (request.DateTime.Date < DateTime.Now.Date) 
                 return BadRequest(new ErrorResponse(400, "Sai ngày bắt đầu!"));
+            if (TimeSpan.Parse(request.To) < TimeSpan.Parse(request.From))
+                return BadRequest(new ErrorResponse(400, "Sai giờ bắt đầu và kết thúc!"));
             if (await _sessionService.UpdateSessionV3(sessionId, request))
             {
                 _logger.LogInformation($"Update Session with ID: {sessionId}");
@@ -170,7 +172,7 @@ namespace eGTS.Controllers
                 return NoContent();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<Session>> CreateSessionV2(SessionCreateViewModelV2 model)
         {
 
@@ -191,6 +193,6 @@ namespace eGTS.Controllers
             }
             else
                 return BadRequest(new ErrorResponse(400, "Dữ liệu bị sai"));
-        }
+        }*/
     }
 }
