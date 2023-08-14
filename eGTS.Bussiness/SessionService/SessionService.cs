@@ -42,7 +42,7 @@ namespace eGTS.Bussiness.SessionService
             }
         }
 
-        public async Task<bool> CreateSession(Guid scheduleID, DateTime startTime, double during)
+        /*public async Task<bool> CreateSession(Guid scheduleID, DateTime startTime, double during)
         {
             var exSchedule = await _excerciseScheduleService.GetExcerciseScheduleByID(scheduleID);
             if (exSchedule != null)
@@ -72,7 +72,7 @@ namespace eGTS.Bussiness.SessionService
             }
             else
                 return false;
-        }
+        }*/
 
         public async Task<bool> CreateSessionResult(SessionResultCreateViewModel model)
         {
@@ -556,7 +556,7 @@ namespace eGTS.Bussiness.SessionService
             return null;
         }
 
-        public async Task<bool> CreateSessionV2(SessionCreateViewModelV2 model)
+        /*public async Task<bool> CreateSessionV2(SessionCreateViewModelV2 model)
         {
             var pg = await _context.PackageGymers.FindAsync(model.PackageGymerID);
             if (pg == null) return false;
@@ -592,7 +592,7 @@ namespace eGTS.Bussiness.SessionService
                 _logger.LogError("Invalid Data");
                 return false;
             }
-        }
+        }*/
 
         public async Task<bool> UpdateSessionV3(Guid id, SessionUpdateViewModel request)
         {
@@ -601,13 +601,16 @@ namespace eGTS.Bussiness.SessionService
             if (session == null)
                 return false;
 
-            var exSchedule = await _context.ExcerciseSchedules.FindAsync(session.ScheduleId);
-            if (exSchedule.From <= request.From)
-            {
-                session.From = request.From;
-                session.To = request.To;
+            var From = request.DateTime.Add(TimeSpan.Parse(request.From));
+            var To = request.DateTime.Add(TimeSpan.Parse(request.To));
 
-                if (request.ListExcercise.Count > 0)
+            var exSchedule = await _context.ExcerciseSchedules.FindAsync(session.ScheduleId);
+            if (exSchedule.From <= request.DateTime)
+            {
+                session.From = From;
+                session.To = To;
+
+                if (request.ListExcercise.Count > 0 || request.ListExcercise != null)
                 {
                     foreach (var item in request.ListExcercise)
                     {

@@ -9,7 +9,7 @@ namespace eGTS.Bussiness.SessionService
 {
     public interface ISessionService
     {
-        Task<bool> CreateSession(Guid scheduleID, DateTime startTime, double during);
+        //Task<bool> CreateSession(Guid scheduleID, DateTime startTime, double during);
         Task<bool> CreateSessionResult(SessionResultCreateViewModel model);
         Task<bool> CreateExcerciseInSession(ExInSessionCreateViewModel model);
         //Task<bool> UpdateSession(Guid id, SessionUpdateViewModel request);
@@ -32,7 +32,7 @@ namespace eGTS.Bussiness.SessionService
         Task<List<ActiveSessionsViewModel>> GetListOfActiveSessionByGymerID(Guid GymerID);
         Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithSessionID(Guid SessionID);
         Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime);
-        Task<bool> CreateSessionV2(SessionCreateViewModelV2 model);
+        //Task<bool> CreateSessionV2(SessionCreateViewModelV2 model);
         Task<bool> UpdateSessionV3(Guid id, SessionUpdateViewModel request);
 
     }
