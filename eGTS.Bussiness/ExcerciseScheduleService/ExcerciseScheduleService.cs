@@ -7,6 +7,7 @@ using Google.Api.Gax;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -368,7 +369,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             foreach (var item in scheduleIDs)
             {
                 var tmp = await _context.Sessions.Where(a => a.ScheduleId == item && a.From.Date == date.Date).ToListAsync();
-                if (tmp != null)
+                if (tmp.Count > 0 || tmp.IsNullOrEmpty() == false)
                 {
                     foreach (var item1 in tmp)
                     {
