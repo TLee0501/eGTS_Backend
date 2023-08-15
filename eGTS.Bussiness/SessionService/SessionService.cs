@@ -601,8 +601,8 @@ namespace eGTS.Bussiness.SessionService
             if (session == null)
                 return false;
 
-            var From = request.DateTime.Add(TimeSpan.Parse(request.From));
-            var To = request.DateTime.Add(TimeSpan.Parse(request.To));
+            var From = request.DateTime.Date.Add(TimeSpan.Parse(request.From));
+            var To = request.DateTime.Date.Add(TimeSpan.Parse(request.To));
 
             var exSchedule = await _context.ExcerciseSchedules.FindAsync(session.ScheduleId);
             if (exSchedule.From <= request.DateTime)
