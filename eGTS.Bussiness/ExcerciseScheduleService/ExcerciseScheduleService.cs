@@ -532,7 +532,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             foreach (var item in packageGymers)
             {
                 var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
-                if (schedules == null)
+                if (schedules != null)
                 {
                     foreach (var item1 in schedules)
                     {
