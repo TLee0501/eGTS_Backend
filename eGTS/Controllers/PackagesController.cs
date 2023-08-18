@@ -43,6 +43,18 @@ namespace eGTS.Controllers
                 return StatusCode(204);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PackageMobileViewModel>>> GetPackagesForMobile()
+        {
+            var result = await _packageService.GetPackagesForMobile();
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<PackageMobileViewModel>>(200, "List of Packages found", result));
+            }
+            else
+                return StatusCode(204);
+        }
+
         // GET: api/Packages/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Package>> GetPackage(Guid id)
