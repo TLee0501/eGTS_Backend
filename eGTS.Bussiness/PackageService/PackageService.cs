@@ -95,9 +95,9 @@ namespace eGTS.Bussiness.PackageService
                     }
                     if (package.Necost != null)
                     {
-                        if (package.Ptcost != null)
+                        if (package.NumberOfsession != null)
                         {
-                            oriPrice = (double)(oriPrice + package.Ptcost);
+                            oriPrice = (double)(oriPrice + package.Necost);
                         }
                         else
                         {
