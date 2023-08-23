@@ -157,5 +157,35 @@ namespace eGTS.Bussiness.MealService
 
             return true;
         }
+
+        public async Task<bool> UpdateMeal(MealCreateViewModel request)
+        {
+            var nuSchedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
+
+            var inDB = await _context.Meals.Where(a => a.NutritionScheduleId == nuSchedule.Id && a.IsDelete == false).ToListAsync();
+            foreach (var item in inDB)
+            {
+                if (item.Datetime.Date >= request.FromDatetime.Date && item.Datetime.Date <= request.ToDatetime.Date)
+                {
+                    item.IsDelete = true;
+
+                    var fim = await _context.FoodAndSupplimentInMeals.Where(a => a.MealId == item.Id).ToListAsync();
+                    foreach (var item1 in fim)
+                    {
+                        _context.FoodAndSupplimentInMeals.Remove(item1);
+                    }
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                await CreateMeal(request);
+                return true;
+            } catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }
