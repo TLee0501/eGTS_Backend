@@ -56,34 +56,17 @@ namespace eGTS.Controllers
 
         // PUT: api/Meals/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*[HttpPut("{id}")]
-        public async Task<IActionResult> PutMeal(Guid id, Meal meal)
+        [HttpPut]
+        public async Task<IActionResult> UpdateMeal(MealCreateViewModel request)
         {
-            if (id != meal.Id)
-            {
-                return BadRequest();
-            }
+            if (request.ToDatetime < request.FromDatetime) return BadRequest("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!");
+            if (request.MonAnSang == null && request.MonAnTrua == null && request.MonAnToi == null && request.MonAnTruocTap == null)
+                return BadRequest("Vui lòng nhập món ăn để cập nhật  thực đơn!");
 
-            _context.Entry(meal).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MealExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }*/
+            var result = await _mealService.UpdateMeal(request);
+            if (result == false) return BadRequest("Cập nhật thực đơn thất bại!");
+            return Ok("Cập nhật  thực đơn thành công!");
+        }
 
         // POST: api/Meals
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
