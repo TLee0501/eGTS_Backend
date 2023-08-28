@@ -17,5 +17,7 @@ namespace eGTS.Bussiness.PackageGymersService
         List<GymerPackageActiveViewModel> GetGymerPackageActiveByNE(Guid NEID);
         Task<bool> CheckAlreadyPackGymerHasCenter(Guid id);
         Task<bool> CheckAlreadyPackGymerHasNE(Guid id);
+        Task<List<AccountIdAndNameViewModel>> GetGymersByNE(Guid NEID);
+        List<GymerPackageActiveViewModel> GetGymerPackagesByNEAndGymer(Guid NEID, Guid GymerId);
     }
 }
