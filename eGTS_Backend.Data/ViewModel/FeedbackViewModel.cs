@@ -16,5 +16,6 @@ namespace eGTS_Backend.Data.ViewModel
         public string PTOrNeName { get; set; }
         public short Rate { get; set; }
         public string Feedback1 { get; set; } = null!;
+        public bool IsDelete { get; set; }
     }
 }

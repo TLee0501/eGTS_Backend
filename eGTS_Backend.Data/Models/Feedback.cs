@@ -19,17 +19,6 @@ public partial class FeedBack
 
     public bool IsDelete { get; set; }
 
-    public FeedBack(Guid id, Guid ptidorNeid, Guid packageGymerId, short rate, string feedback1, DateTime createDate, bool isDelete)
-    {
-        Id = id;
-        PtidorNeid = ptidorNeid;
-        PackageGymerId = packageGymerId;
-        Rate = rate;
-        Feedback1 = feedback1;
-        CreateDate = createDate;
-        IsDelete = isDelete;
-    }
-
     public virtual PackageGymer PackageGymer { get; set; } = null!;
 
     public virtual Account PtidorNe { get; set; } = null!;
