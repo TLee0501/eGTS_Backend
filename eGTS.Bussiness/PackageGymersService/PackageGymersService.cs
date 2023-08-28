@@ -148,5 +148,54 @@ namespace eGTS.Bussiness.PackageGymersService
             }
             return false;
         }
+
+        public async Task<List<AccountIdAndNameViewModel>> GetGymersByNE(Guid NEID)
+        {
+            var pgs = await _context.PackageGymers.Where(a => a.Neid == NEID && a.IsDelete == false).ToListAsync();
+            var gymersDup = new List<Guid>();
+            foreach (var item in pgs)
+            {
+                gymersDup.Add(item.GymerId);
+            }
+
+            var gymers = gymersDup.Distinct().ToList();
+            var result = new List<AccountIdAndNameViewModel>();
+            foreach (var item in gymers)
+            {
+                var account = await _context.Accounts.FindAsync(item);
+                var tmp = new AccountIdAndNameViewModel()
+                {
+                    Id = item,
+                    Fullname = account.Fullname
+                };
+                result.Add(tmp);
+            }
+            return result;
+        }
+
+        public List<GymerPackageActiveViewModel> GetGymerPackagesByNEAndGymer(Guid NEID, Guid GymerId)
+        {
+            List<GymerPackageActiveViewModel> result = new List<GymerPackageActiveViewModel>();
+
+            var listGymerPackage = _context.PackageGymers.Where(a => a.Neid == NEID && a.GymerId == GymerId && a.IsDelete == false).ToList();
+            foreach (var item in listGymerPackage)
+            {
+                var gymerActive = new GymerPackageActiveViewModel();
+                gymerActive.GymerId = item.GymerId;
+                gymerActive.PackageName = item.Name;
+                gymerActive.PackageGymerId = item.Id;
+                gymerActive.GymerName = _context.Accounts.Find(item.GymerId).Fullname;
+                gymerActive.From = (DateTime)item.From;
+                gymerActive.Status = item.Status;
+                gymerActive.NumberOfSession = _context.Packages.Find(item.PackageId).NumberOfsession;
+                var s = _context.ExcerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
+                var isUpdate = true;
+                if (s == null) isUpdate = false;
+                gymerActive.isUpdate = isUpdate;
+                result.Add(gymerActive);
+            }
+
+            return result;
+        }
     }
 }

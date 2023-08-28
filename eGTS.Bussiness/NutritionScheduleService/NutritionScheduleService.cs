@@ -154,5 +154,34 @@ namespace eGTS.Bussiness.NutritionScheduleService
             }
             return result;
         }
+
+        public async Task<List<MealViewModel>> GetMealByPackageGymerIDAndDateAndMealTime(Guid PackageGymerID, DateTime date, int MealTime)
+        {
+            //Tim ScheduleID
+            var schedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == PackageGymerID);
+            if (schedule == null) return null;
+            var ScheduleID = schedule.Id;
+
+            //Tim Meal
+            var meals = await _context.Meals.Where(a => a.NutritionScheduleId == ScheduleID && a.MealTime == MealTime).ToListAsync();
+            if (meals == null) return null;
+
+            //Search Meal
+            var result = new List<MealViewModel>();
+            foreach (var item in meals)
+            {
+                if (item.Datetime.Date == date.Date)
+                {
+                    var tmp = new MealViewModel();
+                    tmp.Id = item.Id;
+                    tmp.NutritionScheduleId = ScheduleID;
+                    tmp.Datetime = item.Datetime.Date;
+                    tmp.MealTime = item.MealTime;
+                    tmp.FoodAndSuppliment = GetFoodInMeals(item.Id);
+                    result.Add(tmp);
+                }
+            }
+            return result;
+        }
     }
 }

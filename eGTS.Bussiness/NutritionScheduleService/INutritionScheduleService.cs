@@ -1,10 +1,4 @@
 ﻿using eGTS_Backend.Data.ViewModel;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.NutritionScheduleService
 {
@@ -18,5 +12,6 @@ namespace eGTS.Bussiness.NutritionScheduleService
         Task<List<MealViewModel>> GetNutritionScheduleByGymerIDAndDate(Guid GymerId, DateTime date);
         Task<List<MealViewModel>> GetNutritionScheduleByGymerID(Guid GymerId);
         Task<bool> CreateNutritionSchedule(Guid PackageGymerID);
+        Task<List<MealViewModel>> GetMealByPackageGymerIDAndDateAndMealTime(Guid PackageGymerID, DateTime date, int MealTime);
     }
 }
