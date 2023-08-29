@@ -114,5 +114,50 @@ namespace eGTS.Bussiness.FeedbackService
             }
             return 0;
         }
+
+        public async Task<List<FeedbackViewModel>> GetFeedbackListByExpertID(Guid expertID, bool? isDelete)
+        {
+            var resultList = new List<FeedbackViewModel>();
+            List<FeedBack> feedbackList = new List<FeedBack>();
+
+            switch (isDelete)
+            {
+                case true:
+                    feedbackList = _context.FeedBacks.Where(f => f.PtidorNeid.Equals(expertID) && f.IsDelete == true).ToList();
+                    break;
+                case false:
+                    feedbackList = _context.FeedBacks.Where(f => f.PtidorNeid.Equals(expertID) && f.IsDelete == false).ToList();
+                    break;
+                default:
+                    feedbackList = _context.FeedBacks.Where(f => f.PtidorNeid.Equals(expertID)).ToList();
+                    break;
+            }
+
+            foreach (var feedback in feedbackList)
+            {
+                var result = new FeedbackViewModel();
+                result.Id = feedback.Id;
+                result.PtidorNeid = feedback.PtidorNeid;
+                result.PTOrNeName = _context.Accounts.Find(feedback.PtidorNeid).Fullname;
+                result.PackageGymerId = feedback.PackageGymerId;
+                var pg = _context.PackageGymers.Find(feedback.PackageGymerId);
+                result.PackageName = pg.Name;
+                result.GymerName = _context.Accounts.Find(pg.GymerId).Fullname;
+                result.Rate = feedback.Rate;
+                result.Feedback1 = feedback.Feedback1;
+                result.IsDelete = feedback.IsDelete;
+
+                resultList.Add(result);
+            }
+            if (resultList.Count > 0)
+                return resultList;
+            else
+                return null;
+        }
+
+        public Task<FeedbackAverageViewModel> GetAverageRatingByExpertID(Guid expertID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
