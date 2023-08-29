@@ -9,5 +9,7 @@ namespace eGTS.Bussiness.FeedbackService
         Task<bool> ChangeisDeleteFeedback(Guid FeedbackID, bool status);
         Task<bool> REMOVEFeedback(Guid FeedbackID);
         Task<List<FeedbackViewModel>> DEBUGGetALLFeedback();
+        Task<List<FeedbackViewModel>> GetFeedbackListByExpertID(Guid expertID, bool? isDelete);
+        Task<FeedbackAverageViewModel> GetAverageRatingByExpertID(Guid expertID);
     }
 }

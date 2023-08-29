@@ -151,6 +151,11 @@ namespace eGTS.Controllers
                     break;
             }
         }
+
+        /// <summary>
+        /// Get ALL Feedback(DEBUG ONLY!)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
@@ -165,5 +170,21 @@ namespace eGTS.Controllers
             else
                 return NoContent();
         }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<IEnumerable<FeedbackViewModel>>> GetFeedbackListByExpertID(Guid expertID, bool? isDelete)
+        {
+            var result = await _feedbackService.GetFeedbackListByExpertID(expertID, isDelete);
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<FeedbackViewModel>>(200, "Danh sách các feedback", result));
+            }
+            else
+                return NoContent();
+        }
+
     }
 }
