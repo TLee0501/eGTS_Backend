@@ -186,5 +186,42 @@ namespace eGTS.Controllers
                 return NoContent();
         }
 
+        /// <summary>
+        /// Get the feedback by it's ID
+        /// </summary>
+        /// <param name="feedbackID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<FeedbackViewModel>> GetFeedbackByID(Guid feedbackID)
+        {
+            var result = await _feedbackService.GetFeedbackByID(feedbackID);
+            if (result != null)
+                return Ok(new SuccessResponse<FeedbackViewModel>(200, "Tìm thấy feedback", result));
+            else
+                return NoContent();
+        }
+
+
+        /// <summary>
+        /// get the average feedback rating for expert by their ID(uses diffence viewmodel)
+        /// </summary>
+        /// <param name="expertID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<FeedbackAverageViewModel>> GetAverageRatingByExpertID(Guid expertID)
+        {
+            var result = await _feedbackService.GetAverageRatingByExpertID(expertID);
+            if (result != null)
+                return Ok(new SuccessResponse<FeedbackAverageViewModel>(200, $"Rating trung bình của chuyên gia với ID: {expertID}", result));
+            else
+                return NoContent();
+        }
+
     }
 }
