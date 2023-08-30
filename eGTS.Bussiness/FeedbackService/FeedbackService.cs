@@ -2,6 +2,7 @@
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace eGTS.Bussiness.FeedbackService
 {
@@ -155,9 +156,44 @@ namespace eGTS.Bussiness.FeedbackService
                 return null;
         }
 
-        public Task<FeedbackAverageViewModel> GetAverageRatingByExpertID(Guid expertID)
+        public async Task<FeedbackAverageViewModel> GetAverageRatingByExpertID(Guid expertID)
         {
-            throw new NotImplementedException();
+            var feedbackList = _context.FeedBacks.Where(f => f.PtidorNeid.Equals(expertID) && f.IsDelete == false).ToList();
+            if (feedbackList.Count == 0) return null;
+
+            var listRating = new List<int>();
+
+            foreach (var feedback in feedbackList)
+                listRating.Add(feedback.Rate);
+
+            var result = new FeedbackAverageViewModel();
+            result.PtidorNeid = expertID;
+            result.PTOrNeName = _context.Accounts.Find(expertID).Fullname;
+            result.AverageRate = listRating.Average();
+
+            return result;
+        }
+
+        public async Task<FeedbackViewModel> GetFeedbackByID(Guid feedbackID)
+        {
+            var feedback = _context.FeedBacks.Find(feedbackID);
+
+            if (feedback == null) return null;
+
+            var result = new FeedbackViewModel();
+            result.Id = feedback.Id;
+            result.PtidorNeid = feedback.PtidorNeid;
+            result.PTOrNeName = _context.Accounts.Find(feedback.PtidorNeid).Fullname;
+            result.PackageGymerId = feedback.PackageGymerId;
+            var pg = _context.PackageGymers.Find(feedback.PackageGymerId);
+            result.PackageName = pg.Name;
+            result.GymerName = _context.Accounts.Find(pg.GymerId).Fullname;
+            result.Rate = feedback.Rate;
+            result.Feedback1 = feedback.Feedback1;
+            result.IsDelete = feedback.IsDelete;
+
+            return result;
+
         }
     }
 }

@@ -11,5 +11,6 @@ namespace eGTS.Bussiness.FeedbackService
         Task<List<FeedbackViewModel>> DEBUGGetALLFeedback();
         Task<List<FeedbackViewModel>> GetFeedbackListByExpertID(Guid expertID, bool? isDelete);
         Task<FeedbackAverageViewModel> GetAverageRatingByExpertID(Guid expertID);
+        Task<FeedbackViewModel> GetFeedbackByID(Guid feedbackID);
     }
 }
