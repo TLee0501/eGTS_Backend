@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Web.Http;
+using System.Web.Mvc;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
@@ -9,13 +10,13 @@ namespace eGTS.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class VNPayController : ControllerBase
+    public class VNPayController : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<string>> CreatePayment()
         {
             //Get Config Info
-            string vnp_Returnurl = "https://egtsvnpay.azurewebsites.net/api/PaymentRecall/PaymentConfirm"; //URL nhan ket qua tra ve 
+            string vnp_Returnurl = "https://egtsvnpay.azurewebsites.net/api/VNPayController/PaymentConfirm"; //URL nhan ket qua tra ve 
             string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = "4S638AXZ"; //Ma website
             string vnp_HashSecret = "MJDZLNLYFKAXDYBAKINTSTMPYYNSCMCA"; //Chuoi bi mat
@@ -88,6 +89,54 @@ namespace eGTS.Controllers
 
             return Ok();
         }*/
+
+        [HttpGet]
+        public async Task<IHttpActionResult> PaymentConfirm()
+        {
+            var queryParameters = HttpContext.Request.Query;
+            if (!queryParameters.IsNullOrEmpty())
+            {
+                string hashSecret = "MJDZLNLYFKAXDYBAKINTSTMPYYNSCMCA"; //Chuỗi bí mật
+                var vnpayData = queryParameters;
+                VnPayLibrary pay = new VnPayLibrary();
+
+                //lấy toàn bộ dữ liệu được trả về
+                foreach (var s in vnpayData)
+                {
+                    if (!string.IsNullOrEmpty(s.Key) && s.Value.ToString().StartsWith("vnp_"))
+                    {
+                        pay.AddResponseData(s.Key, s.Value);
+                    }
+                }
+
+                long orderId = Convert.ToInt64(pay.GetResponseData("vnp_TxnRef")); //mã hóa đơn
+                long vnpayTranId = Convert.ToInt64(pay.GetResponseData("vnp_TransactionNo")); //mã giao dịch tại hệ thống VNPAY
+                string vnp_ResponseCode = pay.GetResponseData("vnp_ResponseCode"); //response code: 00 - thành công, khác 00 - xem thêm https://sandbox.vnpayment.vn/apis/docs/bang-ma-loi/
+                string vnp_SecureHash = queryParameters.FirstOrDefault(q => q.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
+
+                bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret); //check chữ ký đúng hay không?
+
+                if (checkSignature)
+                {
+                    if (vnp_ResponseCode == "00")
+                    {
+                        //Thanh toán thành công
+                        Console.WriteLine("Thanh toán thành công hóa đơn " + orderId + " | Mã giao dịch: " + vnpayTranId);
+                    }
+                    else
+                    {
+                        //Thanh toán không thành công. Mã lỗi: vnp_ResponseCode
+                        Console.WriteLine("Có lỗi xảy ra trong quá trình xử lý hóa đơn " + orderId + " | Mã giao dịch: " + vnpayTranId + " | Mã lỗi: " + vnp_ResponseCode);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Có lỗi xảy ra trong quá trình xử lý");
+                }
+            }
+
+            return (IHttpActionResult)Ok();
+        }
     }
 }
 
