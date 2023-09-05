@@ -20,6 +20,7 @@ using eGTS.Bussiness.BodyParameters;
 using eGTS.Bussiness.ReportService;
 using eGTS.Bussiness.FeedbackService;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -33,7 +34,6 @@ builder.Services.AddDbContext<EGtsContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("EGTSDbConnection"));
 });
-
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -50,6 +50,7 @@ builder.Services.AddScoped<IBodyParametersService, BodyParametersService>();
 builder.Services.AddScoped<IMealService, MealService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();
