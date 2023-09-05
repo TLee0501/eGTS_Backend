@@ -91,7 +91,7 @@ namespace eGTS.Controllers
         }*/
 
         [HttpGet]
-        public async Task<IHttpActionResult> PaymentConfirm()
+        public void PaymentConfirm()
         {
             var queryParameters = HttpContext.Request.Query;
             if (!queryParameters.IsNullOrEmpty())
@@ -135,7 +135,7 @@ namespace eGTS.Controllers
                 }
             }
 
-            return (IHttpActionResult)Ok();
+            //return (IHttpActionResult)Ok();
         }
     }
 }
