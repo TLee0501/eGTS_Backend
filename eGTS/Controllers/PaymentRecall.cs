@@ -11,6 +11,7 @@ namespace eGTS.Controllers
     public class PaymentRecall : ApiController
     {
         [HttpGet]
+        [Route("PaymentRecall/PaymentConfirm")]
         protected async Task<IHttpActionResult> PaymentConfirm()
         {
             if (!Request.GetQueryNameValuePairs().IsNullOrEmpty())

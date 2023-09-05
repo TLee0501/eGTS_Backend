@@ -15,7 +15,7 @@ namespace eGTS.Controllers
         public async Task<ActionResult<string>> CreatePayment()
         {
             //Get Config Info
-            string vnp_Returnurl = "https://egtsvnpay.azurewebsites.net/api/PaymentConfirm"; //URL nhan ket qua tra ve 
+            string vnp_Returnurl = "https://egtsvnpay.azurewebsites.net/api/PaymentRecall/PaymentConfirm"; //URL nhan ket qua tra ve 
             string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = "4S638AXZ"; //Ma website
             string vnp_HashSecret = "MJDZLNLYFKAXDYBAKINTSTMPYYNSCMCA"; //Chuoi bi mat
