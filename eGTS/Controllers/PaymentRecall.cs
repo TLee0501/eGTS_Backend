@@ -8,7 +8,7 @@ using RouteAttribute = System.Web.Http.RouteAttribute;
 namespace eGTS.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class PaymentRecall : ControllerBase
     {
         [HttpGet]
