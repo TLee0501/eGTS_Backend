@@ -29,6 +29,17 @@ namespace eGTS.Bussiness.PackageGymersService
                 PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, packageRequest.NumberOfsession, DateTime.Now, null, "Đang chờ", false);
                 _context.PackageGymers.Add(packageGymer);
             }
+
+            //create payment record
+            var paymentrecord = new Payment
+            {
+                Id = Guid.NewGuid(),
+                PackageGymerId = id,
+                PaymentDate = DateTime.Now,
+                Amount = packageRequest.Price
+            };
+            _context.Payments.AddAsync(paymentrecord);
+
             try
             {
                 await _context.SaveChangesAsync();
