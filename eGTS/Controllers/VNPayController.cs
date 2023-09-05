@@ -28,7 +28,7 @@ namespace eGTS.Controllers
         {
             var package = await _context.Packages.FindAsync(request.PackageID);
             //Get Config Info
-            string vnp_Returnurl = "https://localhost:7296/api/VNPay/PaymentConfirm"; //URL nhan ket qua tra ve 
+            string vnp_Returnurl = "https://egts.azurewebsites.net/api/VNPay/PaymentConfirm"; //URL nhan ket qua tra ve 
             string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = "4S638AXZ"; //Ma website
             string vnp_HashSecret = "MJDZLNLYFKAXDYBAKINTSTMPYYNSCMCA"; //Chuoi bi mat
