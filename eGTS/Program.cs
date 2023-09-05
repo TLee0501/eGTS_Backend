@@ -18,6 +18,7 @@ using eGTS.Bussiness.QualitificationService;
 using eGTS.Bussiness.MealService;
 using eGTS.Bussiness.BodyParameters;
 using eGTS.Bussiness.ReportService;
+using eGTS_Backend.Data.VNPay;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +34,6 @@ builder.Services.AddDbContext<EGtsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EGTSDbConnection"));
 });
 
-
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPackageService, PackageService>();
@@ -48,6 +48,7 @@ builder.Services.AddScoped<IQualitificationService, QualitificationService>();
 builder.Services.AddScoped<IBodyParametersService, BodyParametersService>();
 builder.Services.AddScoped<IMealService, MealService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();
