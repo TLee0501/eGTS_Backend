@@ -7,23 +7,25 @@ using RouteAttribute = System.Web.Http.RouteAttribute;
 
 namespace eGTS.Controllers
 {
-
-    public class PaymentRecall : ApiController
+    [ApiController]
+    [Route("api/[controller]/[action]")]
+    public class PaymentRecall : ControllerBase
     {
         [HttpGet]
-        [Route("api/PaymentRecall/PaymentConfirm")]
+        [Route("PaymentConfirm")]
         protected async Task<IHttpActionResult> PaymentConfirm()
         {
-            if (!Request.GetQueryNameValuePairs().IsNullOrEmpty())
+            var queryParameters = HttpContext.Request.Query;
+            if (!queryParameters.IsNullOrEmpty())
             {
                 string hashSecret = "MJDZLNLYFKAXDYBAKINTSTMPYYNSCMCA"; //Chuỗi bí mật
-                var vnpayData = Request.GetQueryNameValuePairs();
+                var vnpayData = queryParameters;
                 VnPayLibrary pay = new VnPayLibrary();
 
                 //lấy toàn bộ dữ liệu được trả về
                 foreach (var s in vnpayData)
                 {
-                    if (!string.IsNullOrEmpty(s.Key) && s.Value.StartsWith("vnp_"))
+                    if (!string.IsNullOrEmpty(s.Key) && s.Value.ToString().StartsWith("vnp_"))
                     {
                         pay.AddResponseData(s.Key, s.Value);
                     }
@@ -32,7 +34,7 @@ namespace eGTS.Controllers
                 long orderId = Convert.ToInt64(pay.GetResponseData("vnp_TxnRef")); //mã hóa đơn
                 long vnpayTranId = Convert.ToInt64(pay.GetResponseData("vnp_TransactionNo")); //mã giao dịch tại hệ thống VNPAY
                 string vnp_ResponseCode = pay.GetResponseData("vnp_ResponseCode"); //response code: 00 - thành công, khác 00 - xem thêm https://sandbox.vnpayment.vn/apis/docs/bang-ma-loi/
-                string vnp_SecureHash = Request.GetQueryNameValuePairs().FirstOrDefault(q => q.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
+                string vnp_SecureHash = queryParameters.FirstOrDefault(q => q.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
 
                 bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret); //check chữ ký đúng hay không?
 
@@ -55,7 +57,7 @@ namespace eGTS.Controllers
                 }
             }
 
-            return Ok();
+            return (IHttpActionResult)Ok();
         }
     }
 }
