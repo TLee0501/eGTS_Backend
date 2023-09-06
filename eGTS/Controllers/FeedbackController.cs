@@ -49,7 +49,7 @@ namespace eGTS.Controllers
             switch (await _feedbackService.CreateFeedback(request))
             {
                 case 0:
-                    return BadRequest(new ErrorResponse(400, "Không thể tạo feedback"));
+                    return BadRequest(new ErrorResponse(400, "Không thể tạo đánh giá"));
                     break;
                 case 1:
                     return BadRequest(new ErrorResponse(400, "Không tìm thấy PT hay NE"));
@@ -59,13 +59,16 @@ namespace eGTS.Controllers
                     break;
                 case 3:
                     _logger.LogInformation($"Created Feedback with for expert ID: {request.PtidorNeid}");
-                    return Ok(new SuccessResponse<FeedbackCreateViewModel>(200, "Tạo Feedback thành công", request));
+                    return Ok(new SuccessResponse<FeedbackCreateViewModel>(200, "Tạo đánh giá thành công", request));
                     break;
                 case 4:
                     return BadRequest(new ErrorResponse(400, "Không có PT hay NE trong hợp đồng"));
                     break;
+                case 5:
+                    return BadRequest(new ErrorResponse(400, "Chưa được gửi đánh giá"));
+                    break;
                 default:
-                    return BadRequest(new ErrorResponse(400, "Không thể tạo feedback"));
+                    return BadRequest(new ErrorResponse(400, "Không thể tạo đánh giá"));
                     break;
             }
 
@@ -171,6 +174,12 @@ namespace eGTS.Controllers
                 return NoContent();
         }
 
+        /// <summary>
+        /// Get Feedbacks with ExpertID
+        /// </summary>
+        /// <param name="expertID"></param>
+        /// <param name="isDelete"></param>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
@@ -178,6 +187,27 @@ namespace eGTS.Controllers
         public async Task<ActionResult<IEnumerable<FeedbackViewModel>>> GetFeedbackListByExpertID(Guid expertID, bool? isDelete)
         {
             var result = await _feedbackService.GetFeedbackListByExpertID(expertID, isDelete);
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<FeedbackViewModel>>(200, "Danh sách các feedback", result));
+            }
+            else
+                return NoContent();
+        }
+
+        /// <summary>
+        /// Get Feedbacks with PackageGymerID
+        /// </summary>
+        /// <param name="packageGymerID"></param>
+        /// <param name="isDelete"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
+        [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
+        [ProducesResponseType(StatusCodes.Status200OK)]//OK
+        public async Task<ActionResult<IEnumerable<FeedbackViewModel>>> GetFeedbackListByPackageGymerID(Guid packageGymerID, bool? isDelete)
+        {
+            var result = await _feedbackService.GetFeedbackListByPackageGymerID(packageGymerID, isDelete);
             if (result != null)
             {
                 return Ok(new SuccessResponse<List<FeedbackViewModel>>(200, "Danh sách các feedback", result));

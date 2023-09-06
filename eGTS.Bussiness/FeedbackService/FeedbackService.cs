@@ -27,6 +27,8 @@ namespace eGTS.Bussiness.FeedbackService
 
             if (!pg.Ptid.Equals(PTorNE.Id) && !pg.Neid.Equals(PTorNE.Id)) return 4;
 
+            if (pg.Status.Equals("Đang chờ") || pg.Status.Equals("Đang hoạt động") || pg.Status.Equals("Tạm ngưng")) return 5;
+
             try
             {
                 var feedback = new FeedBack
@@ -194,6 +196,46 @@ namespace eGTS.Bussiness.FeedbackService
 
             return result;
 
+        }
+
+        public async Task<List<FeedbackViewModel>> GetFeedbackListByPackageGymerID(Guid packageGymerID, bool? isDelete)
+        {
+            var resultList = new List<FeedbackViewModel>();
+            List<FeedBack> feedbackList = new List<FeedBack>();
+
+            switch (isDelete)
+            {
+                case true:
+                    feedbackList = _context.FeedBacks.Where(f => f.PackageGymerId.Equals(packageGymerID) && f.IsDelete == true).ToList();
+                    break;
+                case false:
+                    feedbackList = _context.FeedBacks.Where(f => f.PackageGymerId.Equals(packageGymerID) && f.IsDelete == false).ToList();
+                    break;
+                default:
+                    feedbackList = _context.FeedBacks.Where(f => f.PackageGymerId.Equals(packageGymerID)).ToList();
+                    break;
+            }
+
+            foreach (var feedback in feedbackList)
+            {
+                var result = new FeedbackViewModel();
+                result.Id = feedback.Id;
+                result.PtidorNeid = feedback.PtidorNeid;
+                result.PTOrNeName = _context.Accounts.Find(feedback.PtidorNeid).Fullname;
+                result.PackageGymerId = feedback.PackageGymerId;
+                var pg = _context.PackageGymers.Find(feedback.PackageGymerId);
+                result.PackageName = pg.Name;
+                result.GymerName = _context.Accounts.Find(pg.GymerId).Fullname;
+                result.Rate = feedback.Rate;
+                result.Feedback1 = feedback.Feedback1;
+                result.IsDelete = feedback.IsDelete;
+
+                resultList.Add(result);
+            }
+            if (resultList.Count > 0)
+                return resultList;
+            else
+                return null;
         }
     }
 }
