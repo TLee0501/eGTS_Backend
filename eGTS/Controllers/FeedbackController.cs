@@ -67,6 +67,9 @@ namespace eGTS.Controllers
                 case 5:
                     return BadRequest(new ErrorResponse(400, "Chưa được gửi đánh giá"));
                     break;
+                case 6:
+                    return BadRequest(new ErrorResponse(400, "Bạn đã đánh giá hợp đồng này rồi."));
+                    break;
                 default:
                     return BadRequest(new ErrorResponse(400, "Không thể tạo đánh giá"));
                     break;
