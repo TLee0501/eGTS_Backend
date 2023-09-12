@@ -1,15 +1,8 @@
-﻿using eGTS.Bussiness.AccountService;
-using eGTS.Bussiness.ExcerciseScheduleService;
-using eGTS.Bussiness.ExcerciseService;
-using eGTS_Backend.Data.Models;
+﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.BodyParameters
 {
@@ -211,6 +204,36 @@ namespace eGTS.Bussiness.BodyParameters
                 return 0;
             }
             return weight / ((height / 100) * (height / 100));// Height is in CM
+        }
+
+        public async Task<BodyPerameterViewModel> GetBodyParameterByGymerID(Guid GymerId)
+        {
+            List<BodyPerameterViewModel> resultList = new List<BodyPerameterViewModel>();
+            var BP = await _context.BodyPerameters
+                .Where(a => a.GymerId == GymerId)
+                .OrderByDescending(b => b.CreateDate)
+                .FirstOrDefaultAsync();
+
+            if (BP != null)
+            {
+                BodyPerameterViewModel model = new BodyPerameterViewModel()
+                {
+                    Id = BP.Id,
+                    GymerId = GymerId,
+                    Goal = BP.Goal,
+                    Weight = BP.Weight,
+                    Height = BP.Height,
+                    Bmi = BP.Bmi,
+                    Bone = BP.Bone,
+                    Fat = BP.Fat,
+                    Muscle = BP.Muscle,
+                    CreateDate = BP.CreateDate,
+                    IsDelete = BP.IsDelete,
+                };
+                resultList.Add(model);
+                return model;
+            }
+            return null;
         }
     }
 }
