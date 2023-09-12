@@ -62,6 +62,18 @@ namespace eGTS.Controllers
         public async Task<ActionResult<IEnumerable<BodyPerameterViewModel>>> GetBodyPerameterByGymerID(Guid id)
         {
 
+            var result = await _bodyParametersService.GetBodyParameterByGymerID(id);
+            if (result == null)
+                return NoContent();
+            else
+                return Ok(new SuccessResponse<BodyPerameterViewModel>(200, "Tìm thấy các tỉ lệ cơ thể", result)); ;
+
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<BodyPerameterViewModel>>> GetBodyPerametersByGymerID(Guid id)
+        {
+
             var result = await _bodyParametersService.GetBodyParametersByGymerID(id);
             if (result == null)
                 return NoContent();

@@ -16,5 +16,6 @@ namespace eGTS.Bussiness.BodyParameters
         Task<BodyPerameterViewModel> GetBodyParametersByID(Guid id);
         Task<List<BodyPerameterViewModel>> GetBodyParametersByGymerID(Guid id);
         Task<List<BodyPerameterViewModel>> DEBUGGetAllBodyParameters();
+        Task<BodyPerameterViewModel> GetBodyParameterByGymerID(Guid GymerId);
     }
 }
