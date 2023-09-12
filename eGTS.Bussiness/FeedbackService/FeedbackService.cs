@@ -29,6 +29,8 @@ namespace eGTS.Bussiness.FeedbackService
 
             if (pg.Status.Equals("Đang chờ") || pg.Status.Equals("Đang hoạt động") || pg.Status.Equals("Tạm ngưng")) return 5;
 
+            if (checkIfFeedbackAlreadyMade(request)) return 6;
+
             try
             {
                 var feedback = new FeedBack
@@ -237,5 +239,13 @@ namespace eGTS.Bussiness.FeedbackService
             else
                 return null;
         }
+
+        public bool checkIfFeedbackAlreadyMade(FeedbackCreateViewModel model)
+        {
+            var feedback = _context.FeedBacks.Where(f => f.PackageGymerId.Equals(model.PackageGymerId) && f.PtidorNeid.Equals(model.PtidorNeid));
+            if (feedback.ToList().Count == 0) return true;
+            return false;
+        }
+
     }
 }
