@@ -526,7 +526,6 @@ public partial class EGtsContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Result).HasMaxLength(300);
             entity.Property(e => e.SessionId).HasColumnName("SessionID");
 
             entity.HasOne(d => d.Session).WithMany(p => p.SessionResults)
