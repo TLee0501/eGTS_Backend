@@ -18,7 +18,7 @@ namespace eGTS.Bussiness.PackageGymersService
             Guid id = Guid.NewGuid();
             var packageRequest = await _context.Packages.FindAsync(request.PackageID);
 
-            if(packageRequest.NumberOfMonth != null)
+            if (packageRequest.NumberOfMonth != null)
             {
                 var month = (int)packageRequest.NumberOfMonth;
                 PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, null, DateTime.Now, DateTime.Now.AddMonths(month), "Đang hoạt động", false);
@@ -91,53 +91,53 @@ namespace eGTS.Bussiness.PackageGymersService
                 return false;
             }
         }
-        public List<GymerPackageActiveViewModel> GetGymerPackageActiveByNE(Guid NEID)
+        public async Task<List<GymerPackageFilterByGymerViewModel>> GetGymerPackageActiveByNE(Guid NEID)
         {
             List<GymerPackageActiveViewModel> result = new List<GymerPackageActiveViewModel>();
 
-            var listGymerPackage = _context.PackageGymers.Where(a => a.Neid == NEID && a.IsDelete == false).ToList();
+            var listGymerPackage = await _context.PackageGymers.Where(a => a.Neid == NEID && a.IsDelete == false).ToListAsync();
             foreach (var item in listGymerPackage)
             {
                 var gymerActive = new GymerPackageActiveViewModel();
                 gymerActive.GymerId = item.GymerId;
                 gymerActive.PackageName = item.Name;
                 gymerActive.PackageGymerId = item.Id;
-                gymerActive.GymerName = _context.Accounts.Find(item.GymerId).Fullname;
+                gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 gymerActive.From = (DateTime)item.From;
                 gymerActive.Status = item.Status;
-                gymerActive.NumberOfSession = _context.Packages.Find(item.PackageId).NumberOfsession;
+                gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
                 var s = _context.ExcerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
                 var isUpdate = true;
                 if (s == null) isUpdate = false;
                 gymerActive.isUpdate = isUpdate;
                 result.Add(gymerActive);
             }
-
-            return result;
+            var filterResult = FilterByGymer(result);
+            return filterResult;
         }
-        public List<GymerPackageActiveViewModel> GetGymerPackageActiveByPT(Guid PTID)
+        public async Task<List<GymerPackageFilterByGymerViewModel>> GetGymerPackageActiveByPT(Guid PTID)
         {
             List<GymerPackageActiveViewModel> result = new List<GymerPackageActiveViewModel>();
 
-            var listGymerPackage = _context.PackageGymers.Where(a => a.Ptid == PTID && a.IsDelete == false).ToList();
+            var listGymerPackage = await _context.PackageGymers.Where(a => a.Ptid == PTID && a.IsDelete == false).ToListAsync();
             foreach (var item in listGymerPackage)
             {
                 var gymerActive = new GymerPackageActiveViewModel();
                 gymerActive.GymerId = item.GymerId;
                 gymerActive.PackageName = item.Name;
                 gymerActive.PackageGymerId = item.Id;
-                gymerActive.GymerName = _context.Accounts.Find(item.GymerId).Fullname;
+                gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 gymerActive.From = (DateTime)item.From;
                 gymerActive.Status = item.Status;
-                gymerActive.NumberOfSession = _context.Packages.Find(item.PackageId).NumberOfsession;
+                gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
                 var s = _context.ExcerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
                 var isUpdate = true;
                 if (s == null) isUpdate = false;
                 gymerActive.isUpdate = isUpdate;
                 result.Add(gymerActive);
             }
-
-            return result;
+            var filterResult = FilterByGymer(result);
+            return filterResult;
         }
 
         public async Task<bool> CheckAlreadyPackGymerHasCenter(Guid id)
@@ -207,6 +207,27 @@ namespace eGTS.Bussiness.PackageGymersService
             }
 
             return result;
+        }
+
+        private List<GymerPackageFilterByGymerViewModel> FilterByGymer(List<GymerPackageActiveViewModel> request)
+        {
+            var groupedByGymerId = request
+                .GroupBy(item => new { item.GymerId, item.GymerName })
+                .Select(group => new GymerPackageFilterByGymerViewModel
+                    {
+                        GymerId = group.Key.GymerId,
+                        GymerName = group.Key.GymerName,
+                        GymerPackages = group.Select(item => new GymerPackage
+                        {
+                            PackageGymerId = item.PackageGymerId,
+                            PackageName = item.PackageName,
+                            From = item.From,
+                            Status = item.Status,
+                            NumberOfSession = item.NumberOfSession,
+                            isUpdate = item.isUpdate
+                        }).ToList()
+                    }).ToList();
+            return groupedByGymerId;
         }
     }
 }

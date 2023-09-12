@@ -10,6 +10,7 @@ using eGTS.Bussiness.SessionService;
 using eGTS_Backend.Data.ViewModel;
 using coffee_kiosk_solution.Data.Responses;
 using Azure.Core;
+using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Controllers
 {
@@ -87,8 +88,10 @@ namespace eGTS.Controllers
         {
             if (model.SessionId.Equals("") || model.SessionId == null)
                 return BadRequest(new ErrorResponse(400, "Session ID is empty."));
-            if (model.Result.Equals(""))
-                return BadRequest(new ErrorResponse(400, "Result is empty."));
+            if (model.Note.IsNullOrEmpty())
+                return BadRequest(new ErrorResponse(400, "Note is empty."));
+            if (model.CaloConsump == 0)
+                return BadRequest(new ErrorResponse(400, "CaloConsump is equal 0."));
 
             if (await _sessionService.CreateSessionResult(model))
             {

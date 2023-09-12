@@ -103,23 +103,23 @@ namespace eGTS.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackageActiveByNE(Guid NEID)
+        public async Task<ActionResult<IEnumerable<GymerPackageFilterByGymerViewModel>>> GetGymerPackageActiveByNE(Guid NEID)
         {
             try
             {
-                var result = _packageGymersService.GetGymerPackageActiveByNE(NEID);
-                return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Danh sách các gói", result));
+                var result = await _packageGymersService.GetGymerPackageActiveByNE(NEID);
+                return Ok(new SuccessResponse<List<GymerPackageFilterByGymerViewModel>>(200, "Danh sách các gói", result));
             }
             catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackageActiveByPT(Guid PTID)
+        public async Task<ActionResult<IEnumerable<GymerPackageFilterByGymerViewModel>>> GetGymerPackageActiveByPT(Guid PTID)
         {
             try
             {
-                var result = _packageGymersService.GetGymerPackageActiveByPT(PTID);
-                return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Danh sách các gói", result));
+                var result = await _packageGymersService.GetGymerPackageActiveByPT(PTID);
+                return Ok(new SuccessResponse<List<GymerPackageFilterByGymerViewModel>>(200, "Danh sách các gói", result));
             }
             catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
         }

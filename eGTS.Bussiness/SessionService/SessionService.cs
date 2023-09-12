@@ -4,6 +4,7 @@ using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Bussiness.SessionService
 {
@@ -79,8 +80,14 @@ namespace eGTS.Bussiness.SessionService
             var session = await _context.Sessions.FindAsync(model.SessionId);
             if (session != null)
             {
-                Guid id = new Guid();
-                SessionResult sessionResult = new SessionResult(id, model.SessionId, model.Result, false);
+                SessionResult sessionResult = new SessionResult()
+                {
+                    Id = new Guid(),
+                    SessionId = model.SessionId,
+                    CaloConsump = model.CaloConsump,
+                    Note = model.Note,
+                    IsDelete = false
+                };
                 try
                 {
                     await _context.SessionResults.AddAsync(sessionResult);
@@ -148,11 +155,14 @@ namespace eGTS.Bussiness.SessionService
             {
                 foreach (var result in sessionResults)
                 {
-                    SessionResultViewModel model = new SessionResultViewModel();
-                    model.id = result.Id;
-                    model.SessionId = result.SessionId;
-                    model.Result = result.Result;
-                    model.IsDelete = result.IsDelete;
+                    SessionResultViewModel model = new SessionResultViewModel()
+                    {
+                        Id = result.Id,
+                        SessionId = result.SessionId,
+                        CaloConsump = result.CaloConsump,
+                        Note = result.Note,
+                        IsDelete = result.IsDelete
+                    };
 
                     resultList.Add(model);
                 }
@@ -388,11 +398,14 @@ namespace eGTS.Bussiness.SessionService
             var sessionResult = await _context.SessionResults.FindAsync(id);
             if (sessionResult != null)
             {
-                SessionResultViewModel result = new SessionResultViewModel();
-                result.id = sessionResult.Id;
-                result.SessionId = sessionResult.SessionId;
-                result.Result = sessionResult.Result;
-                result.IsDelete = sessionResult.IsDelete;
+                SessionResultViewModel result = new SessionResultViewModel()
+                {
+                    Id = sessionResult.Id,
+                    SessionId = sessionResult.SessionId,
+                    CaloConsump = sessionResult.CaloConsump,
+                    Note = sessionResult.Note,
+                    IsDelete = sessionResult.IsDelete
+                };
                 return result;
             }
             else
@@ -407,11 +420,14 @@ namespace eGTS.Bussiness.SessionService
             {
                 foreach (var result in sessionResults)
                 {
-                    SessionResultViewModel model = new SessionResultViewModel();
-                    model.id = result.Id;
-                    model.SessionId = result.SessionId;
-                    model.Result = result.Result;
-                    model.IsDelete = result.IsDelete;
+                    SessionResultViewModel model = new SessionResultViewModel()
+                    {
+                        Id = result.Id,
+                        SessionId = result.SessionId,
+                        CaloConsump = result.CaloConsump,
+                        Note = result.Note,
+                        IsDelete = result.IsDelete
+                    };
 
                     resultList.Add(model);
                 }
@@ -477,9 +493,10 @@ namespace eGTS.Bussiness.SessionService
             var sessionResult = await _context.SessionResults.FindAsync(id);
             if (sessionResult == null)
                 return false;
-            if (!request.Result.Equals("") || request.Result != null)
+            if (!request.Note.IsNullOrEmpty())
             {
-                sessionResult.Result = request.Result;
+                sessionResult.CaloConsump = request.CaloConsump;
+                sessionResult.Note = request.Note;
                 try
                 {
                     await _context.SaveChangesAsync();
