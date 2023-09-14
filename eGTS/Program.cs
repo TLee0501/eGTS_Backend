@@ -19,6 +19,7 @@ using eGTS.Bussiness.MealService;
 using eGTS.Bussiness.BodyParameters;
 using eGTS.Bussiness.ReportService;
 using eGTS.Bussiness.FeedbackService;
+using eGTS.Bussiness;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +51,8 @@ builder.Services.AddScoped<IBodyParametersService, BodyParametersService>();
 builder.Services.AddScoped<IMealService, MealService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
+builder.Services.AddHostedService<AutoScanService>();
 
 
 //swagger
