@@ -91,6 +91,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 return false;
             }
         }
+
         public async Task<List<GymerPackageFilterByGymerViewModel>> GetGymerPackageActiveByNE(Guid NEID)
         {
             List<GymerPackageActiveViewModel> result = new List<GymerPackageActiveViewModel>();
@@ -115,6 +116,7 @@ namespace eGTS.Bussiness.PackageGymersService
             var filterResult = FilterByGymer(result);
             return filterResult;
         }
+
         public async Task<List<GymerPackageFilterByGymerViewModel>> GetGymerPackageActiveByPT(Guid PTID)
         {
             List<GymerPackageActiveViewModel> result = new List<GymerPackageActiveViewModel>();
