@@ -1,19 +1,9 @@
-﻿using Azure.Core;
-using eGTS.Bussiness.AccountService;
-using eGTS.Bussiness.SessionService;
+﻿using eGTS.Bussiness.AccountService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using Google.Api.Gax;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace eGTS.Bussiness.ExcerciseScheduleService
 {
@@ -361,7 +351,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     {
                         scheduleIDs.Add(item1.Id);
                     }
-                }       
+                }
             }
 
             //Tim sessions
@@ -403,7 +393,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             foreach (var item in Exs)
             {
                 var excercise = _context.Excercises.SingleOrDefault(a => a.Id == item.ExerciseId && a.IsDelete == false);
-                if(excercise != null)
+                if (excercise != null)
                 {
                     var viewModel = new ExcerciseViewModel();
                     viewModel.id = excercise.Id;
@@ -658,7 +648,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             return result;
         }
 
-        public async Task<List<SessionDateViewModel>> GetExcerciseScheduleByPackageGymerID(Guid packageGymerID)
+        /*public async Task<List<SessionDateViewModel>> GetExcerciseScheduleByPackageGymerID(Guid packageGymerID)
         {
             var schedule = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
 
@@ -677,6 +667,6 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 result.Add(viewModel);
             }
             return result;
-        }
+        }*/
     }
 }

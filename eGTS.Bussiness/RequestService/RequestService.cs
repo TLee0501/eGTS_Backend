@@ -27,6 +27,7 @@ namespace eGTS.Bussiness.RequestService
 
             //check Type PackageGymer
             var checkpackageGymer = await _context.PackageGymers.FindAsync(request.PackageGymerId);
+            if (checkpackageGymer.Status != "Đang chờ") return 4;
             var checkPackage = await _context.Packages.FindAsync(checkpackageGymer.PackageId);
             var checkExpert = await _context.Accounts.FindAsync(request.ReceiverId);
             if (checkPackage.HasPt == false && checkExpert.Role == "PT") return 3;
@@ -42,7 +43,7 @@ namespace eGTS.Bussiness.RequestService
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                //throw new Exception(ex.Message, ex);
                 return 0;
             }
             return 1;
