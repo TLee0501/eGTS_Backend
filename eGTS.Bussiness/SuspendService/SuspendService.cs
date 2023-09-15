@@ -57,8 +57,8 @@ namespace eGTS.Bussiness.SuspendService
                     {
                         foreach (var item in sessions)
                         {
-                            item.From.AddDays(daysDifference);
-                            item.To.AddDays(daysDifference);
+                            item.From = item.From.AddDays(daysDifference);
+                            item.To = item.To.AddDays(daysDifference);
                         }
                     }
                 }
@@ -89,8 +89,8 @@ namespace eGTS.Bussiness.SuspendService
                     {
                         foreach (var item in sessions)
                         {
-                            item.From.AddDays(daysDifference);
-                            item.To.AddDays(daysDifference);
+                            item.From = item.From.AddDays(daysDifference);
+                            item.To = item.To.AddDays(daysDifference);
                         }
                     }
                 }
@@ -104,6 +104,8 @@ namespace eGTS.Bussiness.SuspendService
                     }
                 }
             }
+
+            pg.Status = "Tạm ngưng";
 
             try
             {

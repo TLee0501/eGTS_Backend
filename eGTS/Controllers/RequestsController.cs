@@ -83,6 +83,7 @@ namespace eGTS.Controllers
                 if (result == 0) return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
                 else if (result == 2) return BadRequest(new ErrorResponse(400, "Bạn đã gửi yêu cầu cho người này!"));
                 else if (result == 3) return BadRequest(new ErrorResponse(400, "Gói không phù hợp với người được gửi yêu cầu!"));
+                else if (result == 4) return BadRequest(new ErrorResponse(400, "Gói không phù hợp!"));
             }
             catch (Exception ex)
             {
