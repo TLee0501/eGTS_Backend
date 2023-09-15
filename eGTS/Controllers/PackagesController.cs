@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections;
+using System.Web.WebPages;
 
 namespace eGTS.Controllers
 {
@@ -92,10 +93,10 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<Package>> CreatePackage(PackageCreateViewModel package)
         {
-            /*if (_context.Packages == null)
-            {
-                return Problem("Entity set 'EGtsContext.Packages'  is null.");
-            }*/
+            if (package.Name.IsEmpty()) return BadRequest("Không có tên gói!");
+            if (package.NumberOfMonth == 0) return BadRequest("Không có thời gian của gói!");
+            if (package.NumberOfsession == 0) return BadRequest("Không có thời gian của gói!");
+            if (package.Price == 0.0) return BadRequest("Không có giá tiền của gói!");
             if (package == null) return BadRequest();
             try
             {

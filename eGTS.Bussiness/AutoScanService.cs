@@ -23,6 +23,7 @@ namespace eGTS.Bussiness
                 {
                     var _context = scope.ServiceProvider.GetRequiredService<EGtsContext>();
                     ScanOfGymerPackagesToFinish(_context);
+                    ScanOfGymerPackagesAtPause(_context);
                 }
                 await Task.Delay(10000);
             }
@@ -57,7 +58,7 @@ namespace eGTS.Bussiness
                 else if (packageType.HasPt == false & packageType.HasNe == true)    //goi chi ne
                 {
                     var ns = _context.NutritionSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id && a.IsDelete == false);
-                    var meals = _context.Meals.Where(m => m.Datetime.Date > DateTime.Now.Date).ToList();
+                    var meals = _context.Meals.Where(a => a.Datetime.Date > DateTime.Now.Date).ToList();
                     if (!meals.IsNullOrEmpty())
                     {
                         item.Status = "Đã hoàn thành";
@@ -89,7 +90,25 @@ namespace eGTS.Bussiness
 
         private async void ScanOfGymerPackagesAtPause(EGtsContext _context)
         {
+            var PackageGymers = _context.PackageGymers.Where(a => a.IsDelete == false && a.Status == "Tạm ngưng").ToList();
 
+            foreach (var item in PackageGymers)
+            {
+                var suspend = _context.Suspends.SingleOrDefault(a => a.PackageGymerId == item.Id);
+                if (suspend != null)
+                {
+                    if (suspend.To.Date == DateTime.Now.Date)
+                        item.Status = "Đang hoạt động";
+                }
+            }
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 }
