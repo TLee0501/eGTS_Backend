@@ -103,7 +103,7 @@ namespace eGTS.Controllers
         }*/
 
         [HttpGet]
-        public async void PaymentConfirm()
+        public async Task<IActionResult> PaymentConfirm()
         {
             var queryParameters = HttpContext.Request.Query;
             if (!queryParameters.IsNullOrEmpty())
@@ -115,19 +115,14 @@ namespace eGTS.Controllers
                 //lấy toàn bộ dữ liệu được trả về
                 foreach (var s in vnpayData)
                 {
-                    //if (!string.IsNullOrEmpty(s.Key) && s.Value.ToString().StartsWith("vnp_"))
-                    //{
                     pay.AddResponseData(s.Key, s.Value);
-                    //}
                 }
 
                 long orderId = Convert.ToInt64(pay.GetResponseData("vnp_TxnRef")); //mã hóa đơn
                 long vnpayTranId = Convert.ToInt64(pay.GetResponseData("vnp_TransactionNo")); //mã giao dịch tại hệ thống VNPAY
                 string vnp_ResponseCode = pay.GetResponseData("vnp_ResponseCode"); //response code: 00 - thành công, khác 00 - xem thêm https://sandbox.vnpayment.vn/apis/docs/bang-ma-loi/
                 string vnp_SecureHash = queryParameters.FirstOrDefault(q => q.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
-
                 var vnp_OrderInfo = pay.GetResponseData("vnp_OrderInfo");
-
 
                 bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret); //check chữ ký đúng hay không?
 
@@ -146,7 +141,10 @@ namespace eGTS.Controllers
                             PackageID = new Guid(p),
                             GymerID = new Guid(g)
                         };
+
                         await _packageGymersService.CreatePackageGymer(request);
+
+                        return Ok(); // Trả về response OK sau khi xử lý thành công
                     }
                     else
                     {
@@ -160,7 +158,7 @@ namespace eGTS.Controllers
                 }
             }
 
-            //return (IHttpActionResult)Ok();
+            return BadRequest(); // Trả về response BadRequest khi có lỗi
         }
     }
 }
