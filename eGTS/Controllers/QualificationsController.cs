@@ -48,10 +48,8 @@ namespace eGTS.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateQualification(QualitificationViewModel qualification)
         {
-            if (qualification == null)
-            {
-                return Problem("'Qualifications' is null.");
-            }
+            if (qualification == null) return Problem("'Qualifications' is null.");
+            if (qualification.Experience < 0) return BadRequest("Experience không hợp lệ!");
             bool result = await _qualitificationService.UpdateQualitification(qualification);
             if (result)
             {
@@ -65,10 +63,9 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<bool>> CreateQualification(QualitificationCreateViewModel request)
         {
-            if (request == null)
-            {
-                return Problem("'Qualifications' is null.");
-            }
+            if (request == null) return Problem("'Qualifications' is null.");
+            if (request.Experience < 0) return BadRequest("Experience không hợp lệ!");
+
             bool result;
             result = await _qualitificationService.CreateQualitification(request);
             if (result)

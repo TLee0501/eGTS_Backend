@@ -87,6 +87,17 @@ namespace eGTS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBodyPerameter(Guid id, BodyPerameterUpdateViewModel request)
         {
+            if (request.Weight.HasValue && request.Weight.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Cân nặng không hợp lệ!"));
+            if (request.Height.HasValue && request.Height.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Chiều cao không hợp lệ!"));
+            if (request.Bone.HasValue && request.Bone.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Bone không hợp lệ!"));
+            if (request.Fat.HasValue && request.Fat.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Fat không hợp lệ không hợp lệ!"));
+            if (request.Muscle.HasValue && request.Muscle.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Muscle không hợp lệ!"));
+
             if (await _bodyParametersService.UpdateBodyParameters(id, request))
             {
                 _logger.LogInformation($"Update Body parameters with ID: {id}");
@@ -94,7 +105,7 @@ namespace eGTS.Controllers
             }
             else
             {
-                return BadRequest(new ErrorResponse(400, "Không thể update tài khoản"));
+                return BadRequest(new ErrorResponse(400, "Không thể cập nhật thông số cơ thể thành công!"));
             }
         }
 
@@ -103,6 +114,16 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<BodyPerameter>> CreateBodyPerameter(BodyPerameterCreateViewModel model)
         {
+            if (model.Weight.HasValue && model.Weight.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Cân nặng không hợp lệ!"));
+            if (model.Height.HasValue && model.Height.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Chiều cao không hợp lệ!"));
+            if (model.Bone.HasValue && model.Bone.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Bone không hợp lệ!"));
+            if (model.Fat.HasValue && model.Fat.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Fat không hợp lệ không hợp lệ!"));
+            if (model.Muscle.HasValue && model.Muscle.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Muscle không hợp lệ!"));
 
             var result = await _bodyParametersService.CreateBodyParameters(model);
             if (result)

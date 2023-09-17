@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.FoodAndSupplimentService;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eGTS.Controllers
 {
@@ -70,6 +64,8 @@ namespace eGTS.Controllers
         public async Task<IActionResult> UpdateFoodAndSuppliment(FoodAndSupplimentUpdateViewModel foodAndSuppliment)
         {
             if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Cập nhật thất bại!"));
+            if (foodAndSuppliment.Ammount < 0) return BadRequest(new ErrorResponse(400, "Ammount không hợp lệ!"));
+            if (foodAndSuppliment.Calories < 0) return BadRequest(new ErrorResponse(400, "Calorie không hợp lệ!"));
             try
             {
                 var result = await _foodAndSupplimentService.UpdateFoodAndSuppliment(foodAndSuppliment);
@@ -87,6 +83,8 @@ namespace eGTS.Controllers
         public async Task<ActionResult<FoodAndSuppliment>> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel foodAndSuppliment)
         {
             if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Tạo mới thất bại!"));
+            if (foodAndSuppliment.Ammount < 0) return BadRequest(new ErrorResponse(400, "Ammount không hợp lệ!"));
+            if (foodAndSuppliment.Calories < 0) return BadRequest(new ErrorResponse(400, "Calorie không hợp lệ!"));
             try
             {
                 var result = await _foodAndSupplimentService.CreateFoodAndSuppliment(foodAndSuppliment);
