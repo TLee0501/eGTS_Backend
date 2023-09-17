@@ -148,7 +148,8 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<IActionResult> UpdateExcercise(Guid id, ExcerciseUpdateViewModel request)
         {
-
+            if (request.CalorieCumsumption < 0) return BadRequest(new ErrorResponse(400, "Calory không hợp lệ!"));
+            if (request.RepTime < 0) return BadRequest(new ErrorResponse(400, "RepTime không hợp lệ!"));
             if (await _excerciseService.UpdateExcercise(id, request))
                 return Ok(new SuccessResponse<ExcerciseUpdateViewModel>(200, $"Bài tập có ID: {id} cập nhập thành công.", request));
             else
@@ -175,6 +176,8 @@ namespace eGTS.Controllers
             {
                 return BadRequest(new ErrorResponse(400, "Name is empty."));
             }
+            if (model.CalorieCumsumption < 0) return BadRequest(new ErrorResponse(400, "Calory không hợp lệ!"));
+            if (model.RepTime < 0) return BadRequest(new ErrorResponse(400, "RepTime không hợp lệ!"));
 
             if (await _excerciseService.CreateExcercise(model))
             {

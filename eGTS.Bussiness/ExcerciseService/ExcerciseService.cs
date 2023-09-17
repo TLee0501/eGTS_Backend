@@ -1,14 +1,8 @@
-﻿using Azure.Core;
-using eGTS.Bussiness.AccountService;
+﻿using eGTS.Bussiness.AccountService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.ExcerciseService
 {
@@ -424,6 +418,9 @@ namespace eGTS.Bussiness.ExcerciseService
             if (!request.Video.Equals(""))
                 excercise.Video = request.Video;
             excercise.IsDelete = request.IsDelete;
+            excercise.CalorieCumsumption = request.CalorieCumsumption;
+            excercise.RepTime = request.RepTime;
+            excercise.UnitOfMeasurement = request.UnitOfMeasurement;
 
             try
             {
