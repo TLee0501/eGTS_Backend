@@ -2,8 +2,6 @@
 {
     public class ExcerciseUpdateViewModel
     {
-
-        public string Name { get; set; } = null!;
         public string? Description { get; set; }
         public string? Video { get; set; }
         public bool IsDelete { get; set; }

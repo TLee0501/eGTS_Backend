@@ -111,6 +111,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         public async Task<ExScheduleViewModel> GetExcerciseScheduleByID(Guid id)
         {
             var ExS = await _context.ExcerciseSchedules.FindAsync(id);
+            if (ExS.IsDelete == true) return null;
             if (ExS != null)
             {
                 var result = new ExScheduleViewModel();
