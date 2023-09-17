@@ -411,8 +411,6 @@ namespace eGTS.Bussiness.ExcerciseService
             var excercise = await _context.Excercises.FindAsync(id);
             if (excercise == null)
                 return false;
-            if (!request.Name.Equals(""))
-                excercise.Name = request.Name;
             if (!request.Description.Equals(""))
                 excercise.Description = request.Description;
             if (!request.Video.Equals(""))
@@ -432,7 +430,6 @@ namespace eGTS.Bussiness.ExcerciseService
                 _logger.LogError("Unable to save changes");
             }
             return false;
-
         }
 
         public async Task<bool> UpdateExcerciseInType(Guid id, ExcerciseInTypeUpdateViewModel request)
