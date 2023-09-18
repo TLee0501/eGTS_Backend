@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace eGTS_Backend.Data.Models;
 
-public partial class FoodAndSuppliment
+public partial class FoodAndSupplement
 {
     public Guid Id { get; set; }
 
@@ -21,7 +21,7 @@ public partial class FoodAndSuppliment
 
     public bool IsDelete { get; set; }
 
-    public virtual ICollection<FoodAndSupplimentInMeal> FoodAndSupplimentInMeals { get; set; } = new List<FoodAndSupplimentInMeal>();
+    public virtual ICollection<FoodAndSupplementInMeal> FoodAndSupplementInMeals { get; set; } = new List<FoodAndSupplementInMeal>();
 
     public virtual Account Ne { get; set; } = null!;
 }

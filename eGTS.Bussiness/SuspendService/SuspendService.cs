@@ -48,7 +48,7 @@ namespace eGTS.Bussiness.SuspendService
 
             else if (packageType.HasPt == true & packageType.HasNe == false)    //goi chi pt
             {
-                var es = _context.ExcerciseSchedules.SingleOrDefault(a => a.PackageGymerId == pg.Id && a.IsDelete == false);
+                var es = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == pg.Id && a.IsDelete == false);
                 if (es != null)
                 {
                     es.To.AddDays(daysDifference);
@@ -79,7 +79,7 @@ namespace eGTS.Bussiness.SuspendService
 
             else if (packageType.HasPt == true & packageType.HasNe == true)    //goi co pt&ne
             {
-                var es = _context.ExcerciseSchedules.SingleOrDefault(a => a.PackageGymerId == pg.Id && a.IsDelete == false);
+                var es = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == pg.Id && a.IsDelete == false);
                 var ns = _context.NutritionSchedules.SingleOrDefault(a => a.PackageGymerId == pg.Id && a.IsDelete == false);
                 if (es != null)
                 {

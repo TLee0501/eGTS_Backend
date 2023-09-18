@@ -35,7 +35,7 @@ namespace eGTS.Bussiness.ExcerciseService
             };
             try
             {
-                await _context.Excercises.AddAsync(excercise);
+                await _context.Exercises.AddAsync(excercise);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -93,13 +93,13 @@ namespace eGTS.Bussiness.ExcerciseService
 
         public async Task<bool> DeleteExcercisePEMANENT(Guid id)
         {
-            if (_context.Excercises == null)
+            if (_context.Exercises == null)
                 return false;
 
-            var excercise = await _context.Excercises.FindAsync(id);
+            var excercise = await _context.Exercises.FindAsync(id);
             if (excercise != null)
             {
-                _context.Excercises.Remove(excercise);
+                _context.Exercises.Remove(excercise);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -123,7 +123,7 @@ namespace eGTS.Bussiness.ExcerciseService
 
         public async Task<bool> DeleteExcercise(Guid id)
         {
-            var excercise = await _context.Excercises.FindAsync(id);
+            var excercise = await _context.Exercises.FindAsync(id);
 
             excercise.IsDelete = true;
 
@@ -176,7 +176,7 @@ namespace eGTS.Bussiness.ExcerciseService
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
 
-            var excercises = await _context.Excercises.ToListAsync();
+            var excercises = await _context.Exercises.ToListAsync();
 
             foreach (Exercise e in excercises)
             {
@@ -249,7 +249,7 @@ namespace eGTS.Bussiness.ExcerciseService
         public async Task<ExcerciseViewModel> GetExcerciseByID(Guid ID)
         {
 
-            var excercise = await _context.Excercises.FindAsync(ID);
+            var excercise = await _context.Exercises.FindAsync(ID);
             if (excercise == null)
                 return null;
             else
@@ -274,7 +274,7 @@ namespace eGTS.Bussiness.ExcerciseService
         public async Task<List<ExcerciseViewModel>> GetExcerciseByName(string Name)
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
-            var excercises = await _context.Excercises.Where(e => e.Name.Contains(Name)).ToListAsync();
+            var excercises = await _context.Exercises.Where(e => e.Name.Contains(Name)).ToListAsync();
             foreach (Exercise e in excercises)
             {
                 ExcerciseViewModel result = new ExcerciseViewModel();
@@ -300,7 +300,7 @@ namespace eGTS.Bussiness.ExcerciseService
         public async Task<List<ExcerciseViewModel>> GetExcerciseByPTID(Guid PTID)
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
-            var excercises = await _context.Excercises.Where(e => e.Ptid == PTID).ToListAsync();
+            var excercises = await _context.Exercises.Where(e => e.Ptid == PTID).ToListAsync();
             foreach (Exercise e in excercises)
             {
                 ExcerciseViewModel result = new ExcerciseViewModel();
@@ -408,7 +408,7 @@ namespace eGTS.Bussiness.ExcerciseService
 
         public async Task<bool> UpdateExcercise(Guid id, ExcerciseUpdateViewModel request)
         {
-            var excercise = await _context.Excercises.FindAsync(id);
+            var excercise = await _context.Exercises.FindAsync(id);
             if (excercise == null)
                 return false;
             if (!request.Description.Equals(""))

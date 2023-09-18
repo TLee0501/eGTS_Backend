@@ -111,7 +111,7 @@ namespace eGTS.Controllers
 
         private bool ExserciseInSessionExists(Guid id)
         {
-            return (_context.ExserciseInSessions?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.ExerciseInSessions?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

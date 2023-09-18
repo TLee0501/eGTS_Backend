@@ -226,7 +226,7 @@ namespace eGTS.Controllers
 
         private bool ExcerciseExists(Guid id)
         {
-            return (_context.Excercises?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Exercises?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

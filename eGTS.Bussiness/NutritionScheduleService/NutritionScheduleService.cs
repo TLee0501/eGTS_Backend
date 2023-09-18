@@ -87,12 +87,12 @@ namespace eGTS.Bussiness.NutritionScheduleService
         {
             var result = new List<FoodAndSupplimentViewModel>();
 
-            var foodIDs = _context.FoodAndSupplimentInMeals.Where(a => a.MealId == id).ToList();
+            var foodIDs = _context.FoodAndSupplementInMeals.Where(a => a.MealId == id).ToList();
             if (foodIDs.Count == 0) return null;
 
             foreach (var item in foodIDs)
             {
-                var food = _context.FoodAndSuppliments.SingleOrDefault(a => a.Id == item.FoodAndSupplimentId && a.IsDelete == false);
+                var food = _context.FoodAndSupplements.SingleOrDefault(a => a.Id == item.FoodAndSupplementId && a.IsDelete == false);
                 if (food != null)
                 {
                     var viewModel = new FoodAndSupplimentViewModel();

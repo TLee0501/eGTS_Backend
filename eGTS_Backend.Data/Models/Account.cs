@@ -38,15 +38,15 @@ public partial class Account
 
     public virtual ICollection<BodyPerameter> BodyPerameters { get; set; } = new List<BodyPerameter>();
 
-    public virtual ICollection<ExerciseSchedule> ExcerciseScheduleGymers { get; set; } = new List<ExerciseSchedule>();
+    public virtual ICollection<ExerciseSchedule> ExerciseScheduleGymers { get; set; } = new List<ExerciseSchedule>();
 
-    public virtual ICollection<ExerciseSchedule> ExcerciseSchedulePts { get; set; } = new List<ExerciseSchedule>();
+    public virtual ICollection<ExerciseSchedule> ExerciseSchedulePts { get; set; } = new List<ExerciseSchedule>();
 
-    public virtual ICollection<Exercise> Excercises { get; set; } = new List<Exercise>();
+    public virtual ICollection<Exercise> Exercises { get; set; } = new List<Exercise>();
 
     public virtual ICollection<FeedBack> FeedBacks { get; set; } = new List<FeedBack>();
 
-    public virtual ICollection<FoodAndSuppliment> FoodAndSuppliments { get; set; } = new List<FoodAndSuppliment>();
+    public virtual ICollection<FoodAndSupplement> FoodAndSupplements { get; set; } = new List<FoodAndSupplement>();
 
     public virtual ICollection<Message> MessageRecievers { get; set; } = new List<Message>();
 

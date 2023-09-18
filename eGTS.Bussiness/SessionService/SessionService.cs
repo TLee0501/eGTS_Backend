@@ -32,7 +32,7 @@ namespace eGTS.Bussiness.SessionService
         };
             try
             {
-                await _context.ExserciseInSessions.AddAsync(EIS);
+                await _context.ExerciseInSessions.AddAsync(EIS);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -109,7 +109,7 @@ namespace eGTS.Bussiness.SessionService
         public async Task<List<ExInSessionViewModel>> DebugGetAllExcerciseInSessionList()
         {
             List<ExInSessionViewModel> resultList = new List<ExInSessionViewModel>();
-            var ExInsessions = await _context.ExserciseInSessions.ToListAsync();
+            var ExInsessions = await _context.ExerciseInSessions.ToListAsync();
             if (ExInsessions.Count > 0)
             {
                 foreach (var ex in ExInsessions)
@@ -173,10 +173,10 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<bool> DeleteExcerciseInSessionPERMANENT(Guid id)
         {
-            var EIS = await _context.ExserciseInSessions.FindAsync(id);
+            var EIS = await _context.ExerciseInSessions.FindAsync(id);
             if (EIS != null)
             {
-                _context.ExserciseInSessions.Remove(EIS);
+                _context.ExerciseInSessions.Remove(EIS);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -248,12 +248,12 @@ namespace eGTS.Bussiness.SessionService
         public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime)
         {
             Session session = _context.Sessions.FirstOrDefault(s => s.ScheduleId.Equals(ScheduleID) && s.From.Equals(dateTime));
-            var exInSessionList = _context.ExserciseInSessions.Where(s => s.SessionId.Equals(session.Id)).ToList();
+            var exInSessionList = _context.ExerciseInSessions.Where(s => s.SessionId.Equals(session.Id)).ToList();
             var excerciseList = new List<ExcerciseViewModel>();
             foreach (var exInSession in exInSessionList)
             {
 
-                var excercise = _context.Excercises.Find(exInSession.ExerciseId);
+                var excercise = _context.Exercises.Find(exInSession.ExerciseId);
                 var ExV = new ExcerciseViewModel();
                 ExV.id = excercise.Id;
                 ExV.Ptid = excercise.Ptid;
@@ -285,12 +285,12 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithSessionID(Guid SessionID)
         {
-            var exInSessionList = _context.ExserciseInSessions.Where(s => s.SessionId == SessionID).ToList();
+            var exInSessionList = _context.ExerciseInSessions.Where(s => s.SessionId == SessionID).ToList();
             var session = _context.Sessions.Find(SessionID);
             var excerciseList = new List<ExcerciseViewModel>();
             foreach (var exInSession in exInSessionList)
             {
-                var excercise = _context.Excercises.Find(exInSession.ExerciseId);
+                var excercise = _context.Exercises.Find(exInSession.ExerciseId);
                 var ExV = new ExcerciseViewModel();
                 ExV.id = excercise.Id;
                 ExV.Ptid = excercise.Ptid;
@@ -321,7 +321,7 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<ExInSessionViewModel> GetExcerciseInSessionByID(Guid id)
         {
-            var EIS = await _context.ExserciseInSessions.FindAsync(id);
+            var EIS = await _context.ExerciseInSessions.FindAsync(id);
             if (EIS != null)
             {
                 ExInSessionViewModel result = new ExInSessionViewModel();
@@ -337,7 +337,7 @@ namespace eGTS.Bussiness.SessionService
         public async Task<List<ExInSessionViewModel>> GetExcerciseInSessionBySessionID(Guid id)
         {
             List<ExInSessionViewModel> resultList = new List<ExInSessionViewModel>();
-            var EISs = await _context.ExserciseInSessions.Where(s => s.SessionId == id).ToListAsync();
+            var EISs = await _context.ExerciseInSessions.Where(s => s.SessionId == id).ToListAsync();
             if (EISs.Count > 0)
             {
                 foreach (var EIS in EISs)
@@ -438,7 +438,7 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<bool> UpdateExcerciseInSession(Guid id, ExInSessionUpdateViewModel request)
         {
-            var EIS = await _context.ExserciseInSessions.FindAsync(id);
+            var EIS = await _context.ExerciseInSessions.FindAsync(id);
             if (EIS == null)
                 return false;
             if (!request.ExerciseId.Equals(""))
@@ -533,7 +533,7 @@ namespace eGTS.Bussiness.SessionService
                 foreach (Guid PGID in listPGID)
                 {
 
-                    var scheduleList = _context.ExcerciseSchedules.Where(s => s.PackageGymerId.Equals(PGID)).ToList();
+                    var scheduleList = _context.ExerciseSchedules.Where(s => s.PackageGymerId.Equals(PGID)).ToList();
 
                     if (scheduleList.Count > 0)
                     {
@@ -621,7 +621,7 @@ namespace eGTS.Bussiness.SessionService
             var From = request.DateTime.Date.Add(TimeSpan.Parse(request.From));
             var To = request.DateTime.Date.Add(TimeSpan.Parse(request.To));
 
-            var exSchedule = await _context.ExcerciseSchedules.FindAsync(session.ScheduleId);
+            var exSchedule = await _context.ExerciseSchedules.FindAsync(session.ScheduleId);
             if (exSchedule.From <= request.DateTime)
             {
                 session.From = From;
@@ -637,7 +637,7 @@ namespace eGTS.Bussiness.SessionService
                             SessionId = session.Id,
                             ExerciseId = item
                         };
-                        await _context.ExserciseInSessions.AddAsync(tmp);
+                        await _context.ExerciseInSessions.AddAsync(tmp);
                     }
                 }
 

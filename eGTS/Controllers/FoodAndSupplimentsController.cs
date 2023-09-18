@@ -21,7 +21,7 @@ namespace eGTS.Controllers
 
         // GET: api/FoodAndSuppliments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FoodAndSuppliment>>> GetFoodAndSuppliments()
+        public async Task<ActionResult<IEnumerable<FoodAndSupplement>>> GetFoodAndSuppliments()
         {
             var result = await _foodAndSupplimentService.GetFoodAndSuppliments();
             if (result != null)
@@ -34,7 +34,7 @@ namespace eGTS.Controllers
 
         // GET: api/FoodAndSupplimentsByNE
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<FoodAndSuppliment>>> GetFoodAndSupplimentsBYNE(Guid id)
+        public async Task<ActionResult<IEnumerable<FoodAndSupplement>>> GetFoodAndSupplimentsBYNE(Guid id)
         {
             var result = await _foodAndSupplimentService.GetFoodAndSupplimentsBYNE(id);
             if (result != null)
@@ -47,7 +47,7 @@ namespace eGTS.Controllers
 
         // GET: api/FoodAndSuppliments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FoodAndSuppliment>> GetFoodAndSuppliment(Guid id)
+        public async Task<ActionResult<FoodAndSupplement>> GetFoodAndSuppliment(Guid id)
         {
             var result = await _foodAndSupplimentService.GetFoodAndSuppliment(id);
             if (result != null)
@@ -80,7 +80,7 @@ namespace eGTS.Controllers
         // POST: api/FoodAndSuppliments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FoodAndSuppliment>> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel foodAndSuppliment)
+        public async Task<ActionResult<FoodAndSupplement>> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel foodAndSuppliment)
         {
             if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Tạo mới thất bại!"));
             if (foodAndSuppliment.Ammount < 0) return BadRequest(new ErrorResponse(400, "Ammount không hợp lệ!"));
@@ -111,7 +111,7 @@ namespace eGTS.Controllers
         }
 
         [HttpGet("{NEID}")]
-        public async Task<ActionResult<IEnumerable<FoodAndSuppliment>>> SearchFoodAndSupplimentsByNameAndNE(Guid NEID, string FoodName)
+        public async Task<ActionResult<IEnumerable<FoodAndSupplement>>> SearchFoodAndSupplimentsByNameAndNE(Guid NEID, string FoodName)
         {
             var result = await _foodAndSupplimentService.SearchFoodAndSupplimentsByNameAndNE(NEID, FoodName);
             if (result != null)

@@ -19,17 +19,17 @@ public partial class EGtsContext : DbContext
 
     public virtual DbSet<BodyPerameter> BodyPerameters { get; set; }
 
-    public virtual DbSet<Exercise> Excercises { get; set; }
+    public virtual DbSet<Exercise> Exercises { get; set; }
 
-    public virtual DbSet<ExerciseSchedule> ExcerciseSchedules { get; set; }
+    public virtual DbSet<ExerciseInSession> ExerciseInSessions { get; set; }
 
-    public virtual DbSet<ExerciseInSession> ExserciseInSessions { get; set; }
+    public virtual DbSet<ExerciseSchedule> ExerciseSchedules { get; set; }
 
     public virtual DbSet<FeedBack> FeedBacks { get; set; }
 
-    public virtual DbSet<FoodAndSuppliment> FoodAndSuppliments { get; set; }
+    public virtual DbSet<FoodAndSupplement> FoodAndSupplements { get; set; }
 
-    public virtual DbSet<FoodAndSupplimentInMeal> FoodAndSupplimentInMeals { get; set; }
+    public virtual DbSet<FoodAndSupplementInMeal> FoodAndSupplementInMeals { get; set; }
 
     public virtual DbSet<Meal> Meals { get; set; }
 
@@ -107,7 +107,9 @@ public partial class EGtsContext : DbContext
 
         modelBuilder.Entity<Exercise>(entity =>
         {
-            entity.ToTable("Excercise");
+            entity.HasKey(e => e.Id).HasName("PK_Excercise");
+
+            entity.ToTable("Exercise");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -120,15 +122,40 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.UnitOfMeasurement).HasMaxLength(50);
             entity.Property(e => e.Video).IsUnicode(false);
 
-            entity.HasOne(d => d.Pt).WithMany(p => p.Excercises)
+            entity.HasOne(d => d.Pt).WithMany(p => p.Exercises)
                 .HasForeignKey(d => d.Ptid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Excercise_Account");
         });
 
+        modelBuilder.Entity<ExerciseInSession>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_ExserciseInSession");
+
+            entity.ToTable("ExerciseInSession");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.ExerciseId).HasColumnName("ExerciseID");
+            entity.Property(e => e.SessionId).HasColumnName("SessionID");
+
+            entity.HasOne(d => d.Exercise).WithMany(p => p.ExerciseInSessions)
+                .HasForeignKey(d => d.ExerciseId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExserciseInSession_Excercise");
+
+            entity.HasOne(d => d.Session).WithMany(p => p.ExerciseInSessions)
+                .HasForeignKey(d => d.SessionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExserciseInSession_Session");
+        });
+
         modelBuilder.Entity<ExerciseSchedule>(entity =>
         {
-            entity.ToTable("ExcerciseSchedule");
+            entity.HasKey(e => e.Id).HasName("PK_ExcerciseSchedule");
+
+            entity.ToTable("ExerciseSchedule");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -140,41 +167,20 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Ptid).HasColumnName("PTID");
             entity.Property(e => e.To).HasColumnType("date");
 
-            entity.HasOne(d => d.Gymer).WithMany(p => p.ExcerciseScheduleGymers)
+            entity.HasOne(d => d.Gymer).WithMany(p => p.ExerciseScheduleGymers)
                 .HasForeignKey(d => d.GymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ExcerciseSchedule_Account");
 
-            entity.HasOne(d => d.PackageGymer).WithMany(p => p.ExcerciseSchedules)
+            entity.HasOne(d => d.PackageGymer).WithMany(p => p.ExerciseSchedules)
                 .HasForeignKey(d => d.PackageGymerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ExcerciseSchedule_PackageGymer");
 
-            entity.HasOne(d => d.Pt).WithMany(p => p.ExcerciseSchedulePts)
+            entity.HasOne(d => d.Pt).WithMany(p => p.ExerciseSchedulePts)
                 .HasForeignKey(d => d.Ptid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ExcerciseSchedule_Account1");
-        });
-
-        modelBuilder.Entity<ExerciseInSession>(entity =>
-        {
-            entity.ToTable("ExserciseInSession");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.ExerciseId).HasColumnName("ExerciseID");
-            entity.Property(e => e.SessionId).HasColumnName("SessionID");
-
-            entity.HasOne(d => d.Exercise).WithMany(p => p.ExserciseInSessions)
-                .HasForeignKey(d => d.ExerciseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ExserciseInSession_Excercise");
-
-            entity.HasOne(d => d.Session).WithMany(p => p.ExserciseInSessions)
-                .HasForeignKey(d => d.SessionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ExserciseInSession_Session");
         });
 
         modelBuilder.Entity<FeedBack>(entity =>
@@ -203,9 +209,11 @@ public partial class EGtsContext : DbContext
                 .HasConstraintName("FK_FeedBack_Account");
         });
 
-        modelBuilder.Entity<FoodAndSuppliment>(entity =>
+        modelBuilder.Entity<FoodAndSupplement>(entity =>
         {
-            entity.ToTable("FoodAndSuppliment");
+            entity.HasKey(e => e.Id).HasName("PK_FoodAndSuppliment");
+
+            entity.ToTable("FoodAndSupplement");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -216,28 +224,30 @@ public partial class EGtsContext : DbContext
             entity.Property(e => e.Neid).HasColumnName("NEID");
             entity.Property(e => e.UnitOfMesuament).HasMaxLength(50);
 
-            entity.HasOne(d => d.Ne).WithMany(p => p.FoodAndSuppliments)
+            entity.HasOne(d => d.Ne).WithMany(p => p.FoodAndSupplements)
                 .HasForeignKey(d => d.Neid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FoodAndSuppliment_Account");
         });
 
-        modelBuilder.Entity<FoodAndSupplimentInMeal>(entity =>
+        modelBuilder.Entity<FoodAndSupplementInMeal>(entity =>
         {
-            entity.ToTable("FoodAndSupplimentInMeal");
+            entity.HasKey(e => e.Id).HasName("PK_FoodAndSupplimentInMeal");
+
+            entity.ToTable("FoodAndSupplementInMeal");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.FoodAndSupplimentId).HasColumnName("FoodAndSupplimentID");
+            entity.Property(e => e.FoodAndSupplementId).HasColumnName("FoodAndSupplementID");
             entity.Property(e => e.MealId).HasColumnName("MealID");
 
-            entity.HasOne(d => d.FoodAndSuppliment).WithMany(p => p.FoodAndSupplimentInMeals)
-                .HasForeignKey(d => d.FoodAndSupplimentId)
+            entity.HasOne(d => d.FoodAndSupplement).WithMany(p => p.FoodAndSupplementInMeals)
+                .HasForeignKey(d => d.FoodAndSupplementId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FoodAndSupplimentInMeal_FoodAndSuppliment");
 
-            entity.HasOne(d => d.Meal).WithMany(p => p.FoodAndSupplimentInMeals)
+            entity.HasOne(d => d.Meal).WithMany(p => p.FoodAndSupplementInMeals)
                 .HasForeignKey(d => d.MealId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FoodAndSupplimentInMeal_Meal");

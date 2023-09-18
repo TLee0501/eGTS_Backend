@@ -25,7 +25,7 @@ public partial class Exercise
 
     public bool IsDelete { get; set; }
 
-    public virtual ICollection<ExerciseInSession> ExserciseInSessions { get; set; } = new List<ExerciseInSession>();
+    public virtual ICollection<ExerciseInSession> ExerciseInSessions { get; set; } = new List<ExerciseInSession>();
 
     public virtual Account Pt { get; set; } = null!;
 }
