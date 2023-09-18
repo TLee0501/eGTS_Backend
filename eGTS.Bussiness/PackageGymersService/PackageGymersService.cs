@@ -107,7 +107,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 gymerActive.From = (DateTime)item.From;
                 gymerActive.Status = item.Status;
                 gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
-                var s = _context.ExcerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
+                var s = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
                 var isUpdate = true;
                 if (s == null) isUpdate = false;
                 gymerActive.isUpdate = isUpdate;
@@ -132,7 +132,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 gymerActive.From = (DateTime)item.From;
                 gymerActive.Status = item.Status;
                 gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
-                var s = _context.ExcerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
+                var s = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
                 var isUpdate = true;
                 if (s == null) isUpdate = false;
                 gymerActive.isUpdate = isUpdate;
@@ -201,7 +201,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 gymerActive.From = (DateTime)item.From;
                 gymerActive.Status = item.Status;
                 gymerActive.NumberOfSession = _context.Packages.Find(item.PackageId).NumberOfsession;
-                var s = _context.ExcerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
+                var s = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
                 var isUpdate = true;
                 if (s == null) isUpdate = false;
                 gymerActive.isUpdate = isUpdate;

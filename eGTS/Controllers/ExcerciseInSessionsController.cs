@@ -78,7 +78,7 @@ namespace eGTS.Controllers
 
         // POST: api/ExcerciseInSessions
         [HttpPost]
-        public async Task<ActionResult<ExserciseInSession>> CreateExserciseInSession(ExInSessionCreateViewModel model)
+        public async Task<ActionResult<ExerciseInSession>> CreateExserciseInSession(ExInSessionCreateViewModel model)
         {
             if (model.SessionId.Equals("") || model.SessionId == null)
             {
@@ -111,7 +111,7 @@ namespace eGTS.Controllers
 
         private bool ExserciseInSessionExists(Guid id)
         {
-            return (_context.ExserciseInSessions?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.ExerciseInSessions?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

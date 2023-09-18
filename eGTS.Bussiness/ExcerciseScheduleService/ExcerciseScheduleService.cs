@@ -25,7 +25,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
             try
             {
-                await _context.ExcerciseSchedules.AddAsync(exSchedule);
+                await _context.ExerciseSchedules.AddAsync(exSchedule);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -43,8 +43,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
             if (isExpired == false)
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.Where(e => e.To > DateTime.Now).ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.Where(e => e.To > DateTime.Now).ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -59,8 +59,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             else if (isExpired == true)
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.Where(e => e.To <= DateTime.Now).ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.Where(e => e.To <= DateTime.Now).ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -75,8 +75,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             else
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -98,10 +98,10 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
         public async Task<bool> DeleteExcerciseSchedulePERMANENT(Guid id)
         {
-            var exSchedule = await _context.ExcerciseSchedules.FindAsync(id);
+            var exSchedule = await _context.ExerciseSchedules.FindAsync(id);
             if (exSchedule != null)
             {
-                _context.ExcerciseSchedules.Remove(exSchedule);
+                _context.ExerciseSchedules.Remove(exSchedule);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -110,7 +110,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
         public async Task<ExScheduleViewModel> GetExcerciseScheduleByID(Guid id)
         {
-            var ExS = await _context.ExcerciseSchedules.FindAsync(id);
+            var ExS = await _context.ExerciseSchedules.FindAsync(id);
             if (ExS.IsDelete == true) return null;
             if (ExS != null)
             {
@@ -133,8 +133,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
             if (isExpired == false)
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.Where(e => e.To > DateTime.Now && e.Ptid.Equals(PTID)).ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.Where(e => e.To > DateTime.Now && e.Ptid.Equals(PTID)).ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -149,8 +149,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             else if (isExpired == true)
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.Where(e => e.To <= DateTime.Now && e.Ptid.Equals(PTID)).ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.Where(e => e.To <= DateTime.Now && e.Ptid.Equals(PTID)).ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -165,8 +165,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             else
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.Where(e => e.Ptid.Equals(PTID)).ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.Where(e => e.Ptid.Equals(PTID)).ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -192,8 +192,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
             if (isExpired == false)
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.Where(e => e.To > DateTime.Now && e.GymerId.Equals(GymerID)).ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.Where(e => e.To > DateTime.Now && e.GymerId.Equals(GymerID)).ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -208,8 +208,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             else if (isExpired == true)
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.Where(e => e.To <= DateTime.Now && e.GymerId.Equals(GymerID)).ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.Where(e => e.To <= DateTime.Now && e.GymerId.Equals(GymerID)).ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -224,8 +224,8 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             else
             {
-                var ExScheduleList = await _context.ExcerciseSchedules.Where(e => e.GymerId.Equals(GymerID)).ToListAsync();
-                foreach (ExcerciseSchedule exSchedule in ExScheduleList)
+                var ExScheduleList = await _context.ExerciseSchedules.Where(e => e.GymerId.Equals(GymerID)).ToListAsync();
+                foreach (ExerciseSchedule exSchedule in ExScheduleList)
                 {
                     var result = new ExScheduleViewModel();
                     result.id = exSchedule.Id;
@@ -247,7 +247,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
         public async Task<bool> UpdateExcerciseSchedule(Guid id, ExScheduleUpdateViewModel request)
         {
-            var exSchedule = await _context.ExcerciseSchedules.FindAsync(id);
+            var exSchedule = await _context.ExerciseSchedules.FindAsync(id);
             if (exSchedule == null)
             {
                 return false;
@@ -291,7 +291,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
         public async Task<bool> DeleteExcerciseSchedule(Guid id)
         {
-            var exSchedule = await _context.ExcerciseSchedules.FindAsync(id);
+            var exSchedule = await _context.ExerciseSchedules.FindAsync(id);
             if (exSchedule == null)
             {
                 return false;
@@ -330,7 +330,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 PackageGymerId = packageGymerID,
 
             }
-            await _context.ExcerciseSchedules.AddAsync(schedule);
+            await _context.ExerciseSchedules.AddAsync(schedule);
             await _context.SaveChangesAsync();
             return true;
         }*/
@@ -345,7 +345,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var scheduleIDs = new List<Guid>();
             foreach (var item in packageGymers)
             {
-                var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
+                var schedules = await _context.ExerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
                 if (schedules.Count > 0)
                 {
                     foreach (var item1 in schedules)
@@ -388,12 +388,12 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         {
             var result = new List<ExcerciseViewModel>();
 
-            var Exs = _context.ExserciseInSessions.Where(a => a.SessionId == id).ToList();
+            var Exs = _context.ExerciseInSessions.Where(a => a.SessionId == id).ToList();
             if (Exs.Count == 0) return null;
 
             foreach (var item in Exs)
             {
-                var excercise = _context.Excercises.SingleOrDefault(a => a.Id == item.ExerciseId && a.IsDelete == false);
+                var excercise = _context.Exercises.SingleOrDefault(a => a.Id == item.ExerciseId && a.IsDelete == false);
                 if (excercise != null)
                 {
                     var viewModel = new ExcerciseViewModel();
@@ -422,7 +422,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var scheduleIDs = new List<Guid>();
             foreach (var item in packageGymers)
             {
-                var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
+                var schedules = await _context.ExerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
                 if (schedules.Count > 0)
                 {
                     foreach (var item1 in schedules)
@@ -471,7 +471,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var scheduleIDs = new List<Guid>();
             foreach (var item in packageGymers)
             {
-                var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
+                var schedules = await _context.ExerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
                 if (schedules.Count > 0)
                 {
                     foreach (var item1 in schedules)
@@ -499,7 +499,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var result = new List<SessionOfPTViewModel>();
             foreach (var item in sessions)
             {
-                var GymerID = _context.ExcerciseSchedules.FindAsync(item.ScheduleId).Result.GymerId;
+                var GymerID = _context.ExerciseSchedules.FindAsync(item.ScheduleId).Result.GymerId;
                 var tmp = new SessionOfPTViewModel();
                 tmp.id = item.Id;
                 tmp.GymerID = GymerID;
@@ -522,7 +522,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var scheduleIDs = new List<Guid>();
             foreach (var item in packageGymers)
             {
-                var schedules = await _context.ExcerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
+                var schedules = await _context.ExerciseSchedules.Where(a => a.PackageGymerId == item.Id && a.IsDelete == false).ToListAsync();
                 if (schedules != null)
                 {
                     foreach (var item1 in schedules)
@@ -550,7 +550,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var result = new List<SessionOfPTViewModel>();
             foreach (var item in sessions)
             {
-                var GymerID = _context.ExcerciseSchedules.FindAsync(item.ScheduleId).Result.GymerId;
+                var GymerID = _context.ExerciseSchedules.FindAsync(item.ScheduleId).Result.GymerId;
                 var tmp = new SessionOfPTViewModel();
                 tmp.id = item.Id;
                 tmp.GymerID = GymerID;
@@ -568,11 +568,11 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             var pg = await _context.PackageGymers.FindAsync(request.PackageGymerID);
             if (pg == null) return false;
 
-            var checkS = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
+            var checkS = await _context.ExerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
             if (checkS != null) return false;
 
             var id = Guid.NewGuid();
-            var schedule = new ExcerciseSchedule
+            var schedule = new ExerciseSchedule
             {
                 Id = id,
                 GymerId = pg.GymerId,
@@ -582,7 +582,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 To = request.To,
                 IsDelete = false
             };
-            await _context.ExcerciseSchedules.AddAsync(schedule);
+            await _context.ExerciseSchedules.AddAsync(schedule);
 
             //Tao session
             foreach (var item in request.listSession)
@@ -590,7 +590,15 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 var check = await _context.Sessions.Where(s => s.ScheduleId.Equals(id) && s.From.Equals(item)).ToListAsync();
                 if (check.Count > 0) return false;
                 Guid Sid = Guid.NewGuid();
-                Session session = new Session(Sid, id, item, item.AddHours(1), false);
+                Session session = new Session()
+                {
+                    Id = Guid.NewGuid(),
+                    ScheduleId = id,
+                    From = item,
+                    To = item.AddHours(2),
+                    IsDelete = false
+                };
+                    //(Sid, id, item, item.AddHours(1), false);
 
                 try
                 {
@@ -606,12 +614,20 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             return true;
         }
 
-        private async Task<bool> createSession(Guid scheduleID, DateTime from)
+        /*private async Task<bool> createSession(Guid scheduleID, DateTime from)
         {
             var check = await _context.Sessions.Where(s => s.ScheduleId.Equals(scheduleID) && s.From.Equals(from)).ToListAsync();
             if (check != null) return false;
             Guid id = Guid.NewGuid();
-            Session session = new Session(id, scheduleID, from.AddHours(9), from.AddHours(10), false);
+            //Session session = new Session(id, scheduleID, from.AddHours(9), from.AddHours(10), false);
+            Session session = new Session()
+            {
+                Id = Guid.NewGuid(),
+                ScheduleId = id,
+                From = from.AddHours(9),
+                To = from.AddHours(11),
+                IsDelete = false
+            };
 
             try
             {
@@ -624,11 +640,11 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 _logger.LogError("Invalid Data");
                 return false;
             }
-        }
+        }*/
 
         public async Task<List<SessionDetailViewModel>> GetExcerciseScheduleByPackageGymerIDAndDate(Guid packageGymerID, DateTime date)
         {
-            var schedule = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
+            var schedule = await _context.ExerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
 
             //Tim sessions
             var sessions = await _context.Sessions.Where(a => a.ScheduleId == schedule.Id && a.From.Date == date.Date).ToListAsync();
@@ -651,7 +667,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
 
         /*public async Task<List<SessionDateViewModel>> GetExcerciseScheduleByPackageGymerID(Guid packageGymerID)
         {
-            var schedule = await _context.ExcerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
+            var schedule = await _context.ExerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
 
             //Tim sessions
             var sessions = await _context.Sessions.Where(a => a.ScheduleId == schedule.Id).ToListAsync();

@@ -40,7 +40,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<Excercise>>> GetAllExcercises()
+        public async Task<ActionResult<IEnumerable<Exercise>>> GetAllExcercises()
         {
             var result = await _excerciseService.GetAllExcercise();
             if (result == null)
@@ -59,7 +59,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<Excercise>>> GetExcercisesByName(string Name)
+        public async Task<ActionResult<IEnumerable<Exercise>>> GetExcercisesByName(string Name)
         {
             var result = await _excerciseService.GetExcerciseByName(Name);
             if (result == null)
@@ -74,7 +74,7 @@ namespace eGTS.Controllers
         /// </summary>
         /// <returns></returns>
         // GET: api/ExcercisesByName
-        [HttpGet]
+        /*[HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -86,7 +86,7 @@ namespace eGTS.Controllers
                 return NoContent();
             }
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Excercises Found.", result));
-        }
+        }*/
 
         /// <summary>
         /// Get Excercise by PTID
@@ -166,7 +166,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status201Created)]//CREATED
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<ActionResult<Excercise>> CreateExcercise(ExcerciseCreateViewModel model)
+        public async Task<ActionResult<Exercise>> CreateExcercise(ExcerciseCreateViewModel model)
         {
             if (model.Ptid.Equals("") || model.Ptid == null || model.Ptid.Equals("string"))
             {
@@ -226,7 +226,7 @@ namespace eGTS.Controllers
 
         private bool ExcerciseExists(Guid id)
         {
-            return (_context.Excercises?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Exercises?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
