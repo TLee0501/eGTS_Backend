@@ -226,7 +226,7 @@ namespace eGTS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ExcerciseSchedule>> CreateExcerciseScheduleV3(ExcerciseScheduleCreateViewModelV3 request)
+        public async Task<ActionResult<ExerciseSchedule>> CreateExcerciseScheduleV3(ExcerciseScheduleCreateViewModelV3 request)
         {
             if (request.PackageGymerID.Equals("") || request.PackageGymerID == null)
                 return BadRequest(new ErrorResponse(400, "Không tìm thấy PackageGymerID!"));

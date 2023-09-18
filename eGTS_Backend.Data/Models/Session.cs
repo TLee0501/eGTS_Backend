@@ -5,15 +5,6 @@ namespace eGTS_Backend.Data.Models;
 
 public partial class Session
 {
-    public Session(Guid id, Guid scheduleId, DateTime from, DateTime to, bool isDelete)
-    {
-        Id = id;
-        ScheduleId = scheduleId;
-        From = from;
-        To = to;
-        IsDelete = isDelete;
-    }
-
     public Guid Id { get; set; }
 
     public Guid ScheduleId { get; set; }
@@ -24,9 +15,9 @@ public partial class Session
 
     public bool IsDelete { get; set; }
 
-    public virtual ICollection<ExserciseInSession> ExserciseInSessions { get; set; } = new List<ExserciseInSession>();
+    public virtual ICollection<ExerciseInSession> ExserciseInSessions { get; set; } = new List<ExerciseInSession>();
 
-    public virtual ExcerciseSchedule Schedule { get; set; } = null!;
+    public virtual ExerciseSchedule Schedule { get; set; } = null!;
 
     public virtual ICollection<SessionResult> SessionResults { get; set; } = new List<SessionResult>();
 }

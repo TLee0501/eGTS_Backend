@@ -38,13 +38,11 @@ public partial class Account
 
     public virtual ICollection<BodyPerameter> BodyPerameters { get; set; } = new List<BodyPerameter>();
 
-    public virtual ICollection<ExcerciseSchedule> ExcerciseScheduleGymers { get; set; } = new List<ExcerciseSchedule>();
+    public virtual ICollection<ExerciseSchedule> ExcerciseScheduleGymers { get; set; } = new List<ExerciseSchedule>();
 
-    public virtual ICollection<ExcerciseSchedule> ExcerciseSchedulePts { get; set; } = new List<ExcerciseSchedule>();
+    public virtual ICollection<ExerciseSchedule> ExcerciseSchedulePts { get; set; } = new List<ExerciseSchedule>();
 
-    public virtual ICollection<ExcerciseType> ExcerciseTypes { get; set; } = new List<ExcerciseType>();
-
-    public virtual ICollection<Excercise> Excercises { get; set; } = new List<Excercise>();
+    public virtual ICollection<Exercise> Excercises { get; set; } = new List<Exercise>();
 
     public virtual ICollection<FeedBack> FeedBacks { get; set; } = new List<FeedBack>();
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace eGTS_Backend.Data.Models;
 
-public partial class ExcerciseSchedule
+public partial class ExerciseSchedule
 {
     public Guid Id { get; set; }
 

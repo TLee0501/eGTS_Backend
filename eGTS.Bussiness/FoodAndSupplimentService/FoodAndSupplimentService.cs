@@ -20,9 +20,18 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
             var checkValid = await _context.FoodAndSuppliments.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.Ammount == request.Ammount && a.IsDelete == false);
             if (checkValid != null) return false;
 
-            Guid id = Guid.NewGuid();
-            var createdate = DateTime.Now;
-            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(id, request.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, createdate, false);
+            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment()
+            {
+                Id = Guid.NewGuid(),
+                Neid = request.Neid,
+                Name = request.Name,
+                Ammount = request.Ammount,
+                UnitOfMesuament = request.UnitOfMesuament,
+                Calories = request.Calories,
+                CreateDate = DateTime.Now,
+                IsDelete = false
+            };
+                //(id, request.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, createdate, false);
             _context.FoodAndSuppliments.Add(foodAndSuppliment);
             try
             {
@@ -123,7 +132,19 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         {
             var inDatabase = await _context.FoodAndSuppliments.FindAsync(request.Id);
             _context.ChangeTracker.Clear();
-            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(request.Id, inDatabase.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, inDatabase.CreateDate, inDatabase.IsDelete);
+            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment()
+            {
+                Id = request.Id,
+                Neid = inDatabase.Neid,
+                Name = request.Name,
+                Ammount = request.Ammount,
+                UnitOfMesuament = request.UnitOfMesuament,
+                Calories = request.Calories,
+                CreateDate = inDatabase.CreateDate,
+                IsDelete = inDatabase.IsDelete
+            };
+                //(request.Id, inDatabase.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories,
+                //inDatabase.CreateDate, inDatabase.IsDelete);
             _context.Entry(foodAndSuppliment).State = EntityState.Modified;
             try
             {

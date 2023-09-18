@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace eGTS_Backend.Data.Models;
 
-public partial class Excercise
+public partial class Exercise
 {
     public Guid Id { get; set; }
 
@@ -15,19 +15,17 @@ public partial class Excercise
 
     public string? Video { get; set; }
 
+    public DateTime CreateDate { get; set; }
+
     public int CalorieCumsumption { get; set; }
 
     public int RepTime { get; set; }
 
     public string UnitOfMeasurement { get; set; } = null!;
 
-    public DateTime CreateDate { get; set; }
-
     public bool IsDelete { get; set; }
 
-    public virtual ICollection<ExerciseInExerciseType> ExerciseInExerciseTypes { get; set; } = new List<ExerciseInExerciseType>();
-
-    public virtual ICollection<ExserciseInSession> ExserciseInSessions { get; set; } = new List<ExserciseInSession>();
+    public virtual ICollection<ExerciseInSession> ExserciseInSessions { get; set; } = new List<ExerciseInSession>();
 
     public virtual Account Pt { get; set; } = null!;
 }

@@ -20,7 +20,7 @@ namespace eGTS.Bussiness.ExcerciseService
         public async Task<bool> CreateExcercise(ExcerciseCreateViewModel model)
         {
             DateTime createDate = DateTime.Now;
-            Excercise excercise = new Excercise
+            Exercise excercise = new Exercise
             {
                 Id = Guid.NewGuid(),
                 Ptid = model.Ptid,
@@ -47,7 +47,7 @@ namespace eGTS.Bussiness.ExcerciseService
 
         }
 
-        public async Task<bool> CreateExcerciseInType(ExcerciseInTypeCreateViewModel model)
+        /*public async Task<bool> CreateExcerciseInType(ExcerciseInTypeCreateViewModel model)
         {
             ExerciseInExerciseType EIT = new ExerciseInExerciseType
             {
@@ -66,9 +66,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 _logger.LogError("Invalid data.");
                 return false;
             }
-        }
+        }*/
 
-        public async Task<bool> CreateExcerciseType(ExcerciseTypeCreateViewModel model)
+        /*public async Task<bool> CreateExcerciseType(ExcerciseTypeCreateViewModel model)
         {
             DateTime createDate = DateTime.Now;
             ExcerciseType excerciseType = new ExcerciseType
@@ -89,7 +89,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 _logger.LogError("Invalid data.");
                 return false;
             }
-        }
+        }*/
 
         public async Task<bool> DeleteExcercisePEMANENT(Guid id)
         {
@@ -106,7 +106,7 @@ namespace eGTS.Bussiness.ExcerciseService
             return false;
         }
 
-        public async Task<bool> DeleteExcerciseInType(Guid id)
+        /*public async Task<bool> DeleteExcerciseInType(Guid id)
         {
             if (_context.ExerciseInExerciseTypes == null)
                 return false;
@@ -119,7 +119,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 return true;
             }
             return false;
-        }
+        }*/
 
         public async Task<bool> DeleteExcercise(Guid id)
         {
@@ -139,7 +139,7 @@ namespace eGTS.Bussiness.ExcerciseService
             return false;
         }
 
-        public async Task<bool> DeleteExcerciseTypePEMANENT(Guid id)
+        /*public async Task<bool> DeleteExcerciseTypePEMANENT(Guid id)
         {
             if (_context.ExcerciseTypes == null)
                 return false;
@@ -152,9 +152,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 return true;
             }
             return false;
-        }
+        }*/
 
-        public async Task<bool> DeleteExcerciseType(Guid id)
+        /*public async Task<bool> DeleteExcerciseType(Guid id)
         {
             var excerciseType = await _context.ExcerciseTypes.FindAsync(id);
 
@@ -170,7 +170,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 _logger.LogError("Unable to save changes");
             }
             return false;
-        }
+        }*/
 
         public async Task<List<ExcerciseViewModel>> GetAllExcercise()
         {
@@ -178,7 +178,7 @@ namespace eGTS.Bussiness.ExcerciseService
 
             var excercises = await _context.Excercises.ToListAsync();
 
-            foreach (Excercise e in excercises)
+            foreach (Exercise e in excercises)
             {
                 ExcerciseViewModel result = new ExcerciseViewModel();
                 result.id = e.Id;
@@ -201,7 +201,7 @@ namespace eGTS.Bussiness.ExcerciseService
 
         }
 
-        public async Task<List<ExcerciseInTypeViewModel>> GetAllExcerciseInType()
+        /*public async Task<List<ExcerciseInTypeViewModel>> GetAllExcerciseInType()
         {
             List<ExcerciseInTypeViewModel> resultList = new List<ExcerciseInTypeViewModel>();
 
@@ -220,9 +220,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 return resultList;
             else
                 return null;
-        }
+        }*/
 
-        public async Task<List<ExcerciseTypeViewModel>> GetAllExcerciseType()
+        /*public async Task<List<ExcerciseTypeViewModel>> GetAllExcerciseType()
         {
             List<ExcerciseTypeViewModel> resultList = new List<ExcerciseTypeViewModel>();
 
@@ -244,7 +244,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 return resultList;
             else
                 return null;
-        }
+        }*/
 
         public async Task<ExcerciseViewModel> GetExcerciseByID(Guid ID)
         {
@@ -275,7 +275,7 @@ namespace eGTS.Bussiness.ExcerciseService
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
             var excercises = await _context.Excercises.Where(e => e.Name.Contains(Name)).ToListAsync();
-            foreach (Excercise e in excercises)
+            foreach (Exercise e in excercises)
             {
                 ExcerciseViewModel result = new ExcerciseViewModel();
                 result.id = e.Id;
@@ -301,7 +301,7 @@ namespace eGTS.Bussiness.ExcerciseService
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
             var excercises = await _context.Excercises.Where(e => e.Ptid == PTID).ToListAsync();
-            foreach (Excercise e in excercises)
+            foreach (Exercise e in excercises)
             {
                 ExcerciseViewModel result = new ExcerciseViewModel();
                 result.id = e.Id;
@@ -323,7 +323,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 return null;
         }
 
-        public async Task<List<ExcerciseViewModel>> GetExcerciseByType(Guid TypeID)
+        /*public async Task<List<ExcerciseViewModel>> GetExcerciseByType(Guid TypeID)
         {
             List<ExcerciseViewModel> resultList = new List<ExcerciseViewModel>();
             var EITList = await _context.ExerciseInExerciseTypes.Where(e => e.ExerciseTypeId == TypeID).ToListAsync();
@@ -347,9 +347,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 return resultList;
             else
                 return null;
-        }
+        }*/
 
-        public async Task<ExcerciseTypeViewModel> GetExcerciseTypeByID(Guid id)
+        /*public async Task<ExcerciseTypeViewModel> GetExcerciseTypeByID(Guid id)
         {
             var excerciseType = await _context.ExcerciseTypes.FindAsync(id);
             if (excerciseType == null)
@@ -364,9 +364,9 @@ namespace eGTS.Bussiness.ExcerciseService
 
                 return result;
             }
-        }
+        }*/
 
-        public async Task<List<ExcerciseTypeViewModel>> GetExcerciseTypeByName(string Name)
+        /*public async Task<List<ExcerciseTypeViewModel>> GetExcerciseTypeByName(string Name)
         {
             List<ExcerciseTypeViewModel> resultList = new List<ExcerciseTypeViewModel>();
             var excerciseTypes = await _context.ExcerciseTypes.Where(e => e.Name.Contains(Name)).ToListAsync();
@@ -384,9 +384,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 return resultList;
             else
                 return null;
-        }
+        }*/
 
-        public async Task<List<ExcerciseTypeViewModel>> GetExcerciseTypeByPTID(Guid PTID)
+        /*public async Task<List<ExcerciseTypeViewModel>> GetExcerciseTypeByPTID(Guid PTID)
         {
             List<ExcerciseTypeViewModel> resultList = new List<ExcerciseTypeViewModel>();
             var excercises = await _context.ExcerciseTypes.Where(e => e.Ptid == PTID).ToListAsync();
@@ -404,7 +404,7 @@ namespace eGTS.Bussiness.ExcerciseService
                 return resultList;
             else
                 return null;
-        }
+        }*/
 
         public async Task<bool> UpdateExcercise(Guid id, ExcerciseUpdateViewModel request)
         {
@@ -432,7 +432,7 @@ namespace eGTS.Bussiness.ExcerciseService
             return false;
         }
 
-        public async Task<bool> UpdateExcerciseInType(Guid id, ExcerciseInTypeUpdateViewModel request)
+        /*public async Task<bool> UpdateExcerciseInType(Guid id, ExcerciseInTypeUpdateViewModel request)
         {
             var excerciseInType = await _context.ExerciseInExerciseTypes.FindAsync(id);
             if (excerciseInType == null)
@@ -453,9 +453,9 @@ namespace eGTS.Bussiness.ExcerciseService
                 _logger.LogError("Unable to save changes");
             }
             return false;
-        }
+        }*/
 
-        public async Task<bool> UpdateExcerciseType(Guid id, ExcerciseTypeUpdateViewModel request)
+        /*public async Task<bool> UpdateExcerciseType(Guid id, ExcerciseTypeUpdateViewModel request)
         {
             var excerciseType = await _context.ExcerciseTypes.FindAsync(id);
             if (excerciseType == null)
@@ -475,6 +475,6 @@ namespace eGTS.Bussiness.ExcerciseService
             }
             return false;
 
-        }
+        }*/
     }
 }

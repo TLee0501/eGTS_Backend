@@ -24,7 +24,7 @@ namespace eGTS.Bussiness.SessionService
 
         public async Task<bool> CreateExcerciseInSession(ExInSessionCreateViewModel model)
         {
-            ExserciseInSession EIS = new ExserciseInSession
+            ExerciseInSession EIS = new ExerciseInSession
             {
                 Id = Guid.NewGuid(),
                 SessionId = model.SessionId,
@@ -631,7 +631,7 @@ namespace eGTS.Bussiness.SessionService
                 {
                     foreach (var item in request.ListExcercise)
                     {
-                        var tmp = new ExserciseInSession
+                        var tmp = new ExerciseInSession
                         {
                             Id = Guid.NewGuid(),
                             SessionId = session.Id,

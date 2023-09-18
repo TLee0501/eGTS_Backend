@@ -42,7 +42,7 @@ public partial class PackageGymer
 
     public bool IsDelete { get; set; }
 
-    public virtual ICollection<ExcerciseSchedule> ExcerciseSchedules { get; set; } = new List<ExcerciseSchedule>();
+    public virtual ICollection<ExerciseSchedule> ExcerciseSchedules { get; set; } = new List<ExerciseSchedule>();
 
     public virtual ICollection<FeedBack> FeedBacks { get; set; } = new List<FeedBack>();
 
