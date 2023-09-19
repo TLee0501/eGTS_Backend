@@ -38,7 +38,7 @@ namespace eGTS.Bussiness.PackageGymersService
                 PaymentDate = DateTime.Now,
                 Amount = packageRequest.Price
             };
-            _context.Payments.AddAsync(paymentrecord);
+            await _context.Payments.AddAsync(paymentrecord);
 
             try
             {
