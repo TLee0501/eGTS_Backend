@@ -32,7 +32,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                 IsDelete = false
             };
                 //(id, request.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, createdate, false);
-            _context.FoodAndSupplements.Add(foodAndSuppliment);
+            await _context.FoodAndSupplements.AddAsync(foodAndSuppliment);
             try
             {
                 await _context.SaveChangesAsync();
