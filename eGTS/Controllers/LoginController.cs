@@ -65,7 +65,7 @@ namespace eGTS.Controllers
             var result = await _loginService.Login(model);
 
             if (result == null)
-                return NotFound(new ErrorResponse(204, "Vui lòng kiểm tả lại số điện thoại/mật khẩu!"));
+                return NotFound(new ErrorResponse(204, "Vui lòng kiểm tra lại số điện thoại/mật khẩu!"));
             else if (result.IsDelete == true)
                 return Unauthorized(new ErrorResponse(401, "Tài khoản đã bị khóa!"));
 
