@@ -88,7 +88,10 @@ namespace eGTS.Controllers
             try
             {
                 var result = await _foodAndSupplimentService.CreateFoodAndSuppliment(foodAndSuppliment);
-                return Ok(new SuccessResponse<FoodAndSupplimentCreateViewModel>(200, "Tạo mới thành công!", foodAndSuppliment));
+                if (result == true)
+                    return Ok(new SuccessResponse<FoodAndSupplimentCreateViewModel>(200, "Tạo mới thành công!", foodAndSuppliment));
+                else
+                    return BadRequest(new ErrorResponse(400, "Tạo mới thất bại!"));
             }
             catch (Exception ex)
             {
