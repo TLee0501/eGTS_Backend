@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using eGTS_Backend.Data.ViewModel;
 using eGTS.Bussiness.QualitificationService;
 using Azure.Core;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace eGTS.Controllers
 {
@@ -50,6 +51,8 @@ namespace eGTS.Controllers
         {
             if (qualification == null) return Problem("'Qualifications' is null.");
             if (qualification.Experience < 0) return BadRequest("Experience không hợp lệ!");
+            if (!string.IsNullOrEmpty(qualification.Descrition) && qualification.Descrition.Length >= 300) return BadRequest("Mô tả không hợp lệ!");
+
             bool result = await _qualitificationService.UpdateQualitification(qualification);
             if (result)
             {
@@ -65,6 +68,7 @@ namespace eGTS.Controllers
         {
             if (request == null) return Problem("'Qualifications' is null.");
             if (request.Experience < 0) return BadRequest("Experience không hợp lệ!");
+            if (!string.IsNullOrEmpty(request.Description) && request.Description.Length >= 300) return BadRequest("Mô tả không hợp lệ!");
 
             bool result;
             result = await _qualitificationService.CreateQualitification(request);

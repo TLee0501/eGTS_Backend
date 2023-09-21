@@ -1,7 +1,6 @@
 ﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.ReportService;
 using eGTS_Backend.Data.ViewModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eGTS.Controllers
@@ -21,7 +20,7 @@ namespace eGTS.Controllers
         public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetActivePackages()
         {
             var result = await _reportService.GetActivePackages();
-            if(result.Count == 0) return NotFound(new ErrorResponse(404, "Không tìm thấy!"));
+            if (result.Count == 0) return NotFound(new ErrorResponse(404, "Không tìm thấy!"));
 
             return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Tìm thành công!", result));
         }

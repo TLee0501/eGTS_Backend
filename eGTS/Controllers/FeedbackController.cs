@@ -1,9 +1,7 @@
 ﻿using coffee_kiosk_solution.Data.Responses;
-using eGTS.Bussiness.AccountService;
 using eGTS.Bussiness.FeedbackService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eGTS.Controllers
@@ -37,42 +35,37 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<bool>> CreateFeedback(FeedbackCreateViewModel request)
         {
-            if (request.PackageGymerId == null || request.PackageGymerId.Equals(""))
+            if (request.PackageGymerId == Guid.Empty)
                 return BadRequest(new ErrorResponse(400, "PackageGymerId đang bị bỏ trống."));
 
-            if (request.PtidorNeid == null || request.PtidorNeid.Equals(""))
+            if (request.PtidorNeid == Guid.Empty)
                 return BadRequest(new ErrorResponse(400, "PTID hoặc NEID đang bị bỏ trống."));
 
             if (request.Rate > 5 || request.Rate < 0)
                 return BadRequest(new ErrorResponse(400, "Số sao bị sai."));
 
+            if (!string.IsNullOrEmpty(request.Feedback1) && request.Feedback1.Length >= 300)
+                return BadRequest(new ErrorResponse(400, "Feedback không hợp lệ!"));
+
             switch (await _feedbackService.CreateFeedback(request))
             {
                 case 0:
                     return BadRequest(new ErrorResponse(400, "Không thể tạo đánh giá"));
-                    break;
                 case 1:
                     return BadRequest(new ErrorResponse(400, "Không tìm thấy PT hay NE"));
-                    break;
                 case 2:
                     return BadRequest(new ErrorResponse(400, "Không tìm thấy hợp đồng"));
-                    break;
                 case 3:
                     _logger.LogInformation($"Created Feedback with for expert ID: {request.PtidorNeid}");
                     return Ok(new SuccessResponse<FeedbackCreateViewModel>(200, "Tạo đánh giá thành công", request));
-                    break;
                 case 4:
                     return BadRequest(new ErrorResponse(400, "Không có PT hay NE trong hợp đồng"));
-                    break;
                 case 5:
                     return BadRequest(new ErrorResponse(400, "Chưa được gửi đánh giá"));
-                    break;
                 case 6:
                     return BadRequest(new ErrorResponse(400, "Bạn đã đánh giá hợp đồng này rồi."));
-                    break;
                 default:
                     return BadRequest(new ErrorResponse(400, "Không thể tạo đánh giá"));
-                    break;
             }
 
         }
@@ -124,7 +117,7 @@ namespace eGTS.Controllers
             if (await _feedbackService.REMOVEFeedback(feedbackID))
             {
                 _logger.LogInformation($"Delete Feedback with ID: {feedbackID}");
-                return Ok(new SuccessResponse<FeedbackCreateViewModel>(200, "Xóa vĩn viễn feedback thành công.", null));
+                return Ok(new SuccessResponse<FeedbackCreateViewModel>(200, "Xóa vĩnh viễn feedback thành công.", null));
             }
             else
             {
@@ -140,6 +133,10 @@ namespace eGTS.Controllers
         {
             if (request.Rate > 5 || request.Rate < 0)
                 return BadRequest(new ErrorResponse(400, "Số sao bị sai."));
+
+            if (!string.IsNullOrEmpty(request.Feedback1) && request.Feedback1.Length >= 300)
+                return BadRequest(new ErrorResponse(400, "Feedback không hợp lệ!"));
+
             switch (await _feedbackService.UpdateFeedback(id, request))
             {
                 case 0:

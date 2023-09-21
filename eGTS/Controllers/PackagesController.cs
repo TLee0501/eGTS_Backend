@@ -70,6 +70,9 @@ namespace eGTS.Controllers
             if (package.Ptcost.HasValue && package.Ptcost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
             if (package.Necost.HasValue && package.Necost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
             if (package.CenterCost.HasValue && package.CenterCost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
+            if (package.Name.IsEmpty()) return BadRequest("Không có tên gói!");
+            if (!string.IsNullOrEmpty(package.Name) && package.Name.Length >= 50) return BadRequest("Tên gói không hợp lệ!");
+
             try
             {
                 var result = await _packageService.UpdatePackage(package);
@@ -88,6 +91,7 @@ namespace eGTS.Controllers
         public async Task<ActionResult<Package>> CreatePackage(PackageCreateViewModel package)
         {
             if (package.Name.IsEmpty()) return BadRequest("Không có tên gói!");
+            if (!string.IsNullOrEmpty(package.Name) && package.Name.Length >= 50) return BadRequest("Tên gói không hợp lệ!");
             if (package.NumberOfMonth.HasValue && package.NumberOfMonth.Value <= 0) return BadRequest("Thời gian của gói không hợp lệ!");
             if (package.NumberOfsession.HasValue && package.NumberOfsession.Value <= 0) return BadRequest("Thời gian của gói không hợp lệ!");
             if (package.Price <= 0.0) return BadRequest("Giá tiền không hợp lệ!");
@@ -112,7 +116,7 @@ namespace eGTS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePackage(Guid id)
         {
-            if (id == null) return BadRequest();
+            if (id == Guid.Empty) return BadRequest();
             var result = await _packageService.DeletePackage(id);
             if (result == true) return StatusCode(200);
             else

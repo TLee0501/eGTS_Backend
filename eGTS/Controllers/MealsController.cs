@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using eGTS.Bussiness.MealService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using System.Web.WebPages;
-using eGTS.Bussiness.MealService;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eGTS.Controllers
 {
@@ -29,10 +23,10 @@ namespace eGTS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Meal>>> GetMealsForTest()
         {
-          if (_context.Meals == null)
-          {
-              return NotFound();
-          }
+            if (_context.Meals == null)
+            {
+                return NotFound();
+            }
             return await _context.Meals.ToListAsync();
         }
 
@@ -61,7 +55,7 @@ namespace eGTS.Controllers
         {
             if (request.ToDatetime < request.FromDatetime) return BadRequest("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!");
             if (request.MonAnSang == null && request.MonAnTrua == null && request.MonAnToi == null && request.MonAnTruocTap == null)
-                return BadRequest("Vui lòng nhập món ăn để cập nhật  thực đơn!");
+                return BadRequest("Vui lòng nhập món ăn để cập nhật thực đơn!");
 
             var result = await _mealService.UpdateMeal(request);
             if (result == false) return BadRequest("Cập nhật thực đơn thất bại!");
@@ -103,11 +97,6 @@ namespace eGTS.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool MealExists(Guid id)
-        {
-            return (_context.Meals?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

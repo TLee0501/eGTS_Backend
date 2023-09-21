@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
-using eGTS.Bussiness.AccountService;
-using eGTS_Backend.Data.ViewModel;
-using coffee_kiosk_solution.Data.Responses;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.ExcerciseService;
-using Microsoft.AspNetCore.Http.HttpResults;
+using eGTS_Backend.Data.Models;
+using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Controllers
@@ -126,6 +118,9 @@ namespace eGTS.Controllers
         {
             if (request.CalorieCumsumption < 0) return BadRequest(new ErrorResponse(400, "Calory không hợp lệ!"));
             if (request.RepTime < 0) return BadRequest(new ErrorResponse(400, "RepTime không hợp lệ!"));
+            if (!string.IsNullOrEmpty(request.Description) && request.Description.Length >= 300)
+                return BadRequest(new ErrorResponse(400, "Mô tả không hợp lệ!"));
+
             if (await _excerciseService.UpdateExcercise(id, request))
                 return Ok(new SuccessResponse<ExcerciseUpdateViewModel>(200, $"Bài tập có ID: {id} cập nhập thành công.", request));
             else
@@ -154,6 +149,13 @@ namespace eGTS.Controllers
             }
             if (model.CalorieCumsumption < 0) return BadRequest(new ErrorResponse(400, "Calory không hợp lệ!"));
             if (model.RepTime < 0) return BadRequest(new ErrorResponse(400, "RepTime không hợp lệ!"));
+
+            if (!string.IsNullOrEmpty(model.Name) && model.Name.Length >= 50)
+                return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+
+            if (!string.IsNullOrEmpty(model.Description) && model.Description.Length >= 300)
+                return BadRequest(new ErrorResponse(400, "Mô tả không hợp lệ!"));
+
 
             if (await _excerciseService.CreateExcercise(model))
             {

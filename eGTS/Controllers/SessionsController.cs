@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
-using eGTS.Bussiness.AccountService;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.SessionService;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eGTS.Controllers
 {
@@ -108,7 +99,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<IActionResult> UpdateSession(Guid sessionId, SessionUpdateViewModel request)
         {
-            if (request.DateTime.Date < DateTime.Now.Date) 
+            if (request.DateTime.Date < DateTime.Now.Date)
                 return BadRequest(new ErrorResponse(400, "Sai ngày bắt đầu!"));
             if (TimeSpan.Parse(request.To) < TimeSpan.Parse(request.From))
                 return BadRequest(new ErrorResponse(400, "Sai giờ bắt đầu và kết thúc!"));

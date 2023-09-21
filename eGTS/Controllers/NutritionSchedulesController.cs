@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.NutritionScheduleService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using eGTS.Bussiness.NutritionScheduleService;
-using coffee_kiosk_solution.Data.Responses;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eGTS.Controllers
 {
@@ -28,10 +23,10 @@ namespace eGTS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NutritionSchedule>>> GetNutritionSchedulesForTest()
         {
-          if (_context.NutritionSchedules == null)
-          {
-              return NotFound();
-          }
+            if (_context.NutritionSchedules == null)
+            {
+                return NotFound();
+            }
             return await _context.NutritionSchedules.ToListAsync();
         }
 
@@ -39,10 +34,10 @@ namespace eGTS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<NutritionSchedule>> GetNutritionSchedule(Guid id)
         {
-          if (_context.NutritionSchedules == null)
-          {
-              return NotFound();
-          }
+            if (_context.NutritionSchedules == null)
+            {
+                return NotFound();
+            }
             var nutritionSchedule = await _context.NutritionSchedules.FindAsync(id);
 
             if (nutritionSchedule == null)

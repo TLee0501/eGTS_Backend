@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.SessionService;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using coffee_kiosk_solution.Data.Responses;
-using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Controllers
@@ -52,9 +45,9 @@ namespace eGTS.Controllers
         {
             var result = await _sessionService.GetSessionResultByID(id);
             if (result == null)
-                return BadRequest(new ErrorResponse(400, "ID Not Found in Session Result DB"));
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy kết quả luyện tập!"));
             else
-                return Ok(new SuccessResponse<SessionResultViewModel>(200, "Session Result found", result));
+                return Ok(new SuccessResponse<SessionResultViewModel>(200, "Kết quả luyện tập:", result));
         }
 
         [HttpGet("{id}")]
@@ -62,9 +55,9 @@ namespace eGTS.Controllers
         {
             var resultList = await _sessionService.GetSessionResultBySessionID(id);
             if (resultList == null)
-                return BadRequest(new ErrorResponse(400, "Session ID Not Found in Session Result DB"));
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy kết quả luyện tập!"));
             else
-                return Ok(new SuccessResponse<List<SessionResultViewModel>>(200, "Session Result found", resultList));
+                return Ok(new SuccessResponse<List<SessionResultViewModel>>(200, "Kết quả luyện tập:", resultList));
         }
 
         // PUT: api/SessionResults/5
@@ -72,13 +65,18 @@ namespace eGTS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSessionResult(Guid id, SessionResultUpdateViewModel request)
         {
+            if (request.Note.IsNullOrEmpty())
+                return BadRequest(new ErrorResponse(400, "Ghi chú không hợp lệ!"));
+            if (request.CaloConsump <= 0)
+                return BadRequest(new ErrorResponse(400, "Lượng Calorie không hợp lệ!"));
+
             if (await _sessionService.UpdateSessionResult(id, request))
             {
                 _logger.LogInformation($"Update Session with ID: {id}");
-                return Ok(new SuccessResponse<SessionResultUpdateViewModel>(200, "Update Success.", request));
+                return Ok(new SuccessResponse<SessionResultUpdateViewModel>(200, "Thành công!", request));
             }
             else
-                return BadRequest(new ErrorResponse(400, "Unable to update Session"));
+                return BadRequest(new ErrorResponse(400, "Thất bại!"));
         }
 
         // POST: api/SessionResults
@@ -86,20 +84,20 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<SessionResultCreateViewModel>> CreateSessionResult(SessionResultCreateViewModel model)
         {
-            if (model.SessionId.Equals("") || model.SessionId == null)
+            if (model.SessionId == Guid.Empty)
                 return BadRequest(new ErrorResponse(400, "Session ID is empty."));
             if (model.Note.IsNullOrEmpty())
-                return BadRequest(new ErrorResponse(400, "Note is empty."));
-            if (model.CaloConsump == 0)
-                return BadRequest(new ErrorResponse(400, "CaloConsump is equal 0."));
+                return BadRequest(new ErrorResponse(400, "Ghi chú không hợp lệ!"));
+            if (model.CaloConsump <= 0)
+                return BadRequest(new ErrorResponse(400, "Lượng Calorie không hợp lệ!"));
 
             if (await _sessionService.CreateSessionResult(model))
             {
                 _logger.LogInformation($"Created Session Result with for Session with ID: {model.SessionId}");
-                return Ok(new SuccessResponse<SessionResultCreateViewModel>(200, "Create Success.", model));
+                return Ok(new SuccessResponse<SessionResultCreateViewModel>(200, "Thành công!", model));
             }
             else
-                return BadRequest(new ErrorResponse(400, "Invalid Data"));
+                return BadRequest(new ErrorResponse(400, "Thất bại!"));
 
         }
 
@@ -110,10 +108,10 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSessionResult(id))
             {
                 _logger.LogInformation($"Deleted Session Result with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Delete Success.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Thành công!", null));
             }
             else
-                return NoContent();
+                return BadRequest(new ErrorResponse(400, "Thất bại!"));
         }
 
         [HttpDelete("{id}")]
@@ -122,15 +120,10 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSessionResultPERMANENT(id))
             {
                 _logger.LogInformation($"Deleted Session Result with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Delete Success.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Thành công!", null));
             }
             else
-                return NoContent();
-        }
-
-        private bool SessionResultExists(Guid id)
-        {
-            return (_context.SessionResults?.Any(e => e.Id == id)).GetValueOrDefault();
+                return BadRequest(new ErrorResponse(400, "Thất bại!"));
         }
     }
 }
