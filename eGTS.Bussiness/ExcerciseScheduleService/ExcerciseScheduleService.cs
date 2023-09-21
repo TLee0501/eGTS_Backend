@@ -665,14 +665,14 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             return result;
         }
 
-        /*public async Task<List<SessionDateViewModel>> GetExcerciseScheduleByPackageGymerID(Guid packageGymerID)
+        public async Task<List<SessionDateViewModel>> GetExcerciseScheduleByPackageGymerID(Guid packageGymerID)
         {
             var schedule = await _context.ExerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
 
             //Tim sessions
-            var sessions = await _context.Sessions.Where(a => a.ScheduleId == schedule.Id).ToListAsync();
-            if (sessions == null) return null;
-            
+            var sessions = await _context.Sessions.Where(a => a.ScheduleId == schedule.Id && a.IsDelete == false).ToListAsync();
+            if (sessions.IsNullOrEmpty()) return null;
+
             //Thêm bài tập vào buổi tập
             var result = new List<SessionDateViewModel>();
             foreach (var item in sessions)
@@ -684,6 +684,6 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                 result.Add(viewModel);
             }
             return result;
-        }*/
+        }
     }
 }

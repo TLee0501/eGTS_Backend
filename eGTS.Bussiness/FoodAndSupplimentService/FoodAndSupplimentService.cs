@@ -17,7 +17,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
-            var checkValid = await _context.FoodAndSupplements.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.Ammount == request.Ammount && a.IsDelete == false);
+            var checkValid = await _context.FoodAndSupplements.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.IsDelete == false);
             if (checkValid != null) return false;
 
             FoodAndSupplement foodAndSuppliment = new FoodAndSupplement()
