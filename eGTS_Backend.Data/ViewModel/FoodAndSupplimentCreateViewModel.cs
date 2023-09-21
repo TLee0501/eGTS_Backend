@@ -4,7 +4,7 @@
     {
         public Guid Neid { get; set; }
         public string Name { get; set; } = null!;
-        public short Ammount { get; set; }
+        public short Amount { get; set; }
         public string UnitOfMesuament { get; set; } = null!;
         public double Calories { get; set; }
     }

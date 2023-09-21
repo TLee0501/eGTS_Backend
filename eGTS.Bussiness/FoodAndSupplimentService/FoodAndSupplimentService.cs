@@ -18,7 +18,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
-            var checkValid = await _context.FoodAndSupplements.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.Name.ToLower() == request.Name.ToLower() && a.Ammount == request.Ammount && !a.IsDelete);
+            var checkValid = await _context.FoodAndSupplements.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.Name.ToLower() == request.Name.ToLower() && a.Ammount == request.Amount && !a.IsDelete);
             if (checkValid != null) return false;
 
             FoodAndSupplement foodAndSuppliment = new FoodAndSupplement()
@@ -26,7 +26,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                 Id = Guid.NewGuid(),
                 Neid = request.Neid,
                 Name = request.Name,
-                Ammount = request.Ammount,
+                Ammount = request.Amount,
                 UnitOfMesuament = request.UnitOfMesuament,
                 Calories = request.Calories,
                 CreateDate = DateTime.Now,

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.SuspendService;
+using eGTS_Backend.Data.Models;
+using eGTS_Backend.Data.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
-using eGTS.Bussiness.SuspendService;
-using coffee_kiosk_solution.Data.Responses;
-using eGTS_Backend.Data.ViewModel;
 
 namespace eGTS.Controllers
 {
@@ -30,10 +25,10 @@ namespace eGTS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Suspend>>> GetSuspendsForTest()
         {
-          if (_context.Suspends == null)
-          {
-              return NotFound();
-          }
+            if (_context.Suspends == null)
+            {
+                return NotFound();
+            }
             return await _context.Suspends.ToListAsync();
         }
 
@@ -63,6 +58,9 @@ namespace eGTS.Controllers
                 return BadRequest(new ErrorResponse(400, "Sai dữ liệu ngày bắt đầu/kết thúc!"));
             if (suspend.From.Date <= DateTime.Now.Date)
                 return BadRequest(new ErrorResponse(400, "Sai dữ liệu ngày bắt đầu!"));
+            if (!string.IsNullOrEmpty(suspend.Reason) && suspend.Reason.Length >= 100)
+                return BadRequest("Lý do không hợp lệ!");
+
             var result = await _suspendService.CreateSuspend(suspend);
             if (result == 1) return NotFound(new ErrorResponse(404, "Không tìm thấy!"));
             else if (result == 2) return BadRequest(new ErrorResponse(400, "Sai dữ liệu ngày bắt đầu!"));

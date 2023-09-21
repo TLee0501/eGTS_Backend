@@ -3,6 +3,7 @@ using eGTS.Bussiness.FoodAndSupplimentService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Controllers
 {
@@ -66,6 +67,11 @@ namespace eGTS.Controllers
             if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Cập nhật thất bại!"));
             if (foodAndSuppliment.Ammount < 0) return BadRequest(new ErrorResponse(400, "Ammount không hợp lệ!"));
             if (foodAndSuppliment.Calories < 0) return BadRequest(new ErrorResponse(400, "Calorie không hợp lệ!"));
+            if (foodAndSuppliment.Name.IsNullOrEmpty()) return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+            if (!string.IsNullOrEmpty(foodAndSuppliment.Name) && foodAndSuppliment.Name.Length >= 50) return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+            if (foodAndSuppliment.UnitOfMesuament.IsNullOrEmpty()) return BadRequest(new ErrorResponse(400, "Đơn vị tính không hợp lệ!"));
+            if (!string.IsNullOrEmpty(foodAndSuppliment.UnitOfMesuament) && foodAndSuppliment.UnitOfMesuament.Length >= 50) return BadRequest(new ErrorResponse(400, "Đơn vị tính không hợp lệ!"));
+
             try
             {
                 var result = await _foodAndSupplimentService.UpdateFoodAndSuppliment(foodAndSuppliment);
@@ -83,8 +89,12 @@ namespace eGTS.Controllers
         public async Task<ActionResult<FoodAndSupplement>> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel foodAndSuppliment)
         {
             if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Tạo mới thất bại!"));
-            if (foodAndSuppliment.Ammount < 0) return BadRequest(new ErrorResponse(400, "Ammount không hợp lệ!"));
+            if (foodAndSuppliment.Amount < 0) return BadRequest(new ErrorResponse(400, "Ammount không hợp lệ!"));
             if (foodAndSuppliment.Calories < 0) return BadRequest(new ErrorResponse(400, "Calorie không hợp lệ!"));
+            if (foodAndSuppliment.Name.IsNullOrEmpty()) return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+            if (!string.IsNullOrEmpty(foodAndSuppliment.Name) && foodAndSuppliment.Name.Length >= 50) return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+            if (foodAndSuppliment.UnitOfMesuament.IsNullOrEmpty()) return BadRequest(new ErrorResponse(400, "Đơn vị tính không hợp lệ!"));
+            if (!string.IsNullOrEmpty(foodAndSuppliment.UnitOfMesuament) && foodAndSuppliment.UnitOfMesuament.Length >= 50) return BadRequest(new ErrorResponse(400, "Đơn vị tính không hợp lệ!"));
             try
             {
                 var result = await _foodAndSupplimentService.CreateFoodAndSuppliment(foodAndSuppliment);
@@ -103,8 +113,7 @@ namespace eGTS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFoodAndSuppliment(Guid id)
         {
-
-            if (id == null) return BadRequest(new ErrorResponse(400, "Xóa thất bại!"));
+            if (id == Guid.Empty) return BadRequest(new ErrorResponse(400, "Xóa thất bại!"));
             var result = await _foodAndSupplimentService.DeleteFoodAndSuppliment(id);
             if (result == true) return Ok(new SuccessResponse<FoodAndSupplimentCreateViewModel>(200, "Xóa thành công!", null));
             else

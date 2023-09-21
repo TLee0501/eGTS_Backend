@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.AccountService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using System.Data;
-using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
-using System.Net;
-using coffee_kiosk_solution.Data.Responses;
-using eGTS.Bussiness.AccountService;
-using Microsoft.Identity.Client;
 
 namespace eGTS.Controllers
 {
@@ -61,6 +52,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<AccountViewModel>> GetAccountByID(Guid id)
         {
+            if (id == Guid.Empty) return NoContent();
             var result = await _accountService.GetAccountByID(id);
             if (result == null)
                 return NoContent();
@@ -80,7 +72,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<AccountViewModel>>> SearchAccountByPhoneNo(string PhoneNo)
         {
-            if (PhoneNo == null)
+            if (PhoneNo.IsNullOrEmpty())
                 return BadRequest(new ErrorResponse(400, "SDT đang bị bỏ trống."));
 
             var result = await _accountService.SearchAccountByPhoneNo(PhoneNo);
@@ -103,7 +95,7 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<IEnumerable<AccountViewModel>>> SearchAccountByName(string Fullname)
         {
-            if (Fullname == null)
+            if (Fullname.IsNullOrEmpty())
                 return BadRequest(new ErrorResponse(400, "Họ và tên đang bị bỏ trống."));
 
             var result = await _accountService.SearchAccountByName(Fullname);
@@ -128,30 +120,20 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<IActionResult> UpdateAccount(Guid id, AccountUpdateViewModel request)
         {
-
-
-
-            if (!request.PhoneNo.Equals("") && !PhoneNoIsValid(request.PhoneNo))
-
+            if (request.PhoneNo.IsNullOrEmpty() || !PhoneNoIsValid(request.PhoneNo))
                 return BadRequest(new ErrorResponse(400, "SDT không đúng cú pháp."));
 
             if (PhoneNoExists(request.PhoneNo))
-
                 return BadRequest(new ErrorResponse(400, "SDT đã tồn tại."));
 
-            if (request.Gender == null)
-
+            if (request.Gender.IsNullOrEmpty())
                 return BadRequest(new ErrorResponse(400, "Giới tính sai"));
 
+            if (!string.IsNullOrEmpty(request.Fullname) && request.Fullname.Length >= 50)
+                return BadRequest(new ErrorResponse(400, "Họ tên sai cú pháp!"));
 
-
-            if (!request.Role.Equals("PT") && !request.Role.Equals("NE") && !request.Role.Equals("Gymer") && !request.Role.Equals("Staff") && !request.Role.Equals("") && !request.PhoneNo.Equals("string"))
+            if (!request.Role.Equals("PT") && !request.Role.Equals("NE") && !request.Role.Equals("Gymer") && !request.Role.Equals("Staff"))
                 return BadRequest(new ErrorResponse(400, "Chức vụ sai"));
-
-            if (request.IsDelete == null)
-            {
-                return BadRequest(new ErrorResponse(400, "Trạng thái xóa sai"));
-            }
 
             if (await _accountService.UpdateAccount(id, request))
             {
@@ -179,12 +161,14 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<ActionResult<Guid>> CreateAccount(AccountCreateViewModel model)
         {
-            if (model.PhoneNo.Equals("") || model.Password.Equals(""))
+            if (model.PhoneNo.IsNullOrEmpty() || model.Password.IsNullOrEmpty())
                 return BadRequest(new ErrorResponse(400, "SDT Or mật khẩu đang bị bỏ trống."));
             if (!PhoneNoIsValid(model.PhoneNo))
                 return BadRequest(new ErrorResponse(400, "SDT sai cú pháp."));
             if (PhoneNoExists(model.PhoneNo))
                 return BadRequest(new ErrorResponse(400, "SDT đang được sử dụng."));
+            if (model.Fullname.IsNullOrEmpty() || model.Fullname.Length >= 50)
+                return BadRequest(new ErrorResponse(400, "Họ tên sai cú pháp!"));
 
             var id = await _accountService.CreateAccount(model);
             if (id != Guid.Empty)
@@ -209,7 +193,7 @@ namespace eGTS.Controllers
             if (await _accountService.DeleteAccountPERMANENT(id))
             {
                 _logger.LogInformation($"REMOVE Account with ID: {id}");
-                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Xóa vĩn viễn thành công.", null));
+                return Ok(new SuccessResponse<ExScheduleCreateViewModel>(200, "Xóa vĩnh viễn thành công.", null));
             }
             else
             {
@@ -272,7 +256,7 @@ namespace eGTS.Controllers
         // Check if PhoneNo is valid
         private bool PhoneNoIsValid(string PhoneNo)
         {
-            return Regex.IsMatch(PhoneNo, @"^\d{9,11}$");
+            return Regex.IsMatch(PhoneNo, @"^\d{10}$");
         }
     }
 }

@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
-using eGTS.Bussiness.ExcerciseService;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.SessionService;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eGTS.Controllers
 {
@@ -80,11 +73,11 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<ExerciseInSession>> CreateExserciseInSession(ExInSessionCreateViewModel model)
         {
-            if (model.SessionId.Equals("") || model.SessionId == null)
+            if (model.SessionId == Guid.Empty)
             {
                 return BadRequest(new ErrorResponse(400, "ID bữa tập đang bị rỗng."));
             }
-            if (model.ExerciseId.Equals("") || model.ExerciseId == null)
+            if (model.ExerciseId == Guid.Empty)
             {
                 return BadRequest(new ErrorResponse(400, "ID bài tập đang bị rỗng."));
             }

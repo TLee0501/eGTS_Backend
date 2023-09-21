@@ -1,20 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using eGTS_Backend.Data.Models;
-using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.LoginService;
-using Azure.Core;
-using coffee_kiosk_solution.Data.Responses;
-using eGTS_Backend.Data.ViewModel;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.IdentityModel.JsonWebTokens;
-using System.IdentityModel.Tokens.Jwt;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.Responses;
+using eGTS_Backend.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace eGTS.Controllers
 {

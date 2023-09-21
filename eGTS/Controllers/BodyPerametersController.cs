@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
-using eGTS.Bussiness.AccountService;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.BodyParameters;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eGTS.Controllers
 {
@@ -97,6 +90,8 @@ namespace eGTS.Controllers
                 return BadRequest(new ErrorResponse(400, "Thông số Fat không hợp lệ không hợp lệ!"));
             if (request.Muscle.HasValue && request.Muscle.Value < 0)
                 return BadRequest(new ErrorResponse(400, "Thông số Muscle không hợp lệ!"));
+            if (!string.IsNullOrEmpty(request.Goal) && request.Goal.Length >= 300)
+                return BadRequest(new ErrorResponse(400, "Thông số Goal không hợp lệ!"));
 
             if (await _bodyParametersService.UpdateBodyParameters(id, request))
             {
@@ -124,6 +119,8 @@ namespace eGTS.Controllers
                 return BadRequest(new ErrorResponse(400, "Thông số Fat không hợp lệ không hợp lệ!"));
             if (model.Muscle.HasValue && model.Muscle.Value < 0)
                 return BadRequest(new ErrorResponse(400, "Thông số Muscle không hợp lệ!"));
+            if (!string.IsNullOrEmpty(model.Goal) && model.Goal.Length >= 300)
+                return BadRequest(new ErrorResponse(400, "Thông số Goal không hợp lệ!"));
 
             var result = await _bodyParametersService.CreateBodyParameters(model);
             if (result)

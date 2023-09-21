@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.PackageGymersService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using eGTS.Bussiness.PackageGymersService;
-using coffee_kiosk_solution.Data.Responses;
-using System.Net;
-using Microsoft.AspNetCore.Http.HttpResults;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Controllers
@@ -33,10 +25,10 @@ namespace eGTS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PackageGymer>>> GetPackageGymersForTest()
         {
-          if (_context.PackageGymers == null)
-          {
-              return NotFound();
-          }
+            if (_context.PackageGymers == null)
+            {
+                return NotFound();
+            }
             return await _context.PackageGymers.ToListAsync();
         }
 
@@ -44,10 +36,10 @@ namespace eGTS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PackageGymer>> GetPackageGymer(Guid id)
         {
-          if (_context.PackageGymers == null)
-          {
-              return NotFound();
-          }
+            if (_context.PackageGymers == null)
+            {
+                return NotFound();
+            }
             var packageGymer = await _context.PackageGymers.FindAsync(id);
 
             if (packageGymer == null)
