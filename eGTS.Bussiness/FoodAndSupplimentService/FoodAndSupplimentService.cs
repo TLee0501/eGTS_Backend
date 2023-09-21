@@ -2,6 +2,7 @@
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace eGTS.Bussiness.FoodAndSupplimentService
@@ -17,7 +18,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
-            var checkValid = await _context.FoodAndSupplements.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.IsDelete == false);
+            var checkValid = await _context.FoodAndSupplements.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.Name.ToLower() == request.Name.ToLower() && a.Ammount == request.Ammount && !a.IsDelete);
             if (checkValid != null) return false;
 
             FoodAndSupplement foodAndSuppliment = new FoodAndSupplement()
@@ -64,7 +65,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
                 return null;
             }
             var foodAndSuppliment = await _context.FoodAndSupplements.FindAsync(id);
-            if (foodAndSuppliment == null) return null;
+            if (foodAndSuppliment == null || foodAndSuppliment.IsDelete == true) return null;
             else
             {
                 result.Id = foodAndSuppliment.Id;
@@ -83,7 +84,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         {
             var foodAndSuppliments = await _context.FoodAndSupplements.ToListAsync();
 
-            if (foodAndSuppliments.Count > 0)
+            if (!foodAndSuppliments.IsNullOrEmpty())
             {
                 List<FoodAndSupplimentViewModel> result = new List<FoodAndSupplimentViewModel>();
                 foreach (var foodAndSuppliment in foodAndSuppliments)
@@ -108,7 +109,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         {
             var foodAndSuppliments = await _context.FoodAndSupplements.Where(a => a.Neid.Equals(id) && a.IsDelete == false).ToListAsync();
 
-            if (foodAndSuppliments.Count > 0)
+            if (!foodAndSuppliments.IsNullOrEmpty())
             {
                 List<FoodAndSupplimentViewModel> result = new List<FoodAndSupplimentViewModel>();
                 foreach (var foodAndSuppliment in foodAndSuppliments)
