@@ -120,19 +120,19 @@ namespace eGTS.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
         public async Task<IActionResult> UpdateAccount(Guid id, AccountUpdateViewModel request)
         {
-            if (request.PhoneNo.IsNullOrEmpty() || !PhoneNoIsValid(request.PhoneNo))
+            if (!request.PhoneNo.IsNullOrEmpty() && !PhoneNoIsValid(request.PhoneNo))
                 return BadRequest(new ErrorResponse(400, "SDT không đúng cú pháp."));
 
             if (PhoneNoExists(request.PhoneNo))
                 return BadRequest(new ErrorResponse(400, "SDT đã tồn tại."));
 
-            if (request.Gender.IsNullOrEmpty())
+            if (!request.Gender.IsNullOrEmpty() && (!request.Gender.Equals("F") || !request.Gender.Equals("M")))
                 return BadRequest(new ErrorResponse(400, "Giới tính sai"));
 
             if (!string.IsNullOrEmpty(request.Fullname) && request.Fullname.Length >= 50)
                 return BadRequest(new ErrorResponse(400, "Họ tên sai cú pháp!"));
 
-            if (!request.Role.Equals("PT") && !request.Role.Equals("NE") && !request.Role.Equals("Gymer") && !request.Role.Equals("Staff"))
+            if (!request.Role.Equals("PT") && !request.Role.Equals("NE") && !request.Role.Equals("Gymer") && !request.Role.Equals("Staff") && !request.Role.IsNullOrEmpty())
                 return BadRequest(new ErrorResponse(400, "Chức vụ sai"));
 
             if (await _accountService.UpdateAccount(id, request))
