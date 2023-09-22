@@ -15,7 +15,7 @@ public partial class Meal
 
     public bool IsDelete { get; set; }
 
-    public virtual ICollection<FoodAndSupplimentInMeal> FoodAndSupplimentInMeals { get; set; } = new List<FoodAndSupplimentInMeal>();
+    public virtual ICollection<FoodAndSupplementInMeal> FoodAndSupplementInMeals { get; set; } = new List<FoodAndSupplementInMeal>();
 
     public virtual NutritionSchedule NutritionSchedule { get; set; } = null!;
 }

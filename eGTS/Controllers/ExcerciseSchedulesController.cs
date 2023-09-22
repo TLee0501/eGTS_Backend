@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
-using eGTS.Bussiness.AccountService;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.ExcerciseScheduleService;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Controllers
 {
@@ -100,9 +94,9 @@ namespace eGTS.Controllers
         {
             DateTime fromDate = DateTime.MinValue;
             DateTime toDate = DateTime.MinValue;
-            if (!request.From.Equals(""))
+            if (!request.From.IsNullOrEmpty())
                 fromDate = Convert.ToDateTime(request.From);
-            if (!request.To.Equals(""))
+            if (!request.To.IsNullOrEmpty())
                 toDate = Convert.ToDateTime(request.To);
 
             if (await _exSCheduleService.UpdateExcerciseSchedule(id, request))
@@ -117,7 +111,7 @@ namespace eGTS.Controllers
 
         // POST: api/ExcerciseSchedules
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        /*[HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status201Created)]//CREATED
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
@@ -141,9 +135,8 @@ namespace eGTS.Controllers
             }
             else
                 return BadRequest(new ErrorResponse(400, "Invalid Data"));
+        }*/
 
-
-        }
         // DELETE: api/ExcerciseSchedules/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExcerciseSchedulePERMANENT(Guid id)
@@ -224,6 +217,59 @@ namespace eGTS.Controllers
             }
 
             return Ok(new SuccessResponse<List<SessionOfPTViewModel>>(200, "Danh sách lịch tập!", result));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ExerciseSchedule>> CreateExcerciseScheduleV3(ExcerciseScheduleCreateViewModelV3 request)
+        {
+            if (request.PackageGymerID == Guid.Empty)
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy PackageGymerID!"));
+
+            if (request.From == DateTime.MinValue)
+                return BadRequest(new ErrorResponse(400, "Không có ngày bắt đầu!"));
+
+            if (request.To == DateTime.MinValue)
+                return BadRequest(new ErrorResponse(400, "Không có ngày kết thúc!"));
+
+            if (request.From.Date < DateTime.Now.Date)
+                return BadRequest(new ErrorResponse(400, "Sai ngày bắt đầu!"));
+
+            if (request.From.Date > request.To.Date)
+                return BadRequest(new ErrorResponse(400, "Ngày bắt đầu lớn hơn ngày kết thúc!"));
+
+            if (await _exSCheduleService.CreateExcerciseScheduleV3(request))
+            {
+                _logger.LogInformation($"Created ExCerciseSchedule for Gymer with ID: {request.PackageGymerID}");
+                return Ok(new SuccessResponse<ExcerciseScheduleCreateViewModelV3>(200, "Tạo thành công!", request));
+            }
+            else
+                return BadRequest(new ErrorResponse(400, "Không thành công!"));
+        }
+
+        [HttpGet("{packageGymerID}")]
+        public async Task<ActionResult<IEnumerable<SessionDetailViewModel>>> GetExcerciseScheduleByPackageGymerIDAndDate(Guid packageGymerID, DateTime date)
+        {
+            var result = await _exSCheduleService.GetExcerciseScheduleByPackageGymerIDAndDate(packageGymerID, date);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy lịch tập!");
+            }
+
+            return Ok(new SuccessResponse<List<SessionDetailViewModel>>(200, "Danh sách lịch tập!", result));
+        }
+
+        [HttpGet("{packageGymerID}")]
+        public async Task<ActionResult<IEnumerable<SessionDateViewModel>>> GetExcerciseScheduleByPackageGymerID(Guid packageGymerID)
+        {
+            var result = await _exSCheduleService.GetExcerciseScheduleByPackageGymerID(packageGymerID);
+
+            if (result == null)
+            {
+                return BadRequest("Không tìm thấy lịch tập!");
+            }
+
+            return Ok(new SuccessResponse<List<SessionDateViewModel>>(200, "Danh sách lịch tập!", result));
         }
     }
 }

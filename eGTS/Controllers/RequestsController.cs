@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.RequestService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using eGTS.Bussiness.RequestService;
-using coffee_kiosk_solution.Data.Responses;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eGTS.Controllers
 {
@@ -24,10 +24,10 @@ namespace eGTS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequestsForTest()
         {
-          if (_context.Requests == null)
-          {
-              return NotFound();
-          }
+            if (_context.Requests == null)
+            {
+                return NotFound();
+            }
             return await _context.Requests.ToListAsync();
         }
 
@@ -35,8 +35,8 @@ namespace eGTS.Controllers
         [HttpGet]
         public async Task<ActionResult<Request>> GetRequest(Guid id)
         {
-          if (_context.Requests == null)
-          {
+            if (_context.Requests == null)
+            {
                 return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
             }
             var request = await _requestService.GetRequest(id);
@@ -62,7 +62,7 @@ namespace eGTS.Controllers
             try
             {
                 var result = await _requestService.UpdateRequest(request);
-                if(result == false) return BadRequest(new ErrorResponse(400, "Thất bại!"));
+                if (result == false) return BadRequest(new ErrorResponse(400, "Thất bại!"));
             }
             catch (Exception ex)
             {
@@ -83,6 +83,7 @@ namespace eGTS.Controllers
                 if (result == 0) return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
                 else if (result == 2) return BadRequest(new ErrorResponse(400, "Bạn đã gửi yêu cầu cho người này!"));
                 else if (result == 3) return BadRequest(new ErrorResponse(400, "Gói không phù hợp với người được gửi yêu cầu!"));
+                else if (result == 4) return BadRequest(new ErrorResponse(400, "Gói không phù hợp!"));
             }
             catch (Exception ex)
             {

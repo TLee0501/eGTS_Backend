@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace eGTS_Backend.Data.ViewModel
 {
-    public class ExcerciseInTypeCreateViewModel
+    public class SessionDateViewModel
     {
-        public Guid ExerciseTypeId { get; set; }
-
-        public Guid ExerciseId { get; set; }
+        public Guid id { get; set; }
+        public Guid ScheduleId { get; set; }
+        public DateTime Date { get; set; }
     }
 }

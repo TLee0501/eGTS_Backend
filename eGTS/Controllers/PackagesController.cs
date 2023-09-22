@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.PackageService;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using System.Data;
-using System.Runtime.CompilerServices;
-using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections;
+using Microsoft.AspNetCore.Mvc;
+using System.Web.WebPages;
 
 namespace eGTS.Controllers
 {
@@ -43,6 +33,18 @@ namespace eGTS.Controllers
                 return StatusCode(204);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PackageMobileViewModel>>> GetPackagesForMobile()
+        {
+            var result = await _packageService.GetPackagesForMobile();
+            if (result != null)
+            {
+                return Ok(new SuccessResponse<List<PackageMobileViewModel>>(200, "List of Packages found", result));
+            }
+            else
+                return StatusCode(204);
+        }
+
         // GET: api/Packages/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Package>> GetPackage(Guid id)
@@ -62,7 +64,15 @@ namespace eGTS.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdatePackage(PackageViewModel package)
         {
-            if (package == null) return BadRequest();
+            if (package.NumberOfMonth.HasValue && package.NumberOfMonth.Value <= 0) return BadRequest("Thời gian của gói không hợp lệ!");
+            if (package.NumberOfsession.HasValue && package.NumberOfsession.Value <= 0) return BadRequest("Thời gian của gói không hợp lệ!");
+            if (package.Price <= 0.0) return BadRequest("Giá tiền không hợp lệ!");
+            if (package.Ptcost.HasValue && package.Ptcost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
+            if (package.Necost.HasValue && package.Necost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
+            if (package.CenterCost.HasValue && package.CenterCost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
+            if (package.Name.IsEmpty()) return BadRequest("Không có tên gói!");
+            if (!string.IsNullOrEmpty(package.Name) && package.Name.Length >= 50) return BadRequest("Tên gói không hợp lệ!");
+
             try
             {
                 var result = await _packageService.UpdatePackage(package);
@@ -70,7 +80,7 @@ namespace eGTS.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                //throw new Exception(ex.Message, ex);
                 return StatusCode(400);
             }
         }
@@ -80,10 +90,15 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<Package>> CreatePackage(PackageCreateViewModel package)
         {
-            /*if (_context.Packages == null)
-            {
-                return Problem("Entity set 'EGtsContext.Packages'  is null.");
-            }*/
+            if (package.Name.IsEmpty()) return BadRequest("Không có tên gói!");
+            if (!string.IsNullOrEmpty(package.Name) && package.Name.Length >= 50) return BadRequest("Tên gói không hợp lệ!");
+            if (package.NumberOfMonth.HasValue && package.NumberOfMonth.Value <= 0) return BadRequest("Thời gian của gói không hợp lệ!");
+            if (package.NumberOfsession.HasValue && package.NumberOfsession.Value <= 0) return BadRequest("Thời gian của gói không hợp lệ!");
+            if (package.Price <= 0.0) return BadRequest("Giá tiền không hợp lệ!");
+            if (package.Ptcost.HasValue && package.Ptcost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
+            if (package.Necost.HasValue && package.Necost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
+            if (package.CenterCost.HasValue && package.CenterCost.Value < 0) return BadRequest("Giá tiền không hợp lệ!");
+
             if (package == null) return BadRequest();
             try
             {
@@ -92,7 +107,7 @@ namespace eGTS.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                //throw new Exception(ex.Message, ex);
                 return StatusCode(400);
             }
         }
@@ -101,7 +116,7 @@ namespace eGTS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePackage(Guid id)
         {
-            if (id == null) return BadRequest();
+            if (id == Guid.Empty) return BadRequest();
             var result = await _packageService.DeletePackage(id);
             if (result == true) return StatusCode(200);
             else

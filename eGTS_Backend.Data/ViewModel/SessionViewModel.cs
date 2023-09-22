@@ -10,7 +10,8 @@ namespace eGTS_Backend.Data.ViewModel
     {
         public Guid id { get; set; }
         public Guid ScheduleId { get; set; }
-        public DateTime DateAndTime { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
         public bool IsDelete { get; set; }
     }
 }

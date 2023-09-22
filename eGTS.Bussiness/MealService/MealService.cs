@@ -46,12 +46,12 @@ namespace eGTS.Bussiness.MealService
                         //Them tung mon vao bua an
                         foreach (var sang in request.MonAnSang)
                         {
-                            var fim = new FoodAndSupplimentInMeal();
+                            var fim = new FoodAndSupplementInMeal();
                             var fimId = Guid.NewGuid();
                             fim.Id = fimId;
-                            fim.FoodAndSupplimentId = sang;
+                            fim.FoodAndSupplementId = sang;
                             fim.MealId = mealId;
-                            await _context.FoodAndSupplimentInMeals.AddAsync(fim);
+                            await _context.FoodAndSupplementInMeals.AddAsync(fim);
                         }
                     }
                     if (request.MonAnTrua != null)  //Neu co mon thi tao bua an
@@ -68,12 +68,12 @@ namespace eGTS.Bussiness.MealService
                         //Them tung mon vao bua an
                         foreach (var trua in request.MonAnTrua)
                         {
-                            var fim = new FoodAndSupplimentInMeal();
+                            var fim = new FoodAndSupplementInMeal();
                             var fimId = Guid.NewGuid();
                             fim.Id = fimId;
-                            fim.FoodAndSupplimentId = trua;
+                            fim.FoodAndSupplementId = trua;
                             fim.MealId = mealId;
-                            await _context.FoodAndSupplimentInMeals.AddAsync(fim);
+                            await _context.FoodAndSupplementInMeals.AddAsync(fim);
                         }
                     }
                     if (request.MonAnToi != null)  //Neu co mon thi tao bua an
@@ -90,12 +90,12 @@ namespace eGTS.Bussiness.MealService
                         //Them tung mon vao bua an
                         foreach (var toi in request.MonAnToi)
                         {
-                            var fim = new FoodAndSupplimentInMeal();
+                            var fim = new FoodAndSupplementInMeal();
                             var fimId = Guid.NewGuid();
                             fim.Id = fimId;
-                            fim.FoodAndSupplimentId = toi;
+                            fim.FoodAndSupplementId = toi;
                             fim.MealId = mealId;
-                            await _context.FoodAndSupplimentInMeals.AddAsync(fim);
+                            await _context.FoodAndSupplementInMeals.AddAsync(fim);
                         }
                     }
                     if (request.MonAnTruocTap != null)  ///Neu co mon thi tao bua an
@@ -112,12 +112,12 @@ namespace eGTS.Bussiness.MealService
                         //Them tung mon vao bua an
                         foreach (var truoctap in request.MonAnTruocTap)
                         {
-                            var fim = new FoodAndSupplimentInMeal();
+                            var fim = new FoodAndSupplementInMeal();
                             var fimId = Guid.NewGuid();
                             fim.Id = fimId;
-                            fim.FoodAndSupplimentId = truoctap;
+                            fim.FoodAndSupplementId = truoctap;
                             fim.MealId = mealId;
-                            await _context.FoodAndSupplimentInMeals.AddAsync(fim);
+                            await _context.FoodAndSupplementInMeals.AddAsync(fim);
                         }
                     }
                     await _context.SaveChangesAsync();
@@ -156,6 +156,36 @@ namespace eGTS.Bussiness.MealService
             }
 
             return true;
+        }
+
+        public async Task<bool> UpdateMeal(MealCreateViewModel request)
+        {
+            var nuSchedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
+
+            var inDB = await _context.Meals.Where(a => a.NutritionScheduleId == nuSchedule.Id && a.IsDelete == false).ToListAsync();
+            foreach (var item in inDB)
+            {
+                if (item.Datetime.Date >= request.FromDatetime.Date && item.Datetime.Date <= request.ToDatetime.Date)
+                {
+                    item.IsDelete = true;
+
+                    var fim = await _context.FoodAndSupplementInMeals.Where(a => a.MealId == item.Id).ToListAsync();
+                    foreach (var item1 in fim)
+                    {
+                        _context.FoodAndSupplementInMeals.Remove(item1);
+                    }
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                await CreateMeal(request);
+                return true;
+            } catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

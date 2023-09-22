@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.FoodAndSupplimentService;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Controllers
 {
@@ -27,7 +22,7 @@ namespace eGTS.Controllers
 
         // GET: api/FoodAndSuppliments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FoodAndSuppliment>>> GetFoodAndSuppliments()
+        public async Task<ActionResult<IEnumerable<FoodAndSupplement>>> GetFoodAndSuppliments()
         {
             var result = await _foodAndSupplimentService.GetFoodAndSuppliments();
             if (result != null)
@@ -40,7 +35,7 @@ namespace eGTS.Controllers
 
         // GET: api/FoodAndSupplimentsByNE
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<FoodAndSuppliment>>> GetFoodAndSupplimentsBYNE(Guid id)
+        public async Task<ActionResult<IEnumerable<FoodAndSupplement>>> GetFoodAndSupplimentsBYNE(Guid id)
         {
             var result = await _foodAndSupplimentService.GetFoodAndSupplimentsBYNE(id);
             if (result != null)
@@ -53,7 +48,7 @@ namespace eGTS.Controllers
 
         // GET: api/FoodAndSuppliments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FoodAndSuppliment>> GetFoodAndSuppliment(Guid id)
+        public async Task<ActionResult<FoodAndSupplement>> GetFoodAndSuppliment(Guid id)
         {
             var result = await _foodAndSupplimentService.GetFoodAndSuppliment(id);
             if (result != null)
@@ -70,6 +65,13 @@ namespace eGTS.Controllers
         public async Task<IActionResult> UpdateFoodAndSuppliment(FoodAndSupplimentUpdateViewModel foodAndSuppliment)
         {
             if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Cập nhật thất bại!"));
+            if (foodAndSuppliment.Ammount < 0) return BadRequest(new ErrorResponse(400, "Ammount không hợp lệ!"));
+            if (foodAndSuppliment.Calories < 0) return BadRequest(new ErrorResponse(400, "Calorie không hợp lệ!"));
+            if (foodAndSuppliment.Name.IsNullOrEmpty()) return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+            if (!string.IsNullOrEmpty(foodAndSuppliment.Name) && foodAndSuppliment.Name.Length >= 50) return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+            if (foodAndSuppliment.UnitOfMesuament.IsNullOrEmpty()) return BadRequest(new ErrorResponse(400, "Đơn vị tính không hợp lệ!"));
+            if (!string.IsNullOrEmpty(foodAndSuppliment.UnitOfMesuament) && foodAndSuppliment.UnitOfMesuament.Length >= 50) return BadRequest(new ErrorResponse(400, "Đơn vị tính không hợp lệ!"));
+
             try
             {
                 var result = await _foodAndSupplimentService.UpdateFoodAndSuppliment(foodAndSuppliment);
@@ -84,13 +86,22 @@ namespace eGTS.Controllers
         // POST: api/FoodAndSuppliments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FoodAndSuppliment>> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel foodAndSuppliment)
+        public async Task<ActionResult<FoodAndSupplement>> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel foodAndSuppliment)
         {
             if (foodAndSuppliment == null) return BadRequest(new ErrorResponse(400, "Tạo mới thất bại!"));
+            if (foodAndSuppliment.Amount < 0) return BadRequest(new ErrorResponse(400, "Ammount không hợp lệ!"));
+            if (foodAndSuppliment.Calories < 0) return BadRequest(new ErrorResponse(400, "Calorie không hợp lệ!"));
+            if (foodAndSuppliment.Name.IsNullOrEmpty()) return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+            if (!string.IsNullOrEmpty(foodAndSuppliment.Name) && foodAndSuppliment.Name.Length >= 50) return BadRequest(new ErrorResponse(400, "Tên không hợp lệ!"));
+            if (foodAndSuppliment.UnitOfMesuament.IsNullOrEmpty()) return BadRequest(new ErrorResponse(400, "Đơn vị tính không hợp lệ!"));
+            if (!string.IsNullOrEmpty(foodAndSuppliment.UnitOfMesuament) && foodAndSuppliment.UnitOfMesuament.Length >= 50) return BadRequest(new ErrorResponse(400, "Đơn vị tính không hợp lệ!"));
             try
             {
                 var result = await _foodAndSupplimentService.CreateFoodAndSuppliment(foodAndSuppliment);
-                return Ok(new SuccessResponse<FoodAndSupplimentCreateViewModel>(200, "Tạo mới thành công!", foodAndSuppliment));
+                if (result == true)
+                    return Ok(new SuccessResponse<FoodAndSupplimentCreateViewModel>(200, "Tạo mới thành công!", foodAndSuppliment));
+                else
+                    return BadRequest(new ErrorResponse(400, "Tạo mới thất bại!"));
             }
             catch (Exception ex)
             {
@@ -102,8 +113,7 @@ namespace eGTS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFoodAndSuppliment(Guid id)
         {
-
-            if (id == null) return BadRequest(new ErrorResponse(400, "Xóa thất bại!"));
+            if (id == Guid.Empty) return BadRequest(new ErrorResponse(400, "Xóa thất bại!"));
             var result = await _foodAndSupplimentService.DeleteFoodAndSuppliment(id);
             if (result == true) return Ok(new SuccessResponse<FoodAndSupplimentCreateViewModel>(200, "Xóa thành công!", null));
             else
@@ -113,7 +123,7 @@ namespace eGTS.Controllers
         }
 
         [HttpGet("{NEID}")]
-        public async Task<ActionResult<IEnumerable<FoodAndSuppliment>>> SearchFoodAndSupplimentsByNameAndNE(Guid NEID, string FoodName)
+        public async Task<ActionResult<IEnumerable<FoodAndSupplement>>> SearchFoodAndSupplimentsByNameAndNE(Guid NEID, string FoodName)
         {
             var result = await _foodAndSupplimentService.SearchFoodAndSupplimentsByNameAndNE(NEID, FoodName);
             if (result != null)

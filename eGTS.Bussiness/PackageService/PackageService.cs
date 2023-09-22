@@ -78,6 +78,62 @@ namespace eGTS.Bussiness.PackageService
             }
         }
 
+        public async Task<List<PackageMobileViewModel>> GetPackagesForMobile()
+        {
+            var packages = await _context.Packages.ToListAsync();
+
+            if (packages.Count > 0)
+            {
+                List<PackageMobileViewModel> result = new List<PackageMobileViewModel>();
+                foreach (var package in packages)
+                {
+                    double oriPrice = 0;
+                    if (package.Ptcost != null)
+                    {
+                        var totalPT = package.Ptcost * package.NumberOfsession;
+                        oriPrice = (double)(oriPrice + totalPT);
+                    }
+                    if (package.Necost != null)
+                    {
+                        if (package.NumberOfsession != null)
+                        {
+                            oriPrice = (double)(oriPrice + package.Necost);
+                        }
+                        else
+                        {
+                            var totalNE = package.Necost * package.NumberOfMonth;
+                            oriPrice = ((double)(oriPrice + totalNE));
+                        }
+                    }
+                    if (package.CenterCost != null)
+                    {
+                        var totalCC = package.CenterCost * package.NumberOfMonth;
+                        oriPrice = (double)(oriPrice + totalCC);
+                    }
+
+                    var viewModel = new PackageMobileViewModel();
+                    viewModel.Id = package.Id;
+                    viewModel.Name = package.Name;
+                    viewModel.HasPt = package.HasPt;
+                    viewModel.HasNe = package.HasNe;
+                    viewModel.NumberOfsession = package.NumberOfsession;
+                    viewModel.NumberOfMonth = package.NumberOfMonth;
+                    viewModel.Ptcost = package.Ptcost;
+                    viewModel.Necost = package.Necost;
+                    viewModel.CenterCost = package.CenterCost;
+                    viewModel.Price = package.Price;
+                    viewModel.IsDelete = package.IsDelete;
+                    viewModel.OriginPrice = oriPrice;
+                    viewModel.Discount = package.Discount;
+                    viewModel.CreateDate = package.CreateDate;
+                    viewModel.IsDelete = package.IsDelete;
+                    result.Add(viewModel);
+                }
+                return result;
+            }
+            return null;
+        }
+
         public async Task<List<PackageViewModel>> GetPackages()
         {
             var packages = await _context.Packages.ToListAsync();

@@ -1,6 +1,4 @@
-﻿using eGTS.Bussiness.ExcerciseScheduleService;
-using eGTS.Bussiness.NutritionScheduleService;
-using eGTS_Backend.Data.Models;
+﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,21 +7,17 @@ namespace eGTS.Bussiness.RequestService
     public class RequestService : IRequestService
     {
         private readonly EGtsContext _context;
-        private readonly INutritionScheduleService _scheduleService;
-        private readonly IExcerciseScheduleService _excerciseScheduleService;
 
-        public RequestService(EGtsContext context, INutritionScheduleService scheduleService, IExcerciseScheduleService excerciseScheduleService)
+        public RequestService(EGtsContext context)
         {
             _context = context;
-            _scheduleService = scheduleService;
-            _excerciseScheduleService = excerciseScheduleService;
         }
 
         public async Task<int> CreateRequest(RequestCreateViewModel request)
         {
             var account = await _context.Accounts.FindAsync(request.ReceiverId);
             var boolPT = false;
-            if(account.Role.Equals("PT")) boolPT = true;
+            if (account.Role.Equals("PT")) boolPT = true;
 
             //check sent Request before
             var checkExist = await _context.Requests.SingleOrDefaultAsync(a => a.ReceiverId == request.ReceiverId && a.PackageGymerId == request.PackageGymerId);
@@ -31,6 +25,7 @@ namespace eGTS.Bussiness.RequestService
 
             //check Type PackageGymer
             var checkpackageGymer = await _context.PackageGymers.FindAsync(request.PackageGymerId);
+            if (checkpackageGymer.Status != "Đang chờ") return 4;
             var checkPackage = await _context.Packages.FindAsync(checkpackageGymer.PackageId);
             var checkExpert = await _context.Accounts.FindAsync(request.ReceiverId);
             if (checkPackage.HasPt == false && checkExpert.Role == "PT") return 3;
@@ -38,7 +33,7 @@ namespace eGTS.Bussiness.RequestService
 
             var id = Guid.NewGuid();
             var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, boolPT, null, false);
-            
+
             try
             {
                 _context.Requests.Add(requestService);
@@ -46,7 +41,7 @@ namespace eGTS.Bussiness.RequestService
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                //throw new Exception(ex.Message, ex);
                 return 0;
             }
             return 1;
@@ -76,7 +71,7 @@ namespace eGTS.Bussiness.RequestService
                 }
                 result.Add(temp);
             }
-            if(result.Count == 0) return null;
+            if (result.Count == 0) return null;
             return result;
         }
 
@@ -104,17 +99,22 @@ namespace eGTS.Bussiness.RequestService
 
                 if (requestDB.IsPt == true)
                 {
-                    packageGymer.Ptid = requestDB.ReceiverId; 
-                    await _context.SaveChangesAsync();
-                    var schedule = await _excerciseScheduleService.CreateExcerciseScheduleV2(packageGymer.Id);
-                    if (schedule == false) return false;
+                    packageGymer.Ptid = requestDB.ReceiverId;
                 }
                 else
                 {
                     packageGymer.Neid = requestDB.ReceiverId;
-                    await _context.SaveChangesAsync();
-                    var schedule = await _scheduleService.CreateNutritionSchedule(packageGymer.Id);
-                    if (schedule == false) return false;
+
+                    var schedule = new NutritionSchedule()
+                    {
+                        Id = Guid.NewGuid(),
+                        GymerId = packageGymer.GymerId,
+                        Neid = (Guid)packageGymer.Neid,
+                        PackageGymerId = packageGymer.Id,
+                        IsDelete = false
+                    };
+                    //(id, packageGymer.GymerId, (Guid)packageGymer.Neid, packageGymer.Id, false);
+                    await _context.NutritionSchedules.AddAsync(schedule);
                 }
             }
             else
@@ -124,24 +124,24 @@ namespace eGTS.Bussiness.RequestService
                 await _context.SaveChangesAsync();
                 return true;
             }
-            
+
             var packageType = await _context.Packages.FindAsync(packageGymer.PackageId);
 
             //Update status PackageGymer
             if (packageGymer.Ptid != null && packageGymer.Neid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
-                packageGymer.From = DateTime.Now;
+                //packageGymer.From = DateTime.Now;
             }
             else if (packageType.HasPt == false && packageGymer.Neid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
-                packageGymer.From = DateTime.Now;
+                //packageGymer.From = DateTime.Now;
             }
             else if (packageType.HasNe == false && packageGymer.Ptid != null)
             {
                 packageGymer.Status = "Đang hoạt động";
-                packageGymer.From = DateTime.Now;
+                //packageGymer.From = DateTime.Now;
             }
 
             try

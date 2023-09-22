@@ -2,6 +2,7 @@
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace eGTS.Bussiness.FoodAndSupplimentService
@@ -17,13 +18,22 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
         }
         public async Task<bool> CreateFoodAndSuppliment(FoodAndSupplimentCreateViewModel request)
         {
-            var checkValid = await _context.FoodAndSuppliments.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.Ammount == request.Ammount && a.IsDelete == false);
+            var checkValid = await _context.FoodAndSupplements.SingleOrDefaultAsync(a => a.Neid == request.Neid && a.Name.ToLower() == request.Name.ToLower() && a.Ammount == request.Amount && !a.IsDelete);
             if (checkValid != null) return false;
 
-            Guid id = Guid.NewGuid();
-            var createdate = DateTime.Now;
-            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(id, request.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, createdate, false);
-            _context.FoodAndSuppliments.Add(foodAndSuppliment);
+            FoodAndSupplement foodAndSuppliment = new FoodAndSupplement()
+            {
+                Id = Guid.NewGuid(),
+                Neid = request.Neid,
+                Name = request.Name,
+                Ammount = request.Amount,
+                UnitOfMesuament = request.UnitOfMesuament,
+                Calories = request.Calories,
+                CreateDate = DateTime.Now,
+                IsDelete = false
+            };
+                //(id, request.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, createdate, false);
+            await _context.FoodAndSupplements.AddAsync(foodAndSuppliment);
             try
             {
                 await _context.SaveChangesAsync();
@@ -37,7 +47,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
 
         public async Task<bool> DeleteFoodAndSuppliment(Guid id)
         {
-            var foodAndSuppliment = await _context.FoodAndSuppliments.FindAsync(id);
+            var foodAndSuppliment = await _context.FoodAndSupplements.FindAsync(id);
             if (foodAndSuppliment == null) return false;
             else
             {
@@ -54,8 +64,8 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
             {
                 return null;
             }
-            var foodAndSuppliment = await _context.FoodAndSuppliments.FindAsync(id);
-            if (foodAndSuppliment == null) return null;
+            var foodAndSuppliment = await _context.FoodAndSupplements.FindAsync(id);
+            if (foodAndSuppliment == null || foodAndSuppliment.IsDelete == true) return null;
             else
             {
                 result.Id = foodAndSuppliment.Id;
@@ -72,9 +82,9 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
 
         public async Task<List<FoodAndSupplimentViewModel>> GetFoodAndSuppliments()
         {
-            var foodAndSuppliments = await _context.FoodAndSuppliments.ToListAsync();
+            var foodAndSuppliments = await _context.FoodAndSupplements.ToListAsync();
 
-            if (foodAndSuppliments.Count > 0)
+            if (!foodAndSuppliments.IsNullOrEmpty())
             {
                 List<FoodAndSupplimentViewModel> result = new List<FoodAndSupplimentViewModel>();
                 foreach (var foodAndSuppliment in foodAndSuppliments)
@@ -97,9 +107,9 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
 
         public async Task<List<FoodAndSupplimentViewModel>> GetFoodAndSupplimentsBYNE(Guid id)
         {
-            var foodAndSuppliments = await _context.FoodAndSuppliments.Where(a => a.Neid.Equals(id) && a.IsDelete == false).ToListAsync();
+            var foodAndSuppliments = await _context.FoodAndSupplements.Where(a => a.Neid.Equals(id) && a.IsDelete == false).ToListAsync();
 
-            if (foodAndSuppliments.Count > 0)
+            if (!foodAndSuppliments.IsNullOrEmpty())
             {
                 List<FoodAndSupplimentViewModel> result = new List<FoodAndSupplimentViewModel>();
                 foreach (var foodAndSuppliment in foodAndSuppliments)
@@ -121,9 +131,21 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
 
         public async Task<bool> UpdateFoodAndSuppliment(FoodAndSupplimentUpdateViewModel request)
         {
-            var inDatabase = await _context.FoodAndSuppliments.FindAsync(request.Id);
+            var inDatabase = await _context.FoodAndSupplements.FindAsync(request.Id);
             _context.ChangeTracker.Clear();
-            FoodAndSuppliment foodAndSuppliment = new FoodAndSuppliment(request.Id, inDatabase.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories, inDatabase.CreateDate, inDatabase.IsDelete);
+            FoodAndSupplement foodAndSuppliment = new FoodAndSupplement()
+            {
+                Id = request.Id,
+                Neid = inDatabase.Neid,
+                Name = request.Name,
+                Ammount = request.Ammount,
+                UnitOfMesuament = request.UnitOfMesuament,
+                Calories = request.Calories,
+                CreateDate = inDatabase.CreateDate,
+                IsDelete = inDatabase.IsDelete
+            };
+                //(request.Id, inDatabase.Neid, request.Name, request.Ammount, request.UnitOfMesuament, request.Calories,
+                //inDatabase.CreateDate, inDatabase.IsDelete);
             _context.Entry(foodAndSuppliment).State = EntityState.Modified;
             try
             {
@@ -153,7 +175,7 @@ namespace eGTS.Bussiness.FoodAndSupplimentService
 
         public async Task<List<FoodAndSupplimentViewModel>> SearchFoodAndSupplimentsByNameAndNE(Guid NEID, string FoodName)
         {
-            var foodAndSuppliments = await _context.FoodAndSuppliments.Where(a => a.Neid.Equals(NEID) && a.Name.Contains(FoodName) && a.IsDelete == false).ToListAsync();
+            var foodAndSuppliments = await _context.FoodAndSupplements.Where(a => a.Neid.Equals(NEID) && a.Name.Contains(FoodName) && a.IsDelete == false).ToListAsync();
 
             if (foodAndSuppliments.Count > 0)
             {

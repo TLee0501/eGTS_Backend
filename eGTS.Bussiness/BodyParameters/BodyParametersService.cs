@@ -1,15 +1,8 @@
-﻿using eGTS.Bussiness.AccountService;
-using eGTS.Bussiness.ExcerciseScheduleService;
-using eGTS.Bussiness.ExcerciseService;
-using eGTS_Backend.Data.Models;
+﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.BodyParameters
 {
@@ -34,8 +27,20 @@ namespace eGTS.Bussiness.BodyParameters
             if (account != null && account.Role.Equals("Gymer") && account.IsDelete == false)
             {
                 var bmi = BMIcalculator(model.Weight, model.Height);
-                BodyPerameter BPS = new BodyPerameter(id, model.GymerId, model.Goal,
-                    model.Weight, model.Height, bmi, model.Bone, model.Fat, model.Muscle, DateTime.Now, false);
+                var BPS = new BodyPerameter
+                {
+                    Id = Guid.NewGuid(),
+                    GymerId = model.GymerId,
+                    Goal = model.Goal,
+                    Weight = model.Weight,
+                    Height = model.Height,
+                    Bmi = bmi,
+                    Bone = model.Bone,
+                    Fat = model.Fat,
+                    Muscle = model.Muscle,
+                    CreateDate = DateTime.Now,
+                    IsDelete = false
+                };
                 try
                 {
                     await _context.BodyPerameters.AddAsync(BPS);
@@ -199,6 +204,36 @@ namespace eGTS.Bussiness.BodyParameters
                 return 0;
             }
             return weight / ((height / 100) * (height / 100));// Height is in CM
+        }
+
+        public async Task<BodyPerameterViewModel> GetBodyParameterByGymerID(Guid GymerId)
+        {
+            List<BodyPerameterViewModel> resultList = new List<BodyPerameterViewModel>();
+            var BP = await _context.BodyPerameters
+                .Where(a => a.GymerId == GymerId)
+                .OrderByDescending(b => b.CreateDate)
+                .FirstOrDefaultAsync();
+
+            if (BP != null)
+            {
+                BodyPerameterViewModel model = new BodyPerameterViewModel()
+                {
+                    Id = BP.Id,
+                    GymerId = GymerId,
+                    Goal = BP.Goal,
+                    Weight = BP.Weight,
+                    Height = BP.Height,
+                    Bmi = BP.Bmi,
+                    Bone = BP.Bone,
+                    Fat = BP.Fat,
+                    Muscle = BP.Muscle,
+                    CreateDate = BP.CreateDate,
+                    IsDelete = BP.IsDelete,
+                };
+                resultList.Add(model);
+                return model;
+            }
+            return null;
         }
     }
 }

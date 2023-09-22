@@ -16,5 +16,11 @@ namespace eGTS_Backend.Data.ViewModel
 
         public string? Video { get; set; }
 
+        public int CalorieCumsumption { get; set; }
+
+        public int RepTime { get; set; }
+
+        public string UnitOfMeasurement { get; set; } = null!;
+
     }
 }

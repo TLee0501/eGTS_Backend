@@ -18,6 +18,9 @@ using eGTS.Bussiness.QualitificationService;
 using eGTS.Bussiness.MealService;
 using eGTS.Bussiness.BodyParameters;
 using eGTS.Bussiness.ReportService;
+using eGTS.Bussiness.FeedbackService;
+using eGTS.Bussiness;
+using eGTS.Bussiness.SuspendService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +36,6 @@ builder.Services.AddDbContext<EGtsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EGTSDbConnection"));
 });
 
-
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPackageService, PackageService>();
@@ -48,6 +50,11 @@ builder.Services.AddScoped<IQualitificationService, QualitificationService>();
 builder.Services.AddScoped<IBodyParametersService, BodyParametersService>();
 builder.Services.AddScoped<IMealService, MealService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<ISuspendService, SuspendService>();
+
+builder.Services.AddHostedService<AutoScanService>();
+
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();

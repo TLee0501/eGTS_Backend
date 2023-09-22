@@ -19,5 +19,6 @@ namespace eGTS_Backend.Data.ViewModel
         public DateTime? To { get; set; }
         public string Status { get; set; } = null!;
         public bool isDelete { get; set; }
+        public bool hasBodyParameter { get; set; }
     }
 }

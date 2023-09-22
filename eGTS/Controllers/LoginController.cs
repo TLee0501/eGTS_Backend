@@ -1,20 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using eGTS_Backend.Data.Models;
-using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.LoginService;
-using Azure.Core;
-using coffee_kiosk_solution.Data.Responses;
-using eGTS_Backend.Data.ViewModel;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.IdentityModel.JsonWebTokens;
-using System.IdentityModel.Tokens.Jwt;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.Responses;
+using eGTS_Backend.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace eGTS.Controllers
 {
@@ -65,9 +59,9 @@ namespace eGTS.Controllers
             var result = await _loginService.Login(model);
 
             if (result == null)
-                return NotFound(new ErrorResponse(204, "Vui lòng kiểm tả lại số điện thoại/mật khẩu!"));
+                return NotFound(new ErrorResponse(204, "Vui lòng kiểm tra lại số điện thoại/mật khẩu!"));
             else if (result.IsDelete == true)
-                return Unauthorized(new ErrorResponse(401, "Tài khaonr đã bị khóa!"));
+                return Unauthorized(new ErrorResponse(401, "Tài khoản đã bị khóa!"));
 
 
             _logger.LogInformation($"Login by {model.PhoneNo}");

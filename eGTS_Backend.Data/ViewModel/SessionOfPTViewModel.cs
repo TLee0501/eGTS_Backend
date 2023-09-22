@@ -11,7 +11,8 @@ namespace eGTS_Backend.Data.ViewModel
         public Guid id { get; set; }
         public Guid GymerID { get; set; }
         public string GymerName { get; set; }
-        public DateTime DateAndTime { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
         public List<ExcerciseViewModel> Excercises { get; set; }
     }
 }

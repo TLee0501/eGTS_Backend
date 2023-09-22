@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
-using eGTS.Bussiness.AccountService;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.SessionService;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eGTS.Controllers
 {
@@ -102,15 +93,19 @@ namespace eGTS.Controllers
 
         // PUT: api/Sessions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{sessionId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         [ProducesResponseType(StatusCodes.Status204NoContent)]//NOT FOUND
         [ProducesResponseType(StatusCodes.Status200OK)]//OK
-        public async Task<IActionResult> UpdateSession(Guid id, SessionUpdateViewModel request)
+        public async Task<IActionResult> UpdateSession(Guid sessionId, SessionUpdateViewModel request)
         {
-            if (await _sessionService.UpdateSession(id, request))
+            if (request.DateTime.Date < DateTime.Now.Date)
+                return BadRequest(new ErrorResponse(400, "Sai ngày bắt đầu!"));
+            if (TimeSpan.Parse(request.To) < TimeSpan.Parse(request.From))
+                return BadRequest(new ErrorResponse(400, "Sai giờ bắt đầu và kết thúc!"));
+            if (await _sessionService.UpdateSessionV3(sessionId, request))
             {
-                _logger.LogInformation($"Update Session with ID: {id}");
+                _logger.LogInformation($"Update Session with ID: {sessionId}");
                 return Ok(new SuccessResponse<SessionUpdateViewModel>(200, "Cập nhật thành công.", request));
             }
             else
@@ -119,7 +114,7 @@ namespace eGTS.Controllers
 
         // POST: api/Sessions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<Session>> CreatNewSession(SessionCreateViewModel model)
         {
 
@@ -140,7 +135,7 @@ namespace eGTS.Controllers
             }
             else
                 return BadRequest(new ErrorResponse(400, "Dữ liệu bị sai"));
-        }
+        }*/
 
         // DELETE: api/Sessions/5
         [HttpDelete("{id}")]
@@ -149,7 +144,7 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSession(id))
             {
                 _logger.LogInformation($"Deleted Session with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Xóa thành công.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Xóa thành công.", null));
             }
             else
                 return NoContent();
@@ -162,13 +157,13 @@ namespace eGTS.Controllers
             if (await _sessionService.DeleteSessionPERMANENT(id))
             {
                 _logger.LogInformation($"REMOVE Session with ID: {id}");
-                return Ok(new SuccessResponse<SessionCreateViewModel>(200, "Xóa thành công.", null));
+                return Ok(new SuccessResponse<SessionCreateViewModelV2>(200, "Xóa thành công.", null));
             }
             else
                 return NoContent();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<Session>> CreateSessionV2(SessionCreateViewModelV2 model)
         {
 
@@ -189,6 +184,6 @@ namespace eGTS.Controllers
             }
             else
                 return BadRequest(new ErrorResponse(400, "Dữ liệu bị sai"));
-        }
+        }*/
     }
 }

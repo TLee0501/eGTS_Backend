@@ -13,9 +13,11 @@ namespace eGTS.Bussiness.PackageGymersService
         Task<List<PackageGymerViewModel>> GetPackageGymerByGymerID(Guid request);
         Task<bool> UpdatePackageGymer(PackageGymerViewModel request);
         Task<bool> CreatePackageGymer(PackageGymerCreateViewModel request);
-        Task<List<GymerPackageActiveViewModel>> GetGymerPackageActiveByPT(Guid PTID);
-        Task<List<GymerPackageActiveViewModel>> GetGymerPackageActiveByNE(Guid NEID);
+        Task<List<GymerPackageFilterByGymerViewModel>> GetGymerPackageActiveByPT(Guid PTID);
+        Task<List<GymerPackageFilterByGymerViewModel>> GetGymerPackageActiveByNE(Guid NEID);
         Task<bool> CheckAlreadyPackGymerHasCenter(Guid id);
         Task<bool> CheckAlreadyPackGymerHasNE(Guid id);
+        Task<List<AccountIdAndNameViewModel>> GetGymersByNE(Guid NEID);
+        List<GymerPackageActiveViewModel> GetGymerPackagesByNEAndGymer(Guid NEID, Guid GymerId);
     }
 }

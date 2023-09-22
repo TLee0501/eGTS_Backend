@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.PackageGymersService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using eGTS.Bussiness.PackageGymersService;
-using coffee_kiosk_solution.Data.Responses;
-using System.Net;
-using Microsoft.AspNetCore.Http.HttpResults;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Controllers
 {
@@ -32,10 +25,10 @@ namespace eGTS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PackageGymer>>> GetPackageGymersForTest()
         {
-          if (_context.PackageGymers == null)
-          {
-              return NotFound();
-          }
+            if (_context.PackageGymers == null)
+            {
+                return NotFound();
+            }
             return await _context.PackageGymers.ToListAsync();
         }
 
@@ -43,10 +36,10 @@ namespace eGTS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PackageGymer>> GetPackageGymer(Guid id)
         {
-          if (_context.PackageGymers == null)
-          {
-              return NotFound();
-          }
+            if (_context.PackageGymers == null)
+            {
+                return NotFound();
+            }
             var packageGymer = await _context.PackageGymers.FindAsync(id);
 
             if (packageGymer == null)
@@ -102,22 +95,48 @@ namespace eGTS.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackageActiveByNE(Guid NEID)
+        public async Task<ActionResult<IEnumerable<GymerPackageFilterByGymerViewModel>>> GetGymerPackageActiveByNE(Guid NEID)
         {
             try
             {
                 var result = await _packageGymersService.GetGymerPackageActiveByNE(NEID);
-                return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Danh sách các gói", result));
+                return Ok(new SuccessResponse<List<GymerPackageFilterByGymerViewModel>>(200, "Danh sách các gói", result));
             }
             catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackageActiveByPT(Guid PTID)
+        public async Task<ActionResult<IEnumerable<GymerPackageFilterByGymerViewModel>>> GetGymerPackageActiveByPT(Guid PTID)
         {
             try
             {
                 var result = await _packageGymersService.GetGymerPackageActiveByPT(PTID);
+                return Ok(new SuccessResponse<List<GymerPackageFilterByGymerViewModel>>(200, "Danh sách các gói", result));
+            }
+            catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<AccountIdAndNameViewModel>>> GetGymersByNE(Guid NEID)
+        {
+            try
+            {
+                var result = await _packageGymersService.GetGymersByNE(NEID);
+                if (result.IsNullOrEmpty())
+                    return NotFound(new ErrorResponse(400, "Không tìm thấy Gymer!"));
+                return Ok(new SuccessResponse<List<AccountIdAndNameViewModel>>(200, "Danh sách các Gymer", result));
+            }
+            catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GymerPackageActiveViewModel>>> GetGymerPackagesByNEAndGymer(Guid NEID, Guid GymerId)
+        {
+            try
+            {
+                var result = _packageGymersService.GetGymerPackagesByNEAndGymer(NEID, GymerId);
+                if (result.IsNullOrEmpty())
+                    return NotFound(new ErrorResponse(400, "Không tìm thấy các gói của Gymer!"));
                 return Ok(new SuccessResponse<List<GymerPackageActiveViewModel>>(200, "Danh sách các gói", result));
             }
             catch { return BadRequest(new ErrorResponse(400, "Thất bại!")); }

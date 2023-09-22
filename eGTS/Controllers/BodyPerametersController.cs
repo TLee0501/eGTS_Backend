@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using eGTS_Backend.Data.Models;
-using eGTS.Bussiness.AccountService;
+﻿using coffee_kiosk_solution.Data.Responses;
 using eGTS.Bussiness.BodyParameters;
-using coffee_kiosk_solution.Data.Responses;
+using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eGTS.Controllers
 {
@@ -62,6 +55,18 @@ namespace eGTS.Controllers
         public async Task<ActionResult<IEnumerable<BodyPerameterViewModel>>> GetBodyPerameterByGymerID(Guid id)
         {
 
+            var result = await _bodyParametersService.GetBodyParameterByGymerID(id);
+            if (result == null)
+                return NoContent();
+            else
+                return Ok(new SuccessResponse<BodyPerameterViewModel>(200, "Tìm thấy các tỉ lệ cơ thể", result)); ;
+
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<BodyPerameterViewModel>>> GetBodyPerametersByGymerID(Guid id)
+        {
+
             var result = await _bodyParametersService.GetBodyParametersByGymerID(id);
             if (result == null)
                 return NoContent();
@@ -75,6 +80,19 @@ namespace eGTS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBodyPerameter(Guid id, BodyPerameterUpdateViewModel request)
         {
+            if (request.Weight.HasValue && request.Weight.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Cân nặng không hợp lệ!"));
+            if (request.Height.HasValue && request.Height.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Chiều cao không hợp lệ!"));
+            if (request.Bone.HasValue && request.Bone.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Bone không hợp lệ!"));
+            if (request.Fat.HasValue && request.Fat.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Fat không hợp lệ không hợp lệ!"));
+            if (request.Muscle.HasValue && request.Muscle.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Muscle không hợp lệ!"));
+            if (!string.IsNullOrEmpty(request.Goal) && request.Goal.Length >= 300)
+                return BadRequest(new ErrorResponse(400, "Thông số Goal không hợp lệ!"));
+
             if (await _bodyParametersService.UpdateBodyParameters(id, request))
             {
                 _logger.LogInformation($"Update Body parameters with ID: {id}");
@@ -82,7 +100,7 @@ namespace eGTS.Controllers
             }
             else
             {
-                return BadRequest(new ErrorResponse(400, "Không thể update tài khoản"));
+                return BadRequest(new ErrorResponse(400, "Không thể cập nhật thông số cơ thể thành công!"));
             }
         }
 
@@ -91,6 +109,18 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<ActionResult<BodyPerameter>> CreateBodyPerameter(BodyPerameterCreateViewModel model)
         {
+            if (model.Weight.HasValue && model.Weight.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Cân nặng không hợp lệ!"));
+            if (model.Height.HasValue && model.Height.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Chiều cao không hợp lệ!"));
+            if (model.Bone.HasValue && model.Bone.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Bone không hợp lệ!"));
+            if (model.Fat.HasValue && model.Fat.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Fat không hợp lệ không hợp lệ!"));
+            if (model.Muscle.HasValue && model.Muscle.Value < 0)
+                return BadRequest(new ErrorResponse(400, "Thông số Muscle không hợp lệ!"));
+            if (!string.IsNullOrEmpty(model.Goal) && model.Goal.Length >= 300)
+                return BadRequest(new ErrorResponse(400, "Thông số Goal không hợp lệ!"));
 
             var result = await _bodyParametersService.CreateBodyParameters(model);
             if (result)
