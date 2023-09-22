@@ -126,7 +126,7 @@ namespace eGTS.Controllers
             if (PhoneNoExists(request.PhoneNo))
                 return BadRequest(new ErrorResponse(400, "SDT đã tồn tại."));
 
-            if (!request.Gender.IsNullOrEmpty() && (!request.Gender.Equals("F") || !request.Gender.Equals("M")))
+            if (!request.Gender.IsNullOrEmpty() && (!request.Gender.Equals("F") && !request.Gender.Equals("M")))
                 return BadRequest(new ErrorResponse(400, "Giới tính sai"));
 
             if (!string.IsNullOrEmpty(request.Fullname) && request.Fullname.Length >= 50)
