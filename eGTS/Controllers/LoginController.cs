@@ -58,9 +58,9 @@ namespace eGTS.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (model.PhoneNo == "")
-                return BadRequest(new ErrorResponse(400, "Vui lòng kiểm tả lại số điện thoại!"));
+                return BadRequest(new ErrorResponse(400, "Vui lòng kiểm tra lại số điện thoại!"));
             if (model.Password == "")
-                return BadRequest(new ErrorResponse(400, "Vui lòng kiểm tả lại mật khẩu!"));
+                return BadRequest(new ErrorResponse(400, "Vui lòng kiểm tra lại mật khẩu!"));
 
             var result = await _loginService.Login(model);
 
