@@ -163,6 +163,25 @@ namespace eGTS.Controllers
                 return NoContent();
         }
 
+        [HttpPut("{SessionID}")]
+        public async Task<IActionResult> UpdateSessionExercise (Guid SessionID, SessionUpdateViewModel request)
+        {
+            if (request.DateTime.Date < DateTime.Now.Date)
+                return BadRequest(new ErrorResponse(400, "Sai ngày bắt đầu!"));
+            if (TimeSpan.Parse(request.To) < TimeSpan.Parse(request.From))
+                return BadRequest(new ErrorResponse(400, "Sai giờ bắt đầu và kết thúc!"));
+
+            var result = await _sessionService.UpdateSessionExercise(SessionID, request);
+            if (result == 2)
+            {
+                _logger.LogInformation($"Update Session with ID: {SessionID}");
+                return Ok(new SuccessResponse<SessionUpdateViewModel>(200, "Cập nhật thành công.", request));
+            }
+            else if (result == 1) return BadRequest(new ErrorResponse(400, "Không tìm thấy buổi tập!"));
+            else
+                return BadRequest(new ErrorResponse(400, "Không cập nhật được buổi tập!"));
+        }
+
         /*[HttpPost]
         public async Task<ActionResult<Session>> CreateSessionV2(SessionCreateViewModelV2 model)
         {

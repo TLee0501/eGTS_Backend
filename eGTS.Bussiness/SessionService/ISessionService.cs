@@ -34,6 +34,6 @@ namespace eGTS.Bussiness.SessionService
         Task<ExInSessionWithSessionIDViewModel> GetAllExcerciseInSessionWithScheduleIDAndDateTime(Guid ScheduleID, DateTime dateTime);
         //Task<bool> CreateSessionV2(SessionCreateViewModelV2 model);
         Task<bool> UpdateSessionV3(Guid id, SessionUpdateViewModel request);
-
+        Task<int> UpdateSessionExercise(Guid id, SessionUpdateViewModel request);
     }
 }

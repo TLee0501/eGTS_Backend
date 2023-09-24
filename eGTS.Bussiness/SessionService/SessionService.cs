@@ -655,6 +655,69 @@ namespace eGTS.Bussiness.SessionService
             else return false;
         }
 
+        public async Task<int> UpdateSessionExercise(Guid id, SessionUpdateViewModel request)
+        {
+            var oldS = await _context.Sessions.FindAsync(id);
+            if (oldS == null || oldS.IsDelete == true) return 1;
+
+            _context.Sessions.Remove(oldS);
+
+            var oldEiS = await _context.ExerciseInSessions.Where(a => a.SessionId == id).ToListAsync();
+            if (!oldEiS.IsNullOrEmpty())
+            {
+                foreach (var item in oldEiS)
+                {
+                    _context.ExerciseInSessions.Remove(item);
+                }
+            }
+
+            var From = request.DateTime.Date.Add(TimeSpan.Parse(request.From));
+            var To = request.DateTime.Date.Add(TimeSpan.Parse(request.To));
+
+            var exSchedule = await _context.ExerciseSchedules.FindAsync(oldS.ScheduleId);
+            if (exSchedule.From <= request.DateTime)
+            {
+                /*session.From = From;
+                session.To = To;*/
+                var newS = new Session()
+                {
+                    Id = id,
+                    From = From,
+                    To = To,
+                    ScheduleId = oldS.ScheduleId,
+                    IsDelete = false
+                };
+                await _context.Sessions.AddAsync(newS);
+
+                if (request.ListExcercise.IsNullOrEmpty())
+                {
+                    foreach (var item in request.ListExcercise)
+                    {
+                        var tmp = new ExerciseInSession
+                        {
+                            Id = Guid.NewGuid(),
+                            SessionId = id,
+                            ExerciseId = item
+                        };
+                        await _context.ExerciseInSessions.AddAsync(tmp);
+                    }
+                }
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return 2;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Unable to Update Session");
+                    return 0;
+                }
+            }
+            else return 0;
+
+        }
+
         /*private async Task<bool> UpdateExcerciseListinSession(Guid SessionID, List<Guid> ExcerciseList)
         {
             var inDB = await _context.ExserciseInSessions.Where(a => a.SessionId == SessionID).ToListAsync();

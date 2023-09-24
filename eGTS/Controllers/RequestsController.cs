@@ -76,6 +76,7 @@ namespace eGTS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRequest(RequestCreateViewModel request)
         {
+            if (!request.PackageGymerId.HasValue) return BadRequest(new ErrorResponse(400, "Hãy lựa chọn gói trước khi gửi!"));
             if (request == null) return BadRequest(new ErrorResponse(400, "Gửi yêu cầu thất bại!"));
             try
             {

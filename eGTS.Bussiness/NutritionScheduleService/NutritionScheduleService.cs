@@ -1,12 +1,6 @@
 ﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.NutritionScheduleService
 {
@@ -122,7 +116,7 @@ namespace eGTS.Bussiness.NutritionScheduleService
                 PackageGymerId = PackageGymerID,
                 IsDelete = false
             };
-                //(id, pg.GymerId, (Guid)pg.Neid, PackageGymerID, false);
+            //(id, pg.GymerId, (Guid)pg.Neid, PackageGymerID, false);
             await _context.NutritionSchedules.AddAsync(schedule);
             await _context.SaveChangesAsync();
             return true;
@@ -131,9 +125,9 @@ namespace eGTS.Bussiness.NutritionScheduleService
         public async Task<List<MealViewModel>> GetMealByGymerIDAndDateAndMealTime(Guid GymerId, DateTime date, int MealTime)
         {
             //Tim GymerPackageID
-            var package = await _context.PackageGymers.SingleOrDefaultAsync(a => a.GymerId == GymerId && a.Status != "Đã hoàn thành" && a.IsDelete == false && a.Neid != null);
-            if (package == null) return null;
-            var GymerPackageId = package.Id;
+            var package = await _context.PackageGymers.Where(a => a.GymerId == GymerId && a.Status != "Đã hoàn thành" && a.IsDelete == false && a.Neid != null).ToListAsync();
+            if (package.Count != 1) return null;
+            var GymerPackageId = package[0].Id;
 
             //Tim ScheduleID
             var schedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == GymerPackageId);
