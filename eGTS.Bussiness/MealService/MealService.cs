@@ -1,12 +1,6 @@
 ﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eGTS.Bussiness.MealService
 {
@@ -140,7 +134,7 @@ namespace eGTS.Bussiness.MealService
 
             var nuSchedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
             var meals = await _context.Meals.Where(a => a.NutritionScheduleId == nuSchedule.Id).ToListAsync();
-            if(meals.Count == 0) return true;
+            if (meals.Count == 0) return true;
             var inDB = new List<DateTime>();
             foreach (var meal in meals)
             {
@@ -162,6 +156,7 @@ namespace eGTS.Bussiness.MealService
         {
             var nuSchedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == request.PackageGymerID);
 
+
             var inDB = await _context.Meals.Where(a => a.NutritionScheduleId == nuSchedule.Id && a.IsDelete == false).ToListAsync();
             foreach (var item in inDB)
             {
@@ -182,10 +177,37 @@ namespace eGTS.Bussiness.MealService
                 await _context.SaveChangesAsync();
                 await CreateMeal(request);
                 return true;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return false;
             }
+        }
+
+        public async Task<bool> UpdateMealFood(Guid mealID, MealCreateViewModel request)
+        {
+            var oldM = await _context.Meals.FindAsync(mealID);
+            if (oldM != null) _context.Meals.Remove(oldM);
+
+            var oldFiM = await _context.FoodAndSupplementInMeals.Where(a => a.MealId == mealID).ToListAsync();
+            if (oldFiM.Any())
+            {
+                foreach (var item in oldFiM)
+                {
+                    _context.FoodAndSupplementInMeals.Remove(item);
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                var result = await CreateMeal(request);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

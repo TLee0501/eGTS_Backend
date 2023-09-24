@@ -18,10 +18,16 @@ namespace eGTS.Bussiness.PackageGymersService
             Guid id = Guid.NewGuid();
             var packageRequest = await _context.Packages.FindAsync(request.PackageID);
 
-            if (packageRequest.NumberOfMonth != null)
+            if (packageRequest.HasPt == false && packageRequest.HasNe == false)
             {
                 var month = (int)packageRequest.NumberOfMonth;
                 PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, null, DateTime.Now, DateTime.Now.AddMonths(month), "Đang hoạt động", false);
+                _context.PackageGymers.Add(packageGymer);
+            }
+            else if (packageRequest.HasPt == false && packageRequest.HasNe == true)
+            {
+                var month = (int)packageRequest.NumberOfMonth;
+                PackageGymer packageGymer = new PackageGymer(id, packageRequest.Name, request.GymerID, request.PackageID, null, null, null, DateTime.Now, DateTime.Now.AddMonths(month), "Đang chờ", false);
                 _context.PackageGymers.Add(packageGymer);
             }
             else

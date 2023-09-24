@@ -1,4 +1,5 @@
-﻿using eGTS.Bussiness.PackageGymersService;
+﻿using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.PackageGymersService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using eGTS_Backend.Data.VNPay;
@@ -26,10 +27,17 @@ namespace eGTS.Controllers
         [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<ActionResult<string>> CreatePayment(PackageGymerCreateViewModel request)
         {
-            var checkBasic = await _packageGymersService.CheckAlreadyPackGymerHasCenter(request.GymerID);
-            var checkNE = await _packageGymersService.CheckAlreadyPackGymerHasNE(request.GymerID);
-            if (checkBasic || checkNE) return "0";
-
+            var packageType = await _context.Packages.FindAsync(request.PackageID);
+            if (packageType.HasNe == true)
+            {
+                var checkNE = await _packageGymersService.CheckAlreadyPackGymerHasNE(request.GymerID);
+                if (checkNE == true) return BadRequest(new ErrorResponse(400, "Bạn đã có NE!"));
+            } else if(packageType.HasNe == false && packageType.HasPt == false)
+            {
+                var checkBasic = await _packageGymersService.CheckAlreadyPackGymerHasCenter(request.GymerID);
+                if (checkBasic == true) return BadRequest(new ErrorResponse(400, "Bạn đã có gói cơ bản!"));
+            }
+            
             var package = await _context.Packages.FindAsync(request.PackageID);
             //Get Config Info
             string vnp_Returnurl = "https://egts2.azurewebsites.net/api/VNPay/PaymentConfirm"; //URL nhan ket qua tra ve 
