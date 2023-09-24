@@ -30,24 +30,6 @@ namespace eGTS.Controllers
             return await _context.Meals.ToListAsync();
         }
 
-        // GET: api/Meals/5
-        /*[HttpGet("{id}")]
-        public async Task<ActionResult<Meal>> GetMeal(Guid id)
-        {
-          if (_context.Meals == null)
-          {
-              return NotFound();
-          }
-            var meal = await _context.Meals.FindAsync(id);
-
-            if (meal == null)
-            {
-                return NotFound();
-            }
-
-            return meal;
-        }*/
-
         // PUT: api/Meals/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
@@ -97,6 +79,21 @@ namespace eGTS.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPut("{mealID}")]
+        public async Task<ActionResult<Meal>> UpdateMealFood(Guid mealID, MealCreateViewModel request)
+        {
+            if (request.ToDatetime < request.FromDatetime) return BadRequest("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!");
+            if (request.MonAnSang == null && request.MonAnTrua == null && request.MonAnToi == null && request.MonAnTruocTap == null)
+                return BadRequest("Vui lòng nhập món ăn để tạo thực đơn!");
+
+            var check = await _mealService.CheckvalidDate(request);
+            if (check == false) return BadRequest("Vui lòng kiểm tra lại thời gian bữa ăn!");
+
+            var result = await _mealService.UpdateMealFood(mealID, request);
+            if (result == false) return BadRequest("Tạo thực đơn thất bại!");
+            return Ok("Tạo thực đơn thành công!");
         }
     }
 }

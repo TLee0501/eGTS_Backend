@@ -132,6 +132,9 @@ namespace eGTS.Controllers
             if (!string.IsNullOrEmpty(request.Fullname) && request.Fullname.Length >= 50)
                 return BadRequest(new ErrorResponse(400, "Họ tên sai cú pháp!"));
 
+            if (request.Password.Length < 6 || request.Password.Length >= 50)
+                return BadRequest(new ErrorResponse(400, "Độ dài mật khẩu không đúng!"));
+
             if (!request.Role.Equals("PT") && !request.Role.Equals("NE") && !request.Role.Equals("Gymer") && !request.Role.Equals("Staff"))
                 return BadRequest(new ErrorResponse(400, "Chức vụ sai"));
 
