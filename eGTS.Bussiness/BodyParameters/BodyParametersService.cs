@@ -86,7 +86,12 @@ namespace eGTS.Bussiness.BodyParameters
         public async Task<bool> DeleteBodyParameters(Guid id)
         {
             var BP = _context.BodyPerameters.Find(id);
-            BP.IsDelete = true;
+            if (BP == null)
+                return false;
+
+            if (BP.IsDelete != true)
+                BP.IsDelete = true;
+
             try
             {
                 await _context.SaveChangesAsync();
