@@ -32,7 +32,7 @@ namespace eGTS.Bussiness.RequestService
             if (checkPackage.HasNe == false && checkExpert.Role == "NE") return 3;
 
             var id = Guid.NewGuid();
-            var requestService = new Request(id, request.GymerId, request.ReceiverId, request.PackageGymerId, boolPT, null, false);
+            var requestService = new Request(id, request.GymerId, request.ReceiverId, (Guid)request.PackageGymerId, boolPT, null, false);
 
             try
             {

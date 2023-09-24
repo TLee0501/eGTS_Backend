@@ -105,6 +105,8 @@ namespace eGTS.Bussiness.PackageGymersService
                 gymerActive.PackageGymerId = item.Id;
                 gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 gymerActive.From = (DateTime)item.From;
+                if (gymerActive.To != null) 
+                    gymerActive.To = (DateTime)item.From;
                 gymerActive.Status = item.Status;
                 gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
                 var s = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
@@ -130,6 +132,8 @@ namespace eGTS.Bussiness.PackageGymersService
                 gymerActive.PackageGymerId = item.Id;
                 gymerActive.GymerName = _context.Accounts.FindAsync(item.GymerId).Result.Fullname;
                 gymerActive.From = (DateTime)item.From;
+                if (gymerActive.To != null)
+                    gymerActive.To = (DateTime)item.From;
                 gymerActive.Status = item.Status;
                 gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
                 var s = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
@@ -144,20 +148,28 @@ namespace eGTS.Bussiness.PackageGymersService
 
         public async Task<bool> CheckAlreadyPackGymerHasCenter(Guid id)
         {
-            var gp = await _context.PackageGymers.Where(a => a.GymerId == id && a.IsDelete == false && a.Status != "Đã hoàn thành").ToListAsync();
-            foreach (var item in gp)
+            var existPG = await _context.PackageGymers.Where(a => a.GymerId == id && !a.IsDelete && a.Status != "Đã hoàn thành").ToListAsync();
+            if (existPG.Any())
             {
-                if (item.Ptid == null && item.Neid == null) return true;
+                foreach (var item in existPG)
+                {
+                    var pType = await _context.Packages.FindAsync(item.PackageId);
+                    if (!pType.HasNe && !pType.HasPt) return true;
+                }
             }
             return false;
         }
 
         public async Task<bool> CheckAlreadyPackGymerHasNE(Guid id)
         {
-            var gp = await _context.PackageGymers.Where(a => a.GymerId == id && a.IsDelete == false && a.Status != "Đã hoàn thành").ToListAsync();
-            foreach (var item in gp)
+            var existPG = await _context.PackageGymers.Where(a => a.GymerId == id && !a.IsDelete && a.Status != "Đã hoàn thành").ToListAsync();
+            if (existPG.Any())
             {
-                if (item.Neid != null) return true;
+                foreach (var item in existPG)
+                {
+                    var pType = await _context.Packages.FindAsync(item.PackageId);
+                    if (pType.HasNe) return true;
+                }
             }
             return false;
         }
@@ -231,5 +243,6 @@ namespace eGTS.Bussiness.PackageGymersService
                     }).ToList();
             return groupedByGymerId;
         }
+
     }
 }
