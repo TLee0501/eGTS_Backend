@@ -105,7 +105,7 @@ namespace eGTS.Controllers
                 return Ok(new SuccessResponse<ExScheduleUpdateViewModel>(200, "Update thành công.", request));
             }
             else
-                return BadRequest(new ErrorResponse(400, "Invalid Data"));
+                return BadRequest(new ErrorResponse(400, "Dữ liệu sai!"));
 
         }
 

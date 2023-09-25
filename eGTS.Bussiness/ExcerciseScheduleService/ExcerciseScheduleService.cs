@@ -111,7 +111,10 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
         public async Task<ExScheduleViewModel> GetExcerciseScheduleByID(Guid id)
         {
             var ExS = await _context.ExerciseSchedules.FindAsync(id);
+
+            if (ExS == null) return null;
             if (ExS.IsDelete == true) return null;
+
             if (ExS != null)
             {
                 var result = new ExScheduleViewModel();
@@ -598,7 +601,7 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
                     To = item.AddHours(2),
                     IsDelete = false
                 };
-                    //(Sid, id, item, item.AddHours(1), false);
+                //(Sid, id, item, item.AddHours(1), false);
 
                 try
                 {

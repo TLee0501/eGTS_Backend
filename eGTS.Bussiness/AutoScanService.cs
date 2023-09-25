@@ -47,7 +47,7 @@ namespace eGTS.Bussiness
 
                 else if (packageType.HasPt == true & packageType.HasNe == false)    //goi chi pt
                 {
-                    var es = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id && a.IsDelete == false);
+                    var es = _context.ExerciseSchedules.FirstOrDefault(a => a.PackageGymerId == item.Id && a.IsDelete == false);
                     if (es != null && es.To.Date < DateTime.Now.Date)
                     {
                         item.Status = "Đã hoàn thành";
@@ -80,7 +80,8 @@ namespace eGTS.Bussiness
             try
             {
                 _context.SaveChanges();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
             }
