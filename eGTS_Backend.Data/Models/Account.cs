@@ -48,10 +48,6 @@ public partial class Account
 
     public virtual ICollection<FoodAndSupplement> FoodAndSupplements { get; set; } = new List<FoodAndSupplement>();
 
-    public virtual ICollection<Message> MessageRecievers { get; set; } = new List<Message>();
-
-    public virtual ICollection<Message> MessageSenders { get; set; } = new List<Message>();
-
     public virtual ICollection<PackageGymer> PackageGymerGymers { get; set; } = new List<PackageGymer>();
 
     public virtual ICollection<PackageGymer> PackageGymerNes { get; set; } = new List<PackageGymer>();
