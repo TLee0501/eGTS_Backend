@@ -33,8 +33,6 @@ public partial class EGtsContext : DbContext
 
     public virtual DbSet<Meal> Meals { get; set; }
 
-    public virtual DbSet<Message> Messages { get; set; }
-
     public virtual DbSet<NutritionSchedule> NutritionSchedules { get; set; }
 
     public virtual DbSet<Package> Packages { get; set; }
@@ -268,31 +266,6 @@ public partial class EGtsContext : DbContext
                 .HasForeignKey(d => d.NutritionScheduleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Meal_NutritionSchedule");
-        });
-
-        modelBuilder.Entity<Message>(entity =>
-        {
-            entity.ToTable("Message");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Message1)
-                .HasMaxLength(300)
-                .HasColumnName("Message");
-            entity.Property(e => e.RecieverId).HasColumnName("RecieverID");
-            entity.Property(e => e.SenderId).HasColumnName("SenderID");
-
-            entity.HasOne(d => d.Reciever).WithMany(p => p.MessageRecievers)
-                .HasForeignKey(d => d.RecieverId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Message_Account");
-
-            entity.HasOne(d => d.Sender).WithMany(p => p.MessageSenders)
-                .HasForeignKey(d => d.SenderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Message_Account1");
         });
 
         modelBuilder.Entity<NutritionSchedule>(entity =>

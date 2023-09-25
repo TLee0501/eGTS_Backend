@@ -57,9 +57,7 @@ namespace eGTS.Bussiness
 
                 else if (packageType.HasPt == false & packageType.HasNe == true)    //goi chi ne
                 {
-                    var ns = _context.NutritionSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id && a.IsDelete == false);
-                    var meals = _context.Meals.Where(a => a.Datetime.Date > DateTime.Now.Date).ToList();
-                    if (!meals.IsNullOrEmpty())
+                    if (item.To < DateTime.Now.Date)
                     {
                         item.Status = "Đã hoàn thành";
                         item.To = DateTime.Now;
