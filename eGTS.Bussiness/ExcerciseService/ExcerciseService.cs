@@ -66,7 +66,8 @@ namespace eGTS.Bussiness.ExcerciseService
         {
             var excercise = await _context.Exercises.FindAsync(id);
 
-            excercise.IsDelete = true;
+            if (excercise != null)
+                excercise.IsDelete = true;
 
             try
             {
