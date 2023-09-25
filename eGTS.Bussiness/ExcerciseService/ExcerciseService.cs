@@ -195,6 +195,7 @@ namespace eGTS.Bussiness.ExcerciseService
             if (!request.Video.Equals(""))
                 excercise.Video = request.Video;
             excercise.IsDelete = request.IsDelete;
+
             excercise.CalorieCumsumption = request.CalorieCumsumption;
             excercise.RepTime = request.RepTime;
             excercise.UnitOfMeasurement = request.UnitOfMeasurement;

@@ -49,12 +49,14 @@ namespace eGTS.Controllers
         /// <returns></returns>
         // GET: api/ExcercisesByName
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]//BAD REQUEST
         public async Task<ActionResult<IEnumerable<Exercise>>> GetExcercisesByName(string Name)
         {
+
             var result = await _excerciseService.GetExcerciseByName(Name);
             if (result == null)
             {
-                return NotFound(new ErrorResponse(404, "Không tìm thấy bài tập!"));
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy bài tập!"));
             }
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Danh sách các bài tập.", result));
         }
@@ -70,12 +72,12 @@ namespace eGTS.Controllers
         {
             if (PTID == Guid.Empty)
             {
-                return BadRequest(new ErrorResponse(400, "PTID is empty."));
+                return BadRequest(new ErrorResponse(400, "PTID đang bị bỏ trống."));
             }
             var result = await _excerciseService.GetExcerciseByPTID(PTID);
             if (result == null)
             {
-                return NotFound(new ErrorResponse(404, "Không tìm thấy bài tập!"));
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy bài tập!"));
             }
             return Ok(new SuccessResponse<List<ExcerciseViewModel>>(200, "Danh sách các bài tập.", result));
         }
@@ -141,11 +143,11 @@ namespace eGTS.Controllers
         {
             if (model.Ptid.Equals("") || model.Ptid == Guid.Empty || model.Ptid.Equals("string"))
             {
-                return BadRequest(new ErrorResponse(400, "PTID is empty."));
+                return BadRequest(new ErrorResponse(400, "PTID đang bị bỏ trống."));
             }
             if (model.Name.IsNullOrEmpty())
             {
-                return BadRequest(new ErrorResponse(400, "Name is empty."));
+                return BadRequest(new ErrorResponse(400, "Name đang bị bỏ trống."));
             }
             if (model.CalorieCumsumption < 0) return BadRequest(new ErrorResponse(400, "Calory không hợp lệ!"));
             if (model.RepTime < 0) return BadRequest(new ErrorResponse(400, "RepTime không hợp lệ!"));
