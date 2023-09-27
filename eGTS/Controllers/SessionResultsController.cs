@@ -94,7 +94,7 @@ namespace eGTS.Controllers
             if (await _sessionService.CreateSessionResult(model))
             {
                 _logger.LogInformation($"Created Session Result with for Session with ID: {model.SessionId}");
-                return Ok(new SuccessResponse<SessionResultCreateViewModel>(200, "Thành công!", model));
+                return Ok(new ErrorResponse(200, "Thành công!"));
             }
             else
                 return BadRequest(new ErrorResponse(400, "Thất bại!"));

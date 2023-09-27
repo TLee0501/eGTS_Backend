@@ -82,7 +82,7 @@ namespace eGTS.Bussiness.SessionService
             {
                 SessionResult sessionResult = new SessionResult()
                 {
-                    Id = new Guid(),
+                    Id = Guid.NewGuid(),
                     SessionId = model.SessionId,
                     CaloConsump = model.CaloConsump,
                     Note = model.Note,
