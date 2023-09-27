@@ -75,11 +75,14 @@ namespace eGTS.Bussiness.SessionService
                 return false;
         }*/
 
-        public async Task<bool> CreateSessionResult(SessionResultCreateViewModel model)
+        public async Task<int> CreateSessionResult(SessionResultCreateViewModel model)
         {
             var session = await _context.Sessions.FindAsync(model.SessionId);
             if (session != null)
             {
+                var check = await _context.SessionResults.SingleOrDefaultAsync(a => a.SessionId == model.SessionId);
+                if (check != null) return 2;
+
                 SessionResult sessionResult = new SessionResult()
                 {
                     Id = Guid.NewGuid(),
@@ -92,17 +95,17 @@ namespace eGTS.Bussiness.SessionService
                 {
                     await _context.SessionResults.AddAsync(sessionResult);
                     await _context.SaveChangesAsync();
-                    return true;
+                    return 1;
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError("Invalid Data");
-                    return false;
+                    return 0;
                 }
             }
             else
             {
-                return false;
+                return 0;
             }
         }
 

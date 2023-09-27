@@ -91,11 +91,13 @@ namespace eGTS.Controllers
             if (model.CaloConsump <= 0)
                 return BadRequest(new ErrorResponse(400, "Lượng Calorie không hợp lệ!"));
 
-            if (await _sessionService.CreateSessionResult(model))
+            var result = await _sessionService.CreateSessionResult(model);
+            if (result == 1)
             {
                 _logger.LogInformation($"Created Session Result with for Session with ID: {model.SessionId}");
                 return Ok(new ErrorResponse(200, "Thành công!"));
             }
+            else if (result == 2) return BadRequest(new ErrorResponse(400, "Đã nhập kết quả buổi tập!!"));
             else
                 return BadRequest(new ErrorResponse(400, "Thất bại!"));
 

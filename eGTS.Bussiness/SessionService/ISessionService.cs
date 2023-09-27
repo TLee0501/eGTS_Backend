@@ -10,7 +10,7 @@ namespace eGTS.Bussiness.SessionService
     public interface ISessionService
     {
         //Task<bool> CreateSession(Guid scheduleID, DateTime startTime, double during);
-        Task<bool> CreateSessionResult(SessionResultCreateViewModel model);
+        Task<int> CreateSessionResult(SessionResultCreateViewModel model);
         Task<bool> CreateExcerciseInSession(ExInSessionCreateViewModel model);
         //Task<bool> UpdateSession(Guid id, SessionUpdateViewModel request);
         Task<bool> UpdateSessionResult(Guid id, SessionResultUpdateViewModel model);
