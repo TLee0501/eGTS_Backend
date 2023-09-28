@@ -2,6 +2,7 @@
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq;
 
 namespace eGTS.Bussiness.FeedbackService
@@ -242,9 +243,8 @@ namespace eGTS.Bussiness.FeedbackService
 
         public bool checkIfFeedbackAlreadyMade(FeedbackCreateViewModel model)
         {
-            var feedback = _context.FeedBacks.Where(f => f.PackageGymerId.Equals(model.PackageGymerId) && f.PtidorNeid.Equals(model.PtidorNeid));
-            if (feedback.ToList().Count == 0) return true;
-            return false;
+            var feedback = _context.FeedBacks.Where(f => f.PackageGymerId.Equals(model.PackageGymerId) && f.PtidorNeid.Equals(model.PtidorNeid)).ToList();
+            return feedback.Any();
         }
 
     }
