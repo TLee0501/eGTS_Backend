@@ -169,6 +169,8 @@ namespace eGTS.Controllers
                 return BadRequest(new ErrorResponse(400, "SDT đang được sử dụng."));
             if (model.Fullname.IsNullOrEmpty() || model.Fullname.Length >= 50)
                 return BadRequest(new ErrorResponse(400, "Họ tên sai cú pháp!"));
+            if (model.Password.IsNullOrEmpty() || model.Password.Length >= 50)
+                return BadRequest(new ErrorResponse(400, "Mật khẩu sai cú pháp!"));
 
             var id = await _accountService.CreateAccount(model);
             if (id != Guid.Empty)

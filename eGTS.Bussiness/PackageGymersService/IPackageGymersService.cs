@@ -10,7 +10,7 @@ namespace eGTS.Bussiness.PackageGymersService
     public interface IPackageGymersService
     {
         //Task<PackageGymerViewModel> GetPackage(Guid id);
-        Task<List<PackageGymerViewModel>> GetPackageGymerByGymerID(Guid request);
+        Task<List<PackageGymerNameViewModel>> GetPackageGymerByGymerID(Guid request);
         Task<bool> UpdatePackageGymer(PackageGymerViewModel request);
         Task<bool> CreatePackageGymer(PackageGymerCreateViewModel request);
         Task<List<GymerPackageFilterByGymerViewModel>> GetGymerPackageActiveByPT(Guid PTID);
