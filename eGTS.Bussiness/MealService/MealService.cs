@@ -1,6 +1,7 @@
 ﻿using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace eGTS.Bussiness.MealService
 {
@@ -184,29 +185,131 @@ namespace eGTS.Bussiness.MealService
             }
         }
 
-        public async Task<bool> UpdateMealFood(Guid mealID, MealCreateViewModel request)
+        public async Task<bool> UpdateMealFood(MealCreateViewModel request)
         {
-            var oldM = await _context.Meals.FindAsync(mealID);
-            if (oldM != null) _context.Meals.Remove(oldM);
+            var pg = await _context.PackageGymers.FindAsync(request.PackageGymerID);
+            var ns = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == pg.Id);
 
-            var oldFiM = await _context.FoodAndSupplementInMeals.Where(a => a.MealId == mealID).ToListAsync();
-            if (oldFiM.Any())
+            if (!request.MonAnSang.IsNullOrEmpty())
             {
-                foreach (var item in oldFiM)
+                var oldMs = await _context.Meals.Where(a => a.NutritionScheduleId == ns.Id && a.MealTime == 1 && a.Datetime.Date >= request.FromDatetime.Date && a.Datetime <= request.ToDatetime.Date).ToListAsync();
+                if (oldMs != null)
                 {
-                    _context.FoodAndSupplementInMeals.Remove(item);
+                    foreach (var item in oldMs)
+                    {
+                        item.IsDelete = true;
+
+                        var oldFiMs = await _context.FoodAndSupplementInMeals.Where(a => a.MealId == item.Id).ToListAsync();
+                        if (oldFiMs.Any())
+                        {
+                            foreach (var oldFiM in oldFiMs)
+                            {
+                                _context.FoodAndSupplementInMeals.Remove(oldFiM);
+                            }
+                        }
+                    }
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        var result = await CreateMeal(request);
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
                 }
             }
 
-            try
+            if (!request.MonAnTrua.IsNullOrEmpty())
             {
-                await _context.SaveChangesAsync();
-                var result = await CreateMeal(request);
+                var oldMs = await _context.Meals.Where(a => a.NutritionScheduleId == ns.Id && a.MealTime == 2 && a.Datetime.Date >= request.FromDatetime.Date && a.Datetime <= request.ToDatetime.Date).ToListAsync();
+                if (oldMs != null)
+                {
+                    foreach (var item in oldMs)
+                    {
+                        item.IsDelete = true;
+
+                        var oldFiMs = await _context.FoodAndSupplementInMeals.Where(a => a.MealId == item.Id).ToListAsync();
+                        if (oldFiMs.Any())
+                        {
+                            foreach (var oldFiM in oldFiMs)
+                            {
+                                _context.FoodAndSupplementInMeals.Remove(oldFiM);
+                            }
+                        }
+                    }
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        var result = await CreateMeal(request);
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
             }
-            catch (Exception ex)
+
+            if (!request.MonAnToi.IsNullOrEmpty())
             {
-                return false;
+                var oldMs = await _context.Meals.Where(a => a.NutritionScheduleId == ns.Id && a.MealTime == 3 && a.Datetime.Date >= request.FromDatetime.Date && a.Datetime <= request.ToDatetime.Date).ToListAsync();
+                if (oldMs != null)
+                {
+                    foreach (var item in oldMs)
+                    {
+                        item.IsDelete = true;
+
+                        var oldFiMs = await _context.FoodAndSupplementInMeals.Where(a => a.MealId == item.Id).ToListAsync();
+                        if (oldFiMs.Any())
+                        {
+                            foreach (var oldFiM in oldFiMs)
+                            {
+                                _context.FoodAndSupplementInMeals.Remove(oldFiM);
+                            }
+                        }
+                    }
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        var result = await CreateMeal(request);
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
             }
+
+            if (!request.MonAnTruocTap.IsNullOrEmpty())
+            {
+                var oldMs = await _context.Meals.Where(a => a.NutritionScheduleId == ns.Id && a.MealTime == 4 && a.Datetime.Date >= request.FromDatetime.Date && a.Datetime <= request.ToDatetime.Date).ToListAsync();
+                if (oldMs != null)
+                {
+                    foreach (var item in oldMs)
+                    {
+                        item.IsDelete = true;
+
+                        var oldFiMs = await _context.FoodAndSupplementInMeals.Where(a => a.MealId == item.Id).ToListAsync();
+                        if (oldFiMs.Any())
+                        {
+                            foreach (var oldFiM in oldFiMs)
+                            {
+                                _context.FoodAndSupplementInMeals.Remove(oldFiM);
+                            }
+                        }
+                    }
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        var result = await CreateMeal(request);
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+
             return true;
         }
     }
