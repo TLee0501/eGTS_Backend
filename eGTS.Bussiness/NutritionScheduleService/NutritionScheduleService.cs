@@ -135,7 +135,7 @@ namespace eGTS.Bussiness.NutritionScheduleService
             var ScheduleID = schedule.Id;
 
             //Tim Meal
-            var meals = await _context.Meals.Where(a => a.NutritionScheduleId == ScheduleID && a.MealTime == MealTime).ToListAsync();
+            var meals = await _context.Meals.Where(a => a.NutritionScheduleId == ScheduleID && a.MealTime == MealTime && !a.IsDelete).ToListAsync();
             if (meals == null) return null;
 
             //Search Meal
@@ -159,12 +159,12 @@ namespace eGTS.Bussiness.NutritionScheduleService
         public async Task<List<MealViewModel>> GetMealByPackageGymerIDAndDateAndMealTime(Guid PackageGymerID, DateTime date, int MealTime)
         {
             //Tim ScheduleID
-            var schedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == PackageGymerID);
+            var schedule = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == PackageGymerID && !a.IsDelete);
             if (schedule == null) return null;
             var ScheduleID = schedule.Id;
 
             //Tim Meal
-            var meals = await _context.Meals.Where(a => a.NutritionScheduleId == ScheduleID && a.MealTime == MealTime).ToListAsync();
+            var meals = await _context.Meals.Where(a => a.NutritionScheduleId == ScheduleID && a.MealTime == MealTime && !a.IsDelete).ToListAsync();
             if (meals == null) return null;
 
             //Search Meal
