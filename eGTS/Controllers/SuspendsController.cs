@@ -67,6 +67,7 @@ namespace eGTS.Controllers
             else if (result == 3) return BadRequest(new ErrorResponse(400, "Thời gian tạm ngưng tối đa là 90 ngày!"));
             else if (result == 5) return BadRequest(new ErrorResponse(400, "Chỉ có thể tạm ngưng gói đang hoạt động!"));
             else if (result == 4) return Ok(new ErrorResponse(200, "Thành công!"));
+            else if (result == 6) return BadRequest(new ErrorResponse(400, "Chỉ có thể tạm ngưng gói tối đa 2 lần!"));
             else return BadRequest(new ErrorResponse(400, "Thất bại!"));
         }
     }
