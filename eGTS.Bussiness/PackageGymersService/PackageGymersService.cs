@@ -115,7 +115,7 @@ namespace eGTS.Bussiness.PackageGymersService
                     gymerActive.To = (DateTime)item.From;
                 gymerActive.Status = item.Status;
                 gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
-                var s = _context.ExerciseSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id);
+                var s = _context.NutritionSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id && !a.IsDelete);
                 var isUpdate = true;
                 if (s == null) isUpdate = false;
                 gymerActive.isUpdate = isUpdate;

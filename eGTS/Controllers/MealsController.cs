@@ -1,4 +1,5 @@
-﻿using eGTS.Bussiness.MealService;
+﻿using coffee_kiosk_solution.Data.Responses;
+using eGTS.Bussiness.MealService;
 using eGTS_Backend.Data.Models;
 using eGTS_Backend.Data.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -81,19 +82,19 @@ namespace eGTS.Controllers
             return NoContent();
         }
 
-        [HttpPut("{mealID}")]
-        public async Task<ActionResult<Meal>> UpdateMealFood(Guid mealID, MealCreateViewModel request)
+        [HttpPut]
+        public async Task<ActionResult<Meal>> UpdateMealFood(MealCreateViewModel request)
         {
-            if (request.ToDatetime < request.FromDatetime) return BadRequest("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!");
-            if (request.MonAnSang == null && request.MonAnTrua == null && request.MonAnToi == null && request.MonAnTruocTap == null)
-                return BadRequest("Vui lòng nhập món ăn để tạo thực đơn!");
+            if (request.ToDatetime < request.FromDatetime) return BadRequest(new ErrorResponse(400, "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!"));
+            /*if (request.MonAnSang == null && request.MonAnTrua == null && request.MonAnToi == null && request.MonAnTruocTap == null)
+                return BadRequest("Vui lòng nhập món ăn để tạo thực đơn!");*/
 
-            var check = await _mealService.CheckvalidDate(request);
-            if (check == false) return BadRequest("Vui lòng kiểm tra lại thời gian bữa ăn!");
+            /*var check = await _mealService.CheckvalidDate(request);
+            if (check == false) return BadRequest("Vui lòng kiểm tra lại thời gian bữa ăn!");*/
 
-            var result = await _mealService.UpdateMealFood(mealID, request);
-            if (result == false) return BadRequest("Tạo thực đơn thất bại!");
-            return Ok("Tạo thực đơn thành công!");
+            var result = await _mealService.UpdateMealFood(request);
+            if (result == false) return BadRequest(new ErrorResponse(400, "Tạo thực đơn thất bại!"));
+            return Ok(new ErrorResponse(200, "Tạo thực đơn thành công!"));
         }
     }
 }
