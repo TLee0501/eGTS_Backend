@@ -688,5 +688,40 @@ namespace eGTS.Bussiness.ExcerciseScheduleService
             }
             return result;
         }
+
+        public async Task<ExScheduleBasicForGymerViewModel> GetExcerciseScheduleByPackageGymerIDForGymer(Guid packageGymerID)
+        {
+            try
+            {
+                var schedule = await _context.ExerciseSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == packageGymerID && a.IsDelete == false);
+
+                //Tim sessions
+                var sessions = await _context.Sessions.Where(a => a.ScheduleId == schedule.Id && !a.IsDelete).ToListAsync();
+                if (sessions.IsNullOrEmpty()) return null;
+
+                //Thêm bài tập vào buổi tập
+                var listsession = new List<SessionDateViewModel>();
+                foreach (var item in sessions)
+                {
+                    var viewModel = new SessionDateViewModel();
+                    viewModel.id = item.Id;
+                    viewModel.ScheduleId = item.ScheduleId;
+                    viewModel.Date = item.From.Date;
+                    listsession.Add(viewModel);
+                }
+
+                var result = new ExScheduleBasicForGymerViewModel()
+                {
+                    From = schedule.From,
+                    To = schedule.To,
+                    sessions = listsession
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

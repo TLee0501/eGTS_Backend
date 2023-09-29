@@ -21,6 +21,9 @@ namespace eGTS.Bussiness.SuspendService
 
         public async Task<int> CreateSuspend(SuspendCreateViewModel request)
         {
+            var checkSuspend = await _context.Suspends.Where(a => a.PackageGymerId == request.PackageGymerId && !a.IsDelete).ToListAsync();
+            if (checkSuspend.Count > 2) return 6;
+
             var pg = await _context.PackageGymers.FindAsync(request.PackageGymerId);
             if (pg == null) return 1;
             if (pg.From.Value.Date >= request.From.Date) return 2;

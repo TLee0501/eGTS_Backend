@@ -7,6 +7,6 @@ namespace eGTS.Bussiness.MealService
         Task<bool> CreateMeal(MealCreateViewModel request);
         Task<bool> CheckvalidDate(MealCreateViewModel request);
         Task<bool> UpdateMeal(MealCreateViewModel request);
-        Task<bool> UpdateMealFood(MealCreateViewModel request);
+        Task<int> UpdateMealFood(MealCreateViewModel request);
     }
 }

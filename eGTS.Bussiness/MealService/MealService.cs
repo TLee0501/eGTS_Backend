@@ -185,10 +185,15 @@ namespace eGTS.Bussiness.MealService
             }
         }
 
-        public async Task<bool> UpdateMealFood(MealCreateViewModel request)
+        public async Task<int> UpdateMealFood(MealCreateViewModel request)
         {
             var pg = await _context.PackageGymers.FindAsync(request.PackageGymerID);
             var ns = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == pg.Id);
+
+            if (pg.To.HasValue)
+            {
+                if (request.ToDatetime.Date > pg.To.Value.Date) return 1;
+            }
 
             if (!request.MonAnSang.IsNullOrEmpty())
             {
@@ -215,7 +220,7 @@ namespace eGTS.Bussiness.MealService
                     }
                     catch (Exception ex)
                     {
-                        return false;
+                        return 0;
                     }
                 }
             }
@@ -245,7 +250,7 @@ namespace eGTS.Bussiness.MealService
                     }
                     catch (Exception ex)
                     {
-                        return false;
+                        return 0;
                     }
                 }
             }
@@ -275,7 +280,7 @@ namespace eGTS.Bussiness.MealService
                     }
                     catch (Exception ex)
                     {
-                        return false;
+                        return 0;
                     }
                 }
             }
@@ -305,12 +310,12 @@ namespace eGTS.Bussiness.MealService
                     }
                     catch (Exception ex)
                     {
-                        return false;
+                        return 0;
                     }
                 }
             }
 
-            return true;
+            return 2;
         }
     }
 }

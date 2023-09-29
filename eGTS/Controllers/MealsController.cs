@@ -93,8 +93,9 @@ namespace eGTS.Controllers
             if (check == false) return BadRequest("Vui lòng kiểm tra lại thời gian bữa ăn!");*/
 
             var result = await _mealService.UpdateMealFood(request);
-            if (result == false) return BadRequest(new ErrorResponse(400, "Tạo thực đơn thất bại!"));
-            return Ok(new ErrorResponse(200, "Tạo thực đơn thành công!"));
+            if (result == 2) return Ok(new ErrorResponse(200, "Tạo thực đơn thành công!"));
+            else if (result == 1) return Ok(new ErrorResponse(200, "Sai ngày kết thúc!"));
+            return BadRequest(new ErrorResponse(400, "Tạo thực đơn thất bại!"));
         }
     }
 }
