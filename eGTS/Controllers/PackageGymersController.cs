@@ -87,11 +87,11 @@ namespace eGTS.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PackageGymerViewModel>>> GetPackageGymerByGymerID(Guid request)
+        public async Task<ActionResult<IEnumerable<PackageGymerNameViewModel>>> GetPackageGymerByGymerID(Guid request)
         {
             var data = await _packageGymersService.GetPackageGymerByGymerID(request);
             if (data == null) return NoContent();
-            return Ok(new SuccessResponse<List<PackageGymerViewModel>>(200, "List of PackageGymer found", data));
+            return Ok(new SuccessResponse<List<PackageGymerNameViewModel>>(200, "List of PackageGymer found", data));
         }
 
         [HttpGet]

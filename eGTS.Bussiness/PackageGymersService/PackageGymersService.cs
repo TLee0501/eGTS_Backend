@@ -57,18 +57,20 @@ namespace eGTS.Bussiness.PackageGymersService
             }
         }
 
-        public async Task<List<PackageGymerViewModel>> GetPackageGymerByGymerID(Guid request)
+        public async Task<List<PackageGymerNameViewModel>> GetPackageGymerByGymerID(Guid request)
         {
             var listPackageGymer = await _context.PackageGymers.Where(a => a.GymerId == request).ToListAsync();
-            List<PackageGymerViewModel> result = new List<PackageGymerViewModel>();
+            List<PackageGymerNameViewModel> result = new List<PackageGymerNameViewModel>();
             foreach (var item in listPackageGymer)
             {
-                var temp = new PackageGymerViewModel();
+                var temp = new PackageGymerNameViewModel();
                 temp.Id = item.Id;
                 temp.GymerId = item.GymerId;
                 temp.Name = item.Name;
                 temp.Ptid = item.Ptid;
+                if (item.Ptid != null) temp.PTName = _context.Accounts.FindAsync(item.Ptid).Result.Fullname;
                 temp.Neid = item.Neid;
+                if (item.Neid != null) temp.NEName = _context.Accounts.FindAsync(item.Neid).Result.Fullname;
                 temp.NumberOfSession = item.NumberOfSession;
                 temp.NumberOfMonth = _context.Packages.FindAsync(item.PackageId).Result.NumberOfMonth;
                 temp.From = item.From;
