@@ -253,10 +253,10 @@ namespace eGTS.Controllers
 
             if (result == null)
             {
-                return BadRequest("Không tìm thấy lịch tập!");
+                return BadRequest(new ErrorResponse(400, "Không tìm thấy lịch tập!"));
             }
 
-            return Ok(new SuccessResponse<List<SessionDetailViewModel>>(200, "Danh sách lịch tập!", result));
+            return result;
         }
 
         [HttpGet("{packageGymerID}")]

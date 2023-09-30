@@ -692,7 +692,7 @@ namespace eGTS.Bussiness.SessionService
                 };
                 await _context.Sessions.AddAsync(newS);
 
-                if (request.ListExcercise.IsNullOrEmpty())
+                if (!request.ListExcercise.IsNullOrEmpty())
                 {
                     foreach (var item in request.ListExcercise)
                     {
