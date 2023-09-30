@@ -95,6 +95,7 @@ namespace eGTS.Controllers
             var result = await _mealService.UpdateMealFood(request);
             if (result == 2) return Ok(new ErrorResponse(200, "Tạo thực đơn thành công!"));
             else if (result == 1) return Ok(new ErrorResponse(200, "Sai ngày kết thúc!"));
+            else if (result == 3) return Ok(new ErrorResponse(200, "Sai ngày bắt đầu!"));
             return BadRequest(new ErrorResponse(400, "Tạo thực đơn thất bại!"));
         }
     }

@@ -661,7 +661,7 @@ namespace eGTS.Bussiness.SessionService
         public async Task<int> UpdateSessionExercise(Guid id, SessionUpdateViewModel request)
         {
             var oldS = await _context.Sessions.FindAsync(id);
-            if (oldS == null || oldS.IsDelete == true) return 1;
+            if (oldS == null || oldS.IsDelete == true) return 1; 
 
             _context.Sessions.Remove(oldS);
 
@@ -676,6 +676,8 @@ namespace eGTS.Bussiness.SessionService
 
             var From = request.DateTime.Date.Add(TimeSpan.Parse(request.From));
             var To = request.DateTime.Date.Add(TimeSpan.Parse(request.To));
+
+            if (From < DateTime.Now) return 3;
 
             var exSchedule = await _context.ExerciseSchedules.FindAsync(oldS.ScheduleId);
             if (exSchedule.From <= request.DateTime)
