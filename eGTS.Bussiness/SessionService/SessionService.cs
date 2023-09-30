@@ -665,6 +665,18 @@ namespace eGTS.Bussiness.SessionService
 
             _context.Sessions.Remove(oldS);
 
+            if(oldS.From.Date != request.DateTime.Date)
+            {
+                var checkDup = await _context.Sessions.Where(a => a.ScheduleId == oldS.ScheduleId && !a.IsDelete).ToListAsync();
+                foreach (var item in checkDup)
+                {
+                    if (item.From.Date == request.DateTime.Date)
+                    {
+                        return 4;
+                    }
+                }
+            }
+
             var oldEiS = await _context.ExerciseInSessions.Where(a => a.SessionId == id).ToListAsync();
             if (!oldEiS.IsNullOrEmpty())
             {
@@ -676,6 +688,8 @@ namespace eGTS.Bussiness.SessionService
 
             var From = request.DateTime.Date.Add(TimeSpan.Parse(request.From));
             var To = request.DateTime.Date.Add(TimeSpan.Parse(request.To));
+
+            if (From < DateTime.Now) return 3;
 
             var exSchedule = await _context.ExerciseSchedules.FindAsync(oldS.ScheduleId);
             if (exSchedule.From <= request.DateTime)
