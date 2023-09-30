@@ -117,9 +117,10 @@ namespace eGTS.Bussiness.PackageGymersService
                     gymerActive.To = (DateTime)item.From;
                 gymerActive.Status = item.Status;
                 gymerActive.NumberOfSession = _context.Packages.FindAsync(item.PackageId).Result.NumberOfsession;
-                var s = _context.NutritionSchedules.SingleOrDefault(a => a.PackageGymerId == item.Id && !a.IsDelete);
+                var s = await _context.NutritionSchedules.SingleOrDefaultAsync(a => a.PackageGymerId == item.Id && !a.IsDelete);
+                var checkEMeal = await _context.Meals.Where(a => a.NutritionScheduleId == s.Id).ToListAsync();
                 var isUpdate = true;
-                if (s == null) isUpdate = false;
+                if (!checkEMeal.Any()) isUpdate = false;
                 gymerActive.isUpdate = isUpdate;
                 result.Add(gymerActive);
             }
