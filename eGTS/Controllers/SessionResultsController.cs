@@ -97,7 +97,8 @@ namespace eGTS.Controllers
                 _logger.LogInformation($"Created Session Result with for Session with ID: {model.SessionId}");
                 return Ok(new ErrorResponse(200, "Thành công!"));
             }
-            else if (result == 2) return BadRequest(new ErrorResponse(400, "Đã nhập kết quả buổi tập!!"));
+            else if (result == 2) return BadRequest(new ErrorResponse(400, "Đã nhập kết quả buổi tập!"));
+            else if (result == 3) return BadRequest(new ErrorResponse(400, "Chưa đến buổi tập!"));
             else
                 return BadRequest(new ErrorResponse(400, "Thất bại!"));
 

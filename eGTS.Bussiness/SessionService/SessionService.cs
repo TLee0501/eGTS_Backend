@@ -80,8 +80,9 @@ namespace eGTS.Bussiness.SessionService
             var session = await _context.Sessions.FindAsync(model.SessionId);
             if (session != null)
             {
-                var check = await _context.SessionResults.SingleOrDefaultAsync(a => a.SessionId == model.SessionId);
+                var check = await _context.SessionResults.SingleOrDefaultAsync(a => a.SessionId == model.SessionId && !a.IsDelete);
                 if (check != null) return 2;
+                if (session.From.Date > DateTime.Now.Date) return 3;
 
                 SessionResult sessionResult = new SessionResult()
                 {
