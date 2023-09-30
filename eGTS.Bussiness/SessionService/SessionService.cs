@@ -661,9 +661,21 @@ namespace eGTS.Bussiness.SessionService
         public async Task<int> UpdateSessionExercise(Guid id, SessionUpdateViewModel request)
         {
             var oldS = await _context.Sessions.FindAsync(id);
-            if (oldS == null || oldS.IsDelete == true) return 1; 
+            if (oldS == null || oldS.IsDelete == true) return 1;
 
             _context.Sessions.Remove(oldS);
+
+            if(oldS.From.Date != request.DateTime.Date)
+            {
+                var checkDup = await _context.Sessions.Where(a => a.ScheduleId == oldS.ScheduleId && !a.IsDelete).ToListAsync();
+                foreach (var item in checkDup)
+                {
+                    if (item.From.Date == request.DateTime.Date)
+                    {
+                        return 4;
+                    }
+                }
+            }
 
             var oldEiS = await _context.ExerciseInSessions.Where(a => a.SessionId == id).ToListAsync();
             if (!oldEiS.IsNullOrEmpty())
